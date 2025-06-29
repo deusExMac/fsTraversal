@@ -16,13 +16,13 @@ First version. This project was called dirsToHtml and has been moved here (after
 # How to execute
 The operation mode is determined/activated based on the arguments provided. 
 - For searching for directory files:
-fsTraversal [regular expression] : searches for files/directories whose name matches the regular expression provided
+    fsTraversal [regular expression] : searches for files/directories whose name matches the regular expression provided
 
 - For comparing two directories
-fsTraversal -LDIR [directory A] -RDIR [directory B] : compares directories [directory A] (left side) and [directory B] (right side) and displays their differences in directories, files as well as the common files
+    fsTraversal -LDIR [directory A] -RDIR [directory B] : compares directories [directory A] (left side) and [directory B] (right side) and displays their differences in directories, files as well as the common files
 
 - For exporting the directory structure (in html/json):
-fsTraversal : exports the strcture of the (default) directory in html
+    fsTraversal : exports the strcture of the (default) directory in html
 
 All operation modes can be modified with arguments which are shown below.
 
