@@ -41,7 +41,21 @@ The general idea is to offer an convenient way to browse the directory/files
 
 -NR  : non recursive. Won't traverse going into subdirectories
 
--o [output file]: file to write html into
+-X [regular expression]: exclude directories/files with name matching [regular expression]
+
+-C [regular expression]: include only those directories/files whose names match [regular expression]
+
+-L [integer]: maximum level to delve into during traversal
+
+-S [integer]: minimum file size
+
+-Z [integer]: maximum file size
+
+-Y : ignore directories during traversal
+
+-F : ignore files during traversal
+
+
 
 -c : color cycling (random) of directory names at each level
 
