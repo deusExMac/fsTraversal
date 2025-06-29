@@ -31,21 +31,15 @@ All operation modes can be modified with arguments which are shown below.
 
 
 
-
-
-
-
-
-
-# Description
-This program attempts to do the following:
-Traverses a directory structure on the disk and creates a html document (default file name index.html) linking to the files found inside these folders. The overall aim is to make a directory structure traversable via Web-links and make browsing easier.
+# Supported arguments
 
 The general idea is to offer an convenient way to browse the directory/files
 
 [TODO: This list of option does not refer to current version] Some command line arguments (not yet exahaustive):
 
--d [directory] : directory to start traversing
+-d [directory] : directory to start traversing and apply operation
+
+-NR  : non recursive. Won't traverse going into subdirectories
 
 -o [output file]: file to write html into
 
