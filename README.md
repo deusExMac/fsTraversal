@@ -98,11 +98,7 @@ When exporting directory structure to html, a templating mechanism is used to pr
 - a set of pseudovariables to reference specific information of the encountered objects. Pseudovariables are used in templates
 
 Templates are stored in html template files. Template files are structured and contain the templates for each of the mentioned object types above (templates for directories/files/page). Separators define the template sections inside the template files:
-<! ---directorytemplate--- >
-
-<! ---filetemplate--- >
-
-<! ---pagetemplate--- >
+<! ---directorytemplate--- > <! ---filetemplate--- > <! ---pagetemplate--- >
 
 
 
