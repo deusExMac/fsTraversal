@@ -88,6 +88,18 @@ The general idea is to offer an convenient way to browse the directory/files
 -RDIR [directory] : Second (right) director of comparison
 
 
+# html templates
+
+When exporting directory structure to html, a templating mechanism is used to properly format the encountered objects and page. The templating mechanism features the following:
+
+- a template to format each encountered directory
+- a template to format each encountered file
+- a template to format the page contining the exported and html formatted fs objects
+- a set of pseudovariables to reference specific information of the encountered objects. Pseudovariables are used in templates
+
+  
+
+
 
 
 # How to run
