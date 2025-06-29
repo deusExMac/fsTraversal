@@ -1,13 +1,13 @@
-# IMPORTANT! This Readme is outdated and under heavy update.
-
-# Version
-
--v0.8b@29122022
-For comments/improvements please contact: tzagara@upatras.gr
 
 # fsTraversal
 
 A python program that traverses local file system structures and can apply three different operations: 1) export filesystem structure in html 2) search for files/directories and 3) displays the differences between two directories.
+
+# Version
+
+-v0.9b@29062025
+First version. This project was called dirsToHtml.
+
 
 
 # Description
