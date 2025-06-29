@@ -17,7 +17,10 @@ First version. This project was called dirsToHtml and has been moved here (after
 The operation mode is determined/activated based on the arguments provided. 
 - For searching for directory files:
   
-    _fsTraversal [regular expression]_ : searches for files/directories whose name matches [regular expression] 
+```python
+_fsTraversal [regular expression]_ 
+```
+  : searches for files/directories whose name matches [regular expression] 
 
 - For comparing two directories
   
