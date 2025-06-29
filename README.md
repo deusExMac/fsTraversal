@@ -142,6 +142,8 @@ ${INITIALDIRECTORY} : the root directory where the traversal started
 
 ${TABLEOFDICTIONARIES} : List of directories only
 
+${RLVLCOLOR} : Random color calculated for each level
+
 
 
 
