@@ -118,6 +118,8 @@ ${ID} : unique id of directory used as element id in html
 
 ${DIRNAME} : name of directory
 
+${SUBDIRECTORY} : the formatted traversal content of the directory (recursive or not depending on the settings)
+
 ${DIRLINK} : URL to directory
 
 ${FILENAME} : name of file
