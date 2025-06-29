@@ -102,22 +102,6 @@ backgroundPalette = [
 
 
 
-def printHelp():
-    print("Usage: dirTraverse [-v] [-d directory] [-o output file] [-e]")
-    print("-v : How verbose")
-    print("-d [directory]: Starting directory to start scanning")
-    print("-e : Html encode filenames")
-    print("-o [file name]: Name of file to save html form of traversal ")
-    print("-S : No recusive scanning of directories")
-    print("-h : This screen")
-    print("-G : Debug mode TODO: not fully implemented")
-    print("-s [css file]: css file")
-    print("-x [pattern]: exclude files having [pattern] in name. You may add as many -x arguments as you like. If [patttern] is a valid file name, patterns are loaded from that file.")
-    sys.exit(0)
-
-
-
-
 
 def strToBool(v):
   return v.lower() in ("yes", "true", "t", "1")
