@@ -124,9 +124,11 @@ ${FILENAME} : name of file
 
 ${PARENTPATH} : path to directory containing current directory or file
 
-${LNDIRS}: number of directories in current directory (no recursive counting)
+${NDIRS}: Total number of directories from that level and downwards (recursive)
 
-${LNFILES} : number of files in current directory (no recursive counting)
+${LNDIRS}: number of directories in current (local) directory level only (does not include directories in deeper levels)
+
+${LNFILES} : number of files in current (local) directory level only (does not include files in deeper levels)
 
 ${FILEEXTENSION} : extention of file
 
@@ -147,28 +149,3 @@ ${RLVLCOLOR} : Random color calculated for each level
 
 
 
-
-
-
-# How to run
-
-In its simplest form, run the program with the following arguments
-
-```python
-dirsToHtml -d C:\\someFolder
-```
-This will traverse recursively the folder C:\someFolder and generate the file index.html with links to all encounterred files and folders. Absolute and relative paths are supported.
-
-NOTE: paths need to escape all  \  characters.
-
-# Example
-
-The included file 
-```ruby
-index.html
-```
-contains an example of what kind of file the program produces. File index.html refers to local files on the development machine when the program was executed. Hence, links will not work on your machine.
-
-# Use cases
-
-This program is usefull if you want to sent an entire local directory structure on your disk to people and would like to allow these people to navigate easily the files and directories.
