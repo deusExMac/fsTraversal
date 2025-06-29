@@ -18,17 +18,24 @@ The operation mode is determined/activated based on the arguments provided.
 - For searching for directory files:
   
 ```python
-_fsTraversal [regular expression]_ 
+fsTraversal [regular expression] 
 ```
-  : searches for files/directories whose name matches [regular expression] 
+searches for files/directories whose name matches [regular expression] 
 
 - For comparing two directories
   
-    _fsTraversal -LDIR [directory A] -RDIR [directory B]_ : compares directories [directory A] (left side) and [directory B] (right side) and displays their differences in directories, files as well as the common files
+```python
+fsTraversal -LDIR [directory A] -RDIR [directory B]
+```
+compares directories [directory A] (left side) and [directory B] (right side) and displays their differences in directories, files as well as the common files
 
 - For exporting the directory structure (in html/json):
-  
-    _fsTraversal_ : exports the strcture of the (default) directory in html
+- 
+```python
+    fsTraversal
+```
+
+exports the strcture of the (default) directory in html
 
 All operation modes can be modified with arguments which are shown below.
 
