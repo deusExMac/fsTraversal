@@ -6,7 +6,8 @@ A python program that traverses local file system (fs) structures and can apply 
 2) search for files/directories and
 3) displays the differences between two directories.
 
-Exporting the fs structure in html is the default operation. 
+Exporting the fs structure in html is the default operation. The general idea is to offer an convenient way to browse/navigate the directory/files
+
 
 # Version
 
@@ -43,9 +44,7 @@ All operation modes can be modified with arguments which are shown below.
 
 # Supported arguments
 
-The general idea is to offer an convenient way to browse the directory/files
-
-[TODO: This list of option does not refer to current version] Some command line arguments (not yet exahaustive):
+Some command line arguments:
 
 -d [directory] : directory to start traversing and apply operation
 
