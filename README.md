@@ -130,6 +130,8 @@ ${LNDIRS}: number of directories in current (local) directory level only (does n
 
 ${LNFILES} : number of files in current (local) directory level only (does not include files in deeper levels)
 
+${NFILES}: Total number of files from that level and downwards (recursive)
+
 ${FILEEXTENSION} : extention of file
 
 ${FILELINK} : URL to file
