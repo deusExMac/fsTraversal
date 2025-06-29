@@ -106,6 +106,26 @@ Example html template files can be found in folder html/
 ## Pseudovariables
 Pseudovariables are used to reference specific info of objects inside templates. Supported pseudovariables include:
 
+${CSSFILE} : stylesheet file to use in web page
+${BGCOLOR}: Background color of web page
+${INTROTEXT}: text to display as introduction
+${TITLE} : Title of web page
+${ID} : unique id of directory used as element id in html
+${DIRNAME} : name of directory
+${DIRLINK} : URL to directory
+${FILENAME} : name of file
+${PARENTPATH} : path to directory containing current directory or file
+${LNDIRS}: number of directories in current directory (no recursive counting)
+${LNFILES} : number of files in current directory (no recursive counting)
+${FILEEXTENSION} : extention of file
+${FILELINK} : URL to file
+${FILESIZE} : size of file
+${FILELASTMODIFIED} : last modified date of file
+${LEVEL} : level at which directory or file is located
+${INITIALDIRECTORY} : the root directory where the traversal started
+${TABLEOFDICTIONARIES} : List of directories only
+
+
 
 
 
