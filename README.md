@@ -106,9 +106,9 @@ Example html template files can be found in folder html/
 ## Pseudovariables
 Pseudovariables are used to reference specific info of objects inside templates. Supported pseudovariables include:
 
-${CSSFILE} : stylesheet file to use in web page
+```${CSSFILE}``` : stylesheet file to use in web page
 
-${BGCOLOR}: Background color of web page
+```${BGCOLOR}```: Background color of web page
 
 ${INTROTEXT}: text to display as introduction
 
