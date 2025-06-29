@@ -13,6 +13,13 @@ Exporting the fs structure in html is the default operation.
 -v0.9b@29062025
 First version. This project was called dirsToHtml and has been moved here (after major refactoring).
 
+# How to execute
+
+For searching for directory files:
+fsTraversal [regular expression] : searches for files/directories whose name matches the regular expression provided
+fsTraversal -LDIR [directory A] -RDIR [directory B] : compares directories [directory A] (left side) and [directory B] (right side) and displays their differences in directories, files as well as the common files
+
+
 
 
 # Description
