@@ -2,10 +2,11 @@
 # fsTraversal
 
 A python program that traverses local file system structures and can apply three different operations: 
-1) export filesystem structure in html
+1) export filesystem structure in html/json
 2) search for files/directories and
 3) displays the differences between two directories.
 
+exporting fs structure in html is the default operation. 
 
 # Version
 
