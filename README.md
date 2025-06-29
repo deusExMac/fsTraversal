@@ -61,7 +61,7 @@ The general idea is to offer an convenient way to browse the directory/files
 
 -s [css style file] : CSS stylesheet file to use
 
--I [text or file] : Content to use as introduction when exporting in html
+-I [text or file] : Content to use as introduction when exporting in html. Text is first interpreted as a file name. If such file is present, the contents of the file is used as intro. Otherwise the text itself.
 
 -T [string] : Title of the exported html file
 
@@ -84,7 +84,7 @@ The general idea is to offer an convenient way to browse the directory/files
 
 In its simplest form, run the program with the following arguments
 
-```ruby
+```python
 dirsToHtml -d C:\\someFolder
 ```
 This will traverse recursively the folder C:\someFolder and generate the file index.html with links to all encounterred files and folders. Absolute and relative paths are supported.
