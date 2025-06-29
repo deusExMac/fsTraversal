@@ -55,15 +55,29 @@ The general idea is to offer an convenient way to browse the directory/files
 
 -F : ignore files during traversal
 
+-P [html template file] : html template file to use when exporting and displaying fs structure in html. For templating, see section html templates.
+
+-o [file name] : output html file
+
+-s [css style file] : CSS stylesheet file to use
+
+-I [text or file] : Content to use as introduction when exporting in html
+
+-T [string] : Title of the exported html file
+
+-e : urlencode URLs
+
+-O : when exporting  structure as a html tree, expand all subfolders
+
+-D : Open the exported html file in browser
+
+-f : export format. Currently html or json supported. Default html
+
+-LDIR [directory] : First (left) directory of comparison. If this is non empty, difference operation is activated.
+
+-RDIR [directory] : Second (right) director of comparison
 
 
--c : color cycling (random) of directory names at each level
-
--s [css file]: Style sheet to use (default is style.css)
-
-...and others. Sorry, no time to fully complete the list.
-
-This has been developed in about 2 days. I apologize for any error, bad design decision or omission. Such problems are exclusively mine.
 
 
 # How to run
