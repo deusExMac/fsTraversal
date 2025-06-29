@@ -2,7 +2,263 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <title>Some title</title>
+
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
+<script type='text/javascript' src='html/jquery-3.7.1.js'></script>
+
+<script>
+
+   function showPath(elem){
+       //alert(elem.innerText);
+
+       e = document.getElementById("hoveredOver");
+       e.innerText = '[' + elem.innerText + ']';
+   }
+
+
+   function showTextPath(elem, oname, parentPath, ex=''){
+       elem.style.fontWeight='bold';
+       e = document.getElementById("hoveredOver");
+       e.innerText = 'Path:' + parentPath ;
+   }
+
+
+   // make appearance normal after exiting.
+   function unhighlight(elem){
+    // Not used yet.
+    elem.style.fontWeight='normal';
+   }
+
+
+
+   $(document).ready(function(){
+
+  //when mouse is over, save initial value and replace with newText
+  function hover_in(newText, $this){
+
+    console.log(newText);
+    //$("#mainText").text('<b>Name:</b>' + $this.text() )
+    $("#mainText").html('<b>Name:</b>' + $this.text())
+    /*#$this.data('initialText', $this.text());
+    $this.text(newText);*/
+  }
+
+  //when mouse is over, replace with initial value
+  function hover_out($this){
+    //$this.text($this.data('initialText'));
+  }
+
+  $('.fsitem').hover(
+    function(){
+      hover_in("NEW TEXT", $(this));
+    },
+    function() {
+      hover_out($(this));
+  });
+});
+
+    </script>
+<style>
+
+#introText {color:#595959; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; margin-left:15px; text-align:justify;}
+
+.tableOfDictionaries ul li {
+  list-style: none;
+  padding-left: 50px;
+  padding-top:10px;
+  position: relative;
+}
+
+.tableOfDictionaries ul li:before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 5px;
+  display: inline-block;
+  height: 25px;
+  width: 25px;
+  background-size: contain;
+  background-image: url("html/fld6.png");
+}
+
+
+
+
+.tableOfDictionaries {
+  column-count: 3;
+  column-gap: 30px;
+  column-rule: 0px solid green;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  margin:10px;
+  word-wrap: break-word;
+  padding:15px;
+  background-color:#fbfbe2;
+}
+
+/* The next fixes first column appearing lower issue
+   See: https://github.com/rstudio/pagedown/issues/295
+*/
+.tableOfDictionaries * {
+  margin-top: 0px;
+}
+
+h2 {
+  column-span: all;
+}
+
+
+.tree{
+  --spacing : 1.5rem;
+  --radius  : 10px;
+}
+
+.tree li{
+  display      : block;
+  position     : relative;
+  padding-left : calc(2 * var(--spacing) - var(--radius) - 2px);
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+.tree ul{
+  #margin-left  : calc(var(--radius) - var(--spacing));
+  padding-left : 0;
+
+}
+
+.tree ul li{
+  border-left : 2px solid green;
+
+}
+
+.tree ul li:last-child{
+  border-color : transparent;
+}
+
+.tree ul li::before{
+  content      : '';
+  display      : block;
+  position     : absolute;
+  top          : calc(var(--spacing) / -2);
+  left         : -2px;
+  width        : calc(var(--spacing) + 2px);
+  height       : calc(var(--spacing) + 1px);
+  border       : solid green;
+
+  border-width : 0 0 2px 2px;
+
+  background-image: url("html/fld5.png");
+}
+
+
+.tree summary{
+  display : block;
+  cursor  : pointer;
+}
+
+.tree summary::marker,
+.tree summary::-webkit-details-marker{
+  display : none;
+}
+
+.tree summary:focus{
+  outline : none;
+}
+
+.tree summary:focus-visible{
+  outline : 1px dotted #000;
+}
+
+.tree li::after,
+.tree summary::before{
+  content       : '';
+  display       : block;
+  position      : absolute;
+  /**
+  top           : calc(var(--spacing) / 2 - var(--radius));
+  left          : calc(var(--spacing) - var(--radius) - 1px);
+  width         : calc(2 * var(--radius));
+  height        : calc(2 * var(--radius));
+  border-radius : 50%;
+  **/
+  /*background    : #ddd;*/
+
+}
+
+.tree summary::before{
+  #content     : '+';
+  z-index     : 1;
+  #background  : #696;
+  #color       : #fff;
+
+  #line-height : calc(2 * var(--radius) - 2px);
+  #text-align  : center;
+  background-image: url("fld10.png");
+}
+
+.tree details[open] > summary::before{
+  #content : '-';
+  background-image: url("fld10.png");
+}
+
+.dir {font-size:20px; color:green}
+
+#container {
+  border: 2px solid #fafab9;
+  margin:auto;
+  width:50%;
+  background-color:#eafaff;
+  padding:15px;
+}
+
+
+.folder { font-size:18px; color:#000000; font-weight:normal; font-family: Arial, Helvetica, sans-serif;}
+
+.fle {font-size:12px; font-family: Arial, Helvetica, sans-serif;}
+
+.detail{font-size:14px; color:darkgray; font-style:normal italic}
+
+
+.floatingmenu {
+    position: fixed; margin-left:83%;
+    background-color:bisque;
+    border: 2px solid #FFE4C4;
+    z-index     : 999;
+    /*margin:auto;*/
+    width:30%;
+    /*margin-top:40px;*/
+    /*float:right;
+    margin-right:calc(100vh-30px);
+    */
+    top: 50%;
+    /*left: 50%;*/
+    transform: translate(-50%, -50%);
+
+    }
+
+
+.detailsInfo{
+    padding:10px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#hoveredOver {color:grey; font-size:8px;}
+
+.outer{
+
+    width:100%;
+    height:600px;
+    background-color:white;
+    margin:0 auto;
+    }
+
+
+</style>
+
 </head>
+
 
 
 
@@ -10,25 +266,102 @@
 
 
 
-Manolis M. Tzagarakis<br/>
 
+<div class="outer">
 
-<font color="red"><b>[D] </b></font>exampleDir / <font color="red">SomeDir</font><br>
-<font color="red"><b>[D] </b></font>exampleDir/SomeDir / <font color="red">anotherDir</font><br>
-<font color="red"><b>[D] </b></font>exampleDir/SomeDir/anotherDir / <font color="red">a</font><br>
-<font color="red"><b>[D] </b></font>exampleDir/SomeDir/anotherDir/a / <font color="red">untitled folder</font><br>
-<font color="green"><b>[F] </b></font>exampleDir/SomeDir/anotherDir/a/untitled folder / <font color="green">123.xlsx</font><br><font color="green"><b>[F] </b></font>exampleDir/SomeDir/anotherDir/a / <font color="green">.DS_Store</font><br><font color="green"><b>[F] </b></font>exampleDir/SomeDir/anotherDir/a / <font color="green">anExcelFile.xlsx</font><br><font color="green"><b>[F] </b></font>exampleDir/SomeDir/anotherDir / <font color="green">.DS_Store</font><br><font color="green"><b>[F] </b></font>exampleDir/SomeDir/anotherDir / <font color="green">anotherFile.accdb</font><br><font color="red"><b>[D] </b></font>exampleDir/SomeDir / <font color="red">anotherDir copy</font><br>
-<font color="red"><b>[D] </b></font>exampleDir/SomeDir/anotherDir copy / <font color="red">a</font><br>
-<font color="red"><b>[D] </b></font>exampleDir/SomeDir/anotherDir copy/a / <font color="red">untitled folder</font><br>
-<font color="green"><b>[F] </b></font>exampleDir/SomeDir/anotherDir copy/a/untitled folder / <font color="green">123.xlsx</font><br><font color="green"><b>[F] </b></font>exampleDir/SomeDir/anotherDir copy/a / <font color="green">.DS_Store</font><br><font color="green"><b>[F] </b></font>exampleDir/SomeDir/anotherDir copy/a / <font color="green">anExcelFile.xlsx</font><br><font color="green"><b>[F] </b></font>exampleDir/SomeDir/anotherDir copy / <font color="green">.DS_Store</font><br><font color="green"><b>[F] </b></font>exampleDir/SomeDir/anotherDir copy / <font color="green">anotherFile.accdb</font><br><font color="green"><b>[F] </b></font>exampleDir/SomeDir / <font color="green">.DS_Store</font><br><font color="green"><b>[F] </b></font>exampleDir/SomeDir / <font color="green">aWordDocument.docx</font><br><font color="green"><b>[F] </b></font>exampleDir/SomeDir / <font color="green">anExcelFile.xlsx</font><br><font color="red"><b>[D] </b></font>exampleDir / <font color="red">YetAnotherDir</font><br>
-<font color="green"><b>[F] </b></font>exampleDir/YetAnotherDir / <font color="green">aWordDocument.docx</font><br><font color="red"><b>[D] </b></font>exampleDir / <font color="red">someDir2</font><br>
-<font color="red"><b>[D] </b></font>exampleDir/someDir2 / <font color="red">anotherDir</font><br>
-<font color="red"><b>[D] </b></font>exampleDir/someDir2/anotherDir / <font color="red">a</font><br>
-<font color="green"><b>[F] </b></font>exampleDir/someDir2/anotherDir / <font color="green">.DS_Store</font><br><font color="green"><b>[F] </b></font>exampleDir/someDir2/anotherDir / <font color="green">anotherFile.accdb</font><br><font color="red"><b>[D] </b></font>exampleDir/someDir2 / <font color="red">anotherDir copy</font><br>
-<font color="red"><b>[D] </b></font>exampleDir/someDir2/anotherDir copy / <font color="red">a</font><br>
-<font color="green"><b>[F] </b></font>exampleDir/someDir2/anotherDir copy / <font color="green">.DS_Store</font><br><font color="green"><b>[F] </b></font>exampleDir/someDir2/anotherDir copy / <font color="green">anotherFile.accdb</font><br><font color="red"><b>[D] </b></font>exampleDir/someDir2 / <font color="red">b</font><br>
-<font color="green"><b>[F] </b></font>exampleDir/someDir2/b / <font color="green">anExcelFile.xlsx</font><br><font color="red"><b>[D] </b></font>exampleDir/someDir2 / <font color="red">c</font><br>
-<font color="green"><b>[F] </b></font>exampleDir/someDir2 / <font color="green">.DS_Store</font><br><font color="green"><b>[F] </b></font>exampleDir/someDir2 / <font color="green">abc.jpg</font><br><font color="green"><b>[F] </b></font>exampleDir/someDir2 / <font color="green">anExcelFile.xlsx</font><br><font color="green"><b>[F] </b></font>exampleDir/someDir2 / <font color="green">randomImage - Copy (2).jpg</font><br><font color="green"><b>[F] </b></font>exampleDir/someDir2 / <font color="green">randomImage - Copy (3).jpg</font><br><font color="green"><b>[F] </b></font>exampleDir/someDir2 / <font color="green">randomImage - Copy.jpg</font><br><font color="green"><b>[F] </b></font>exampleDir/someDir2 / <font color="green">randomImage.jpg</font><br><font color="green"><b>[F] </b></font>exampleDir / <font color="green">.DS_Store</font><br><font color="green"><b>[F] </b></font>exampleDir / <font color="green">HOHOHOanExcelFile.xlsx</font><br><font color="green"><b>[F] </b></font>exampleDir / <font color="green">randomImage.jpg</font><br> <br/>
+   <div id="detailsWindow" class="floatingmenu">
+       <div style="background-color:#4a403d; width:100%;color:white;margin-top:0px">details</div>
+       <div class="detailsInfo">
+          <span id="mainText"><b>Name:</b>Window with some menus</span><br/>
+          <span id="hoveredOver" style="color:green;">XXXXX</span>
+       </div>
+    </div>
+
+<div id="container">
+
+<div id="introText">
+<h2>Some title</h2>
+This is an intro</div>
+<div class="tableOfDictionaries">
+    <ul><li><a href="#d4-450018">untitled folder</a></li><li><a href="#d3-662675">a</a></li><li><a href="#d2-632569">anotherDir</a></li><li><a href="#d4-345425">untitled folder</a></li><li><a href="#d3-336316">a</a></li><li><a href="#d2-850028">anotherDir copy</a></li><li><a href="#d1-307545">SomeDir</a></li><li><a href="#d1-366298">YetAnotherDir</a></li><li><a href="#d3-245051">a</a></li><li><a href="#d2-517789">anotherDir</a></li><li><a href="#d3-59081">a</a></li><li><a href="#d2-155554">anotherDir copy</a></li><li><a href="#d2-339006">b</a></li><li><a href="#d2-554699">c</a></li><li><a href="#d1-710590">someDir2</a></li></ul>
+</div>
+
+<ul class="tree">
+  <li>
+    <details open>
+      <summary class="folder"><img src="html/fld7.png" style="margin-left:-7px;margin-right:5px;">
+          Manolis M. Tzagarakis(3 - 3)
+      </summary>
+        <ul>
+           <li id="d1-307545">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'SomeDir', 'exampleDir', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#9e981e">SomeDir</font><span class='detail'>(<font color='red'><i>1</i></font>, 2, 3 | 6, 13 )</span></summary><ul><li id="d2-632569">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'anotherDir', 'exampleDir/SomeDir', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#6e8c0a">anotherDir</font><span class='detail'>(<font color='red'><i>2</i></font>, 1, 2 | 2, 5 )</span></summary><ul><li id="d3-662675">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'a', 'exampleDir/SomeDir/anotherDir', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#cc7a16">a</font><span class='detail'>(<font color='red'><i>3</i></font>, 1, 2 | 1, 3 )</span></summary><ul><li id="d4-450018">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'untitled folder', 'exampleDir/SomeDir/anotherDir/a', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#f21313">untitled folder</font><span class='detail'>(<font color='red'><i>4</i></font>, 0, 1 | 0, 1 )</span></summary><ul><li class="fle fsitem" onmouseover="showTextPath(this, '123.xlsx', 'exampleDir/SomeDir/anotherDir/a/untitled folder', 'xlsx')" onmouseout="unhighlight(this);"><img src='html/xlsx.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/SomeDir/anotherDir/a/untitled folder/123.xlsx" target="_blank" rel="noopener noreferrer">123.xlsx</a> (6165, [23/01/2022, 13:51:48])</li></ul>
+   </details>
+</li><li class="fle fsitem" onmouseover="showTextPath(this, '.DS_Store', 'exampleDir/SomeDir/anotherDir/a', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/SomeDir/anotherDir/a/.DS_Store" target="_blank" rel="noopener noreferrer">.DS_Store</a> (6148, [20/07/2024, 09:15:30])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'anExcelFile.xlsx', 'exampleDir/SomeDir/anotherDir/a', 'xlsx')" onmouseout="unhighlight(this);"><img src='html/xlsx.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/SomeDir/anotherDir/a/anExcelFile.xlsx" target="_blank" rel="noopener noreferrer">anExcelFile.xlsx</a> (6165, [23/01/2022, 13:51:48])</li></ul>
+   </details>
+</li><li class="fle fsitem" onmouseover="showTextPath(this, '.DS_Store', 'exampleDir/SomeDir/anotherDir', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/SomeDir/anotherDir/.DS_Store" target="_blank" rel="noopener noreferrer">.DS_Store</a> (6148, [02/03/2024, 22:39:02])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'anotherFile.accdb', 'exampleDir/SomeDir/anotherDir', 'accdb')" onmouseout="unhighlight(this);"><img src='html/accdb.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/SomeDir/anotherDir/anotherFile.accdb" target="_blank" rel="noopener noreferrer">anotherFile.accdb</a> (520192, [23/01/2022, 13:51:48])</li></ul>
+   </details>
+</li><li id="d2-850028">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'anotherDir copy', 'exampleDir/SomeDir', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#6e8c0a">anotherDir copy</font><span class='detail'>(<font color='red'><i>2</i></font>, 1, 2 | 2, 5 )</span></summary><ul><li id="d3-336316">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'a', 'exampleDir/SomeDir/anotherDir copy', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#05998d">a</font><span class='detail'>(<font color='red'><i>3</i></font>, 1, 2 | 1, 3 )</span></summary><ul><li id="d4-345425">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'untitled folder', 'exampleDir/SomeDir/anotherDir copy/a', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#851767">untitled folder</font><span class='detail'>(<font color='red'><i>4</i></font>, 0, 1 | 0, 1 )</span></summary><ul><li class="fle fsitem" onmouseover="showTextPath(this, '123.xlsx', 'exampleDir/SomeDir/anotherDir copy/a/untitled folder', 'xlsx')" onmouseout="unhighlight(this);"><img src='html/xlsx.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/SomeDir/anotherDir copy/a/untitled folder/123.xlsx" target="_blank" rel="noopener noreferrer">123.xlsx</a> (6165, [23/01/2022, 13:51:48])</li></ul>
+   </details>
+</li><li class="fle fsitem" onmouseover="showTextPath(this, '.DS_Store', 'exampleDir/SomeDir/anotherDir copy/a', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/SomeDir/anotherDir copy/a/.DS_Store" target="_blank" rel="noopener noreferrer">.DS_Store</a> (6148, [20/07/2024, 09:15:30])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'anExcelFile.xlsx', 'exampleDir/SomeDir/anotherDir copy/a', 'xlsx')" onmouseout="unhighlight(this);"><img src='html/xlsx.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/SomeDir/anotherDir copy/a/anExcelFile.xlsx" target="_blank" rel="noopener noreferrer">anExcelFile.xlsx</a> (6165, [23/01/2022, 13:51:48])</li></ul>
+   </details>
+</li><li class="fle fsitem" onmouseover="showTextPath(this, '.DS_Store', 'exampleDir/SomeDir/anotherDir copy', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/SomeDir/anotherDir copy/.DS_Store" target="_blank" rel="noopener noreferrer">.DS_Store</a> (6148, [02/03/2024, 22:39:02])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'anotherFile.accdb', 'exampleDir/SomeDir/anotherDir copy', 'accdb')" onmouseout="unhighlight(this);"><img src='html/accdb.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/SomeDir/anotherDir copy/anotherFile.accdb" target="_blank" rel="noopener noreferrer">anotherFile.accdb</a> (520192, [23/01/2022, 13:51:48])</li></ul>
+   </details>
+</li><li class="fle fsitem" onmouseover="showTextPath(this, '.DS_Store', 'exampleDir/SomeDir', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/SomeDir/.DS_Store" target="_blank" rel="noopener noreferrer">.DS_Store</a> (10244, [27/12/2022, 23:54:12])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'aWordDocument.docx', 'exampleDir/SomeDir', 'docx')" onmouseout="unhighlight(this);"><img src='html/docx.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/SomeDir/aWordDocument.docx" target="_blank" rel="noopener noreferrer">aWordDocument.docx</a> (20201, [27/12/2022, 07:31:40])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'anExcelFile.xlsx', 'exampleDir/SomeDir', 'xlsx')" onmouseout="unhighlight(this);"><img src='html/xlsx.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/SomeDir/anExcelFile.xlsx" target="_blank" rel="noopener noreferrer">anExcelFile.xlsx</a> (6165, [23/01/2022, 13:51:48])</li></ul>
+   </details>
+</li><li id="d1-366298">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'YetAnotherDir', 'exampleDir', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#9e981e">YetAnotherDir</font><span class='detail'>(<font color='red'><i>1</i></font>, 0, 1 | 0, 1 )</span></summary><ul><li class="fle fsitem" onmouseover="showTextPath(this, 'aWordDocument.docx', 'exampleDir/YetAnotherDir', 'docx')" onmouseout="unhighlight(this);"><img src='html/docx.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/YetAnotherDir/aWordDocument.docx" target="_blank" rel="noopener noreferrer">aWordDocument.docx</a> (28931, [23/01/2022, 13:51:48])</li></ul>
+   </details>
+</li><li id="d1-710590">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'someDir2', 'exampleDir', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#9e981e">someDir2</font><span class='detail'>(<font color='red'><i>1</i></font>, 4, 7 | 6, 12 )</span></summary><ul><li id="d2-517789">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'anotherDir', 'exampleDir/someDir2', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#5c0c25">anotherDir</font><span class='detail'>(<font color='red'><i>2</i></font>, 1, 2 | 1, 2 )</span></summary><ul><li id="d3-245051">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'a', 'exampleDir/someDir2/anotherDir', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#033e6b">a</font><span class='detail'>(<font color='red'><i>3</i></font>, 0, 0 | 0, 0 )</span></summary><ul></ul>
+   </details>
+</li><li class="fle fsitem" onmouseover="showTextPath(this, '.DS_Store', 'exampleDir/someDir2/anotherDir', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/someDir2/anotherDir/.DS_Store" target="_blank" rel="noopener noreferrer">.DS_Store</a> (6148, [20/07/2024, 09:15:00])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'anotherFile.accdb', 'exampleDir/someDir2/anotherDir', 'accdb')" onmouseout="unhighlight(this);"><img src='html/accdb.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/someDir2/anotherDir/anotherFile.accdb" target="_blank" rel="noopener noreferrer">anotherFile.accdb</a> (520192, [23/01/2022, 13:51:48])</li></ul>
+   </details>
+</li><li id="d2-155554">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'anotherDir copy', 'exampleDir/someDir2', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#5c0c25">anotherDir copy</font><span class='detail'>(<font color='red'><i>2</i></font>, 1, 2 | 1, 2 )</span></summary><ul><li id="d3-59081">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'a', 'exampleDir/someDir2/anotherDir copy', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#4287f5">a</font><span class='detail'>(<font color='red'><i>3</i></font>, 0, 0 | 0, 0 )</span></summary><ul></ul>
+   </details>
+</li><li class="fle fsitem" onmouseover="showTextPath(this, '.DS_Store', 'exampleDir/someDir2/anotherDir copy', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/someDir2/anotherDir copy/.DS_Store" target="_blank" rel="noopener noreferrer">.DS_Store</a> (6148, [20/07/2024, 09:15:00])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'anotherFile.accdb', 'exampleDir/someDir2/anotherDir copy', 'accdb')" onmouseout="unhighlight(this);"><img src='html/accdb.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/someDir2/anotherDir copy/anotherFile.accdb" target="_blank" rel="noopener noreferrer">anotherFile.accdb</a> (520192, [23/01/2022, 13:51:48])</li></ul>
+   </details>
+</li><li id="d2-339006">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'b', 'exampleDir/someDir2', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#5c0c25">b</font><span class='detail'>(<font color='red'><i>2</i></font>, 0, 1 | 0, 1 )</span></summary><ul><li class="fle fsitem" onmouseover="showTextPath(this, 'anExcelFile.xlsx', 'exampleDir/someDir2/b', 'xlsx')" onmouseout="unhighlight(this);"><img src='html/xlsx.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/someDir2/b/anExcelFile.xlsx" target="_blank" rel="noopener noreferrer">anExcelFile.xlsx</a> (6165, [23/01/2022, 13:51:48])</li></ul>
+   </details>
+</li><li id="d2-554699">
+  <details >
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'c', 'exampleDir/someDir2', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#5c0c25">c</font><span class='detail'>(<font color='red'><i>2</i></font>, 0, 0 | 0, 0 )</span></summary><ul></ul>
+   </details>
+</li><li class="fle fsitem" onmouseover="showTextPath(this, '.DS_Store', 'exampleDir/someDir2', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/someDir2/.DS_Store" target="_blank" rel="noopener noreferrer">.DS_Store</a> (8196, [02/03/2024, 22:37:24])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'abc.jpg', 'exampleDir/someDir2', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/someDir2/abc.jpg" target="_blank" rel="noopener noreferrer">abc.jpg</a> (15715, [19/07/2024, 10:33:47])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'anExcelFile.xlsx', 'exampleDir/someDir2', 'xlsx')" onmouseout="unhighlight(this);"><img src='html/xlsx.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/someDir2/anExcelFile.xlsx" target="_blank" rel="noopener noreferrer">anExcelFile.xlsx</a> (6165, [23/01/2022, 13:51:48])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'randomImage - Copy (2).jpg', 'exampleDir/someDir2', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/someDir2/randomImage - Copy (2).jpg" target="_blank" rel="noopener noreferrer">randomImage - Copy (2).jpg</a> (15715, [19/07/2024, 10:33:47])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'randomImage - Copy (3).jpg', 'exampleDir/someDir2', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/someDir2/randomImage - Copy (3).jpg" target="_blank" rel="noopener noreferrer">randomImage - Copy (3).jpg</a> (15715, [19/07/2024, 10:33:47])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'randomImage - Copy.jpg', 'exampleDir/someDir2', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/someDir2/randomImage - Copy.jpg" target="_blank" rel="noopener noreferrer">randomImage - Copy.jpg</a> (15715, [19/07/2024, 10:33:47])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'randomImage.jpg', 'exampleDir/someDir2', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/someDir2/randomImage.jpg" target="_blank" rel="noopener noreferrer">randomImage.jpg</a> (15715, [19/07/2024, 10:33:47])</li></ul>
+   </details>
+</li><li class="fle fsitem" onmouseover="showTextPath(this, '.DS_Store', 'exampleDir', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/.DS_Store" target="_blank" rel="noopener noreferrer">.DS_Store</a> (10244, [28/12/2022, 10:05:24])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'HOHOHOanExcelFile.xlsx', 'exampleDir', 'xlsx')" onmouseout="unhighlight(this);"><img src='html/xlsx.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/HOHOHOanExcelFile.xlsx" target="_blank" rel="noopener noreferrer">HOHOHOanExcelFile.xlsx</a> (6165, [23/01/2022, 13:51:48])</li><li class="fle fsitem" onmouseover="showTextPath(this, 'randomImage.jpg', 'exampleDir', 'ukn')" onmouseout="unhighlight(this);"><img src='html/ukn.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'><a href="exampleDir/randomImage.jpg" target="_blank" rel="noopener noreferrer">randomImage.jpg</a> (15715, [01/01/2023, 12:42:04])</li>
+        </ul>
+      </details>
+    </li>
+</ul>
+
+</div>
+
+</div> <!--outer div -->
 
 
 </body>
