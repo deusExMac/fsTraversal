@@ -30,7 +30,7 @@ fsTraversal -LDIR [directory A] -RDIR [directory B]
 compares directories [directory A] (left side) and [directory B] (right side) and displays their differences in directories, files as well as the common files
 
 - For exporting the directory structure (in html/json):
-- 
+ 
 ```python
     fsTraversal
 ```
