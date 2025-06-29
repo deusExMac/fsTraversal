@@ -110,45 +110,45 @@ Pseudovariables are used to reference specific info of objects inside templates.
 
 ```${BGCOLOR}```: Background color of web page
 
-${INTROTEXT}: text to display as introduction
+```${INTROTEXT}```: text to display as introduction
 
-${TITLE} : Title of web page
+```${TITLE}``` : Title of web page
 
-${ID} : unique id of directory used as element id in html
+```${ID}``` : unique id of directory used as element id in html
 
-${DIRNAME} : name of directory
+```${DIRNAME}``` : name of directory
 
-${SUBDIRECTORY} : the formatted traversal content of the directory (recursive or not depending on the settings)
+```${SUBDIRECTORY}``` : the formatted traversal content of the directory (recursive or not depending on the settings)
 
-${DIRLINK} : URL to directory
+```${DIRLINK}``` : URL to directory
 
-${FILENAME} : name of file
+```${FILENAME}``` : name of file
 
-${PARENTPATH} : path to directory containing current directory or file
+```${PARENTPATH}``` : path to directory containing current directory or file
 
-${NDIRS}: Total number of directories from that level and downwards (recursive)
+```${NDIRS}``` : Total number of directories from that level and downwards (recursive)
 
-${LNDIRS}: number of directories in current (local) directory level only (does not include directories in deeper levels)
+```${LNDIRS}``` : number of directories in current (local) directory level only (does not include directories in deeper levels)
 
-${LNFILES} : number of files in current (local) directory level only (does not include files in deeper levels)
+```${LNFILES}``` : number of files in current (local) directory level only (does not include files in deeper levels)
 
-${NFILES}: Total number of files from that level and downwards (recursive)
+```${NFILES}``` : Total number of files from that level and downwards (recursive)
 
-${FILEEXTENSION} : extention of file
+```${FILEEXTENSION}``` : extention of file
 
-${FILELINK} : URL to file
+```${FILELINK}``` : URL to file
 
-${FILESIZE} : size of file
+```${FILESIZE}``` : size of file
 
-${FILELASTMODIFIED} : last modified date of file
+```${FILELASTMODIFIED}``` : last modified date of file
 
-${LEVEL} : level at which directory or file is located
+```${LEVEL}``` : level at which directory or file is located
 
-${INITIALDIRECTORY} : the root directory where the traversal started
+```${INITIALDIRECTORY}``` : the root directory where the traversal started
 
-${TABLEOFDICTIONARIES} : List of directories only
+```${TABLEOFDICTIONARIES}``` : List of directories only
 
-${RLVLCOLOR} : Random color calculated for each level
+```${RLVLCOLOR}``` : Random color calculated for each level
 
 
 
