@@ -15,6 +15,8 @@ v0.9b@29062025
 
   First version. This project was called dirsToHtml and has been moved here (after major refactoring).
 
+
+
 # How to execute
 The operation mode is determined/activated based on the arguments provided. 
 - For searching for directory files:
