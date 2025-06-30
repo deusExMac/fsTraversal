@@ -19,6 +19,10 @@ from filecmp import dircmp
 from prettytable import PrettyTable
 
 
+# Global flag
+ON_TRAVERSE_ERROR_QUIT = False
+
+
 
 
 # Colors to choose from if color cycling is enabled (-c)
@@ -163,7 +167,7 @@ def searchNameComplies(on, xP='', iP='', matchReplacement='', dbg=False):
           print( lvl*"-", "EXCLUDING:[", on, "] lvl:", lvl )               
        return('')
     
-    result = re.subn(iP, matchReplacement, on)
+    result = re.subn(iP, matchReplacement, on, flags=re.IGNORECASE)
     if result[1] > 0:
        return(result[0])
 
@@ -370,8 +374,11 @@ def traverseDirectory(root=".//", lvl=1, recursive = True, maxLevel=-1,
     try:      
       path, dirs, files = next( os.walk(root) )    
     except Exception as wEx:
-      print('Exception during walk:', str(wEx) )  
-      return(-2, 0, 0, 0, "")
+      print('Exception during walk:', str(wEx) )
+      if ON_TRAVERSE_ERROR_QUIT:
+         return(-2, 0, 0, 0, "")
+      else:
+         return(0, 0, 0, 0, "") 
 
 
     # sort directory and files
@@ -562,14 +569,17 @@ def searchDirectories(root=".//", lvl=1, recursive = True, maxLevel=-1,
     if maxLevel > 0:
        if lvl > maxLevel:
           if vrb: 
-             print('Current Level greater than maxLevel', maxLevel, "Not traversing INTO", root) 
+             print(f'Current Level {lvl} greater than maxLevel', maxLevel, "Not traversing INTO", root) 
           return((-1, scannedCount, matchCount))
         
     try:      
       path, dirs, files = next( os.walk(root) )
     except Exception as walkExc:
-      print('[ERROR]', str(walkExc))  
-      return ( (-2, scannedCount, matchCount) )
+      print('[WALK ERROR]', str(walkExc))
+      if ON_TRAVERSE_ERROR_QUIT:
+         return ( (-2, scannedCount, matchCount) ) 
+      else:    
+         return ( (0, scannedCount, matchCount) )
 
     
     
