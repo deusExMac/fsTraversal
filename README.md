@@ -22,8 +22,8 @@ The operation mode is determined/activated based on the arguments provided.
 fsTraversal [regular expression] 
 ```
 searches for files/directories whose name matches [regular expression] 
-NOTE: to avoid "global flags not at the start of the expression..." errors when doing case insensitive search use 
-flags as follows: (?i:d)
+
+NOTE: By default, search is case sensitive. Case insesitive search can be supported using global flags in the regular expression. To avoid "global flags not at the start of the expression..." errors when doing case insensitive search global flags should be used as follows: (?i:d) e.g. for case insensitive search containing d .
 See https://stackoverflow.com/questions/75895460/the-error-was-re-error-global-flags-not-at-the-start-of-the-expression-at-posi
 
 
