@@ -166,8 +166,11 @@ def searchNameComplies(on, xP='', iP='', matchReplacement='', dbg=False):
        if dbg:
           print( lvl*"-", "EXCLUDING:[", on, "] lvl:", lvl )               
        return('')
-    
-    result = re.subn(iP, matchReplacement, on, flags=re.IGNORECASE)
+
+    # Note: to avoid "global flags not at the start of the expression..." errors
+    # provide case insensitive search as follows e.g.: (?i:d)
+    # See https://stackoverflow.com/questions/75895460/the-error-was-re-error-global-flags-not-at-the-start-of-the-expression-at-posi
+    result = re.subn(iP, matchReplacement, on)
     if result[1] > 0:
        return(result[0])
 
