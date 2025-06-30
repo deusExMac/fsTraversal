@@ -12,6 +12,7 @@ Works also for network mapped drives (more testing needed though).
 # Version
 
 v0.9b@29062025
+
   First version. This project was called dirsToHtml and has been moved here (after major refactoring).
 
 # How to execute
