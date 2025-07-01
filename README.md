@@ -15,6 +15,9 @@ v0.9b@29062025
 
   First version. This project was called dirsToHtml and has been moved here (after major refactoring).
 
+# TODO
+
+Use the visitor pattern for traversal code.
 
 
 # How to execute
