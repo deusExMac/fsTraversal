@@ -382,7 +382,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
    try: 
     if maxLevel > 0:
        if lvl > maxLevel: 
-          return(-1, 0, 0, 0, "")
+          return(0, 0, 0, 0, 0, "")
 
 
     # Gather directories and files in directory identified by
@@ -394,9 +394,9 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     except Exception as wEx:
       print('Exception during walk:', str(wEx) )
       if ON_TRAVERSE_ERROR_QUIT:
-         return(-2, 0, 0, 0, "")
+         return(-2, 0, 0, 0, 0, "")
       else:
-         return(0, 0, 0, 0, "") 
+         return(0, 0, 0, 0, 0, "") 
 
 
     # sort directory and files
@@ -430,7 +430,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         # The semantics in order: 
         # total number of directories, total number of files, local number of dirs, local number of files,
         # formatted display of subdirectory 
-        subDirData = (0,0,0,0, "")
+        subDirData = (0,0,0,0,0, "")
         if recursive:
             # go into subdirectory and traverse it
             subDirData = ABSTRACTtraverse( directoryPath, lvl+1, recursive, maxLevel,
@@ -442,11 +442,13 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
             # Upate total number of directories and files that will
             # be propagated upwards.
-            # subDirData[0] will also carry any error encountered
-            # during traversal of subdirectories.
+            # subDirData[0] is the status message
             if subDirData[0] >= 0:
-               nDirs += subDirData[0]
-               nFiles += subDirData[1]
+               nDirs += subDirData[1]
+               nFiles += subDirData[2]
+            else:
+                if (subDirData[0] != -1):
+                    return(subDirData[0], nDirs, nFiles, lnDirs, lnFiles, formatedContents)
 
         dirHandler(encounteredDirectory, root, '[D]', None, lvl)
         '''
@@ -492,7 +494,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     # lnDirs:  number of directories in this directory only, lnFiles: number of files
     # in this directory only, formatedContents: complete formated content up to this
     # point
-    return nDirs, nFiles, lnDirs, lnFiles, formatedContents
+    return 0, nDirs, nFiles, lnDirs, lnFiles, formatedContents
 
    except KeyboardInterrupt:
        print('Keyboard interrupt. Terminating')
