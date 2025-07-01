@@ -490,8 +490,9 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         nFiles +=1
         lnFiles += 1
 
-        #fileHandler(encounteredFile, root, '[F]', None, lvl)
-        v = handlers.File(encounteredFile, root)
+        
+        fMeta = fileInfo(filePath)
+        v = handlers.File(encounteredFile, root, fMeta, lvl)
         v.accept(objVisitor)
         
         '''

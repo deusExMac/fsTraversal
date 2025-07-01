@@ -19,9 +19,10 @@ class Visitor(ABC):
 
 # 3. Concrete element classes (Files and Directories)
 class File(Visitable):
-    def __init__(self, name, path):
+    def __init__(self, name, path, finfo={}, lvl=0):
         self.name = name
         self.path = path
+        self.fileMeta = finfo
 
     def accept(self, visitor):
         visitor.visit_file(self.name, self.path)
