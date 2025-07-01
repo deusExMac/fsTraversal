@@ -496,7 +496,8 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
    except KeyboardInterrupt:
        print('Keyboard interrupt. Terminating')
-       return nDirs, nFiles, lnDirs, lnFiles, formatedContents
+       sys.exit(-3)
+       #return nDirs, nFiles, lnDirs, lnFiles, formatedContents
 
 
 
