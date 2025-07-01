@@ -17,7 +17,7 @@ v0.9b@29062025
 
 # TODO
 
-Use the visitor pattern for traversal code.
+Use the visitor design pattern for traversal code.
 
 
 # How to execute
