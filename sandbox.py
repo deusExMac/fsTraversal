@@ -379,7 +379,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                       fileHandler=fsDefaultFILEHandler):
     
     
-    
+   try: 
     if maxLevel > 0:
        if lvl > maxLevel: 
           return(-1, 0, 0, 0, "")
@@ -494,6 +494,9 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     # point
     return nDirs, nFiles, lnDirs, lnFiles, formatedContents
 
+   except KeyboardInterrupt:
+       print('Keyboard interrupt. Terminating')
+       return nDirs, nFiles, lnDirs, lnFiles, formatedContents
 
 
 
