@@ -351,6 +351,9 @@ def timeit(f):
 #
 #####################################################
 
+
+import handlers
+
 # TODO: Handlers should return an responseObject containing all necessary
 # stuf
 def fsDefaultDIRECTORYHandler(objName, parentPath, objType, objAttrs={}, objLvl=1):
@@ -365,6 +368,10 @@ def fsDefaultFILEHandler(objName, parentPath, objType, objAttrs={}, objLvl=1):
      return
                          
 
+def someFunction(obj):
+    print(obj.file_count)
+
+
 #
 # TODO: 1) Do we need epilog and fepilog??? 2) Check PSEUDOs - check DIRLINK etc
 #       3) Change name to indicate formated output 
@@ -376,9 +383,10 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                       prolog="", 
                       fprolog="",  vrb=False,
                       dirHandler=fsDefaultDIRECTORYHandler,
-                      fileHandler=fsDefaultFILEHandler):
+                      fileHandler=fsDefaultFILEHandler,
+                      objVisitor=None):
     
-    
+      
    try: 
     if maxLevel > 0:
        if lvl > maxLevel: 
@@ -389,7 +397,8 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     # path root.
     #
     # In case of error, quit returning special status
-    try:      
+    try:
+     
       path, dirs, files = next( os.walk(root) )    
     except Exception as wEx:
       print('Exception during walk:', str(wEx) )
@@ -438,7 +447,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                                               dirList, fileList,
                                               encodeUrl,
                                               prolog,  
-                                              fprolog,  vrb)  
+                                              fprolog,  vrb, dirHandler, fileHandler, objVisitor)  
 
             # Upate total number of directories and files that will
             # be propagated upwards.
@@ -450,7 +459,10 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                 if (subDirData[0] != -1):
                     return(subDirData[0], nDirs, nFiles, lnDirs, lnFiles, formatedContents)
 
-        dirHandler(encounteredDirectory, root, '[D]', None, lvl)
+        #dirHandler(encounteredDirectory, root, '[D]', None, lvl)
+        v = handlers.Directory(encounteredDirectory, root)
+        v.accept(objVisitor)
+        
         '''
         # Prepare the entry for one single directory encountered
         dId = "d" + str(lvl) + "-" + str( random.randint(0, 1000000) )
@@ -478,7 +490,9 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         nFiles +=1
         lnFiles += 1
 
-        fileHandler(encounteredFile, root, '[F]', None, lvl)
+        #fileHandler(encounteredFile, root, '[F]', None, lvl)
+        v = handlers.File(encounteredFile, root)
+        v.accept(objVisitor)
         
         '''
         fileList.append(filePath)
@@ -503,9 +517,16 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 
 
+dT = handlers.DirectoryTraverser()
+someFunction(dT)
 
 
+#print(dT.file_count)
+ABSTRACTtraverse(root="/Users/manolistzagarakis/users/tzag/", maxLevel=2,
+                 inclusionPattern="", exclusionPattern="\.git", objVisitor=dT)
 
-
-
+print('######################################################')
+print(f'Total directories:', dT.directory_count)
+print(f'Total files:', dT.file_count)
+sys.exit(-2)
 
