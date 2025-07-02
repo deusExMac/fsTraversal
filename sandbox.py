@@ -403,9 +403,9 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     except Exception as wEx:
       print('Exception during walk:', str(wEx) )
       if ON_TRAVERSE_ERROR_QUIT:
-         return(-2, 0, 0, 0, 0, "")
+         return(-2, 0, 0)
       else:
-         return(0, 0, 0, 0, 0, "") 
+         return(0, 0, 0) 
 
 
     # sort directory and files
@@ -439,7 +439,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         # The semantics in order: 
         # total number of directories, total number of files, local number of dirs, local number of files,
         # formatted display of subdirectory 
-        subDirData = (0,0,0,0,0, "")
+        subDirData = (0,0,0)
         if recursive:
             # go into subdirectory and traverse it
             subDirData = ABSTRACTtraverse( directoryPath, lvl+1, recursive, maxLevel,
@@ -452,15 +452,16 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
             # Upate total number of directories and files that will
             # be propagated upwards.
             # subDirData[0] is the status message
-            if subDirData[0] >= 0:
-               nDirs += subDirData[1]
-               nFiles += subDirData[2]
-            else:
-                if (subDirData[0] != -1):
-                    return(subDirData[0], nDirs, nFiles, lnDirs, lnFiles, formatedContents)
+            #if subDirData[0] >= 0:
+            #   nDirs += subDirData[1]
+            #   nFiles += subDirData[2]
+            #else:
+            if subDirData[0] < 0:
+               if (subDirData[0] != -1):
+                   return(subDirData[0], lnDirs, lnFiles)
 
         #dirHandler(encounteredDirectory, root, '[D]', None, lvl)
-        v = handlers.Directory(encounteredDirectory, root)
+        v = handlers.Directory(encounteredDirectory, lvl, root, directoryPath, subDirData[1], subDirData[2])
         v.accept(objVisitor)
         
         '''
@@ -509,7 +510,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     # lnDirs:  number of directories in this directory only, lnFiles: number of files
     # in this directory only, formatedContents: complete formated content up to this
     # point
-    return 0, nDirs, nFiles, lnDirs, lnFiles, formatedContents
+    return 0, lnDirs, lnFiles
 
    except KeyboardInterrupt:
        print('Keyboard interrupt. Terminating')
@@ -523,9 +524,10 @@ someFunction(dT)
 
 
 #print(dT.file_count)
-ABSTRACTtraverse(root="/Users/manolistzagarakis/users/tzag/", maxLevel=2,
+rootData = ABSTRACTtraverse(root="exampleDir/", maxLevel=-1,
                  inclusionPattern="", exclusionPattern="\.git", objVisitor=dT)
 
+print(f'Terminated with {rootData[0]}. Root directory: [LD:{rootData[1]}] [LF:{rootData[2]}]')
 print('######################################################')
 print(f'Total directories:', dT.directory_count)
 print(f'Total files:', dT.file_count)
