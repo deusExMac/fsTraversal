@@ -18,9 +18,12 @@ class Visitor(ABC):
     def visit_directory(self, dir_path):
         pass
 
+
+
+
 # 3. Concrete element classes (Files and Directories)
 class File(Visitable):
-    def __init__(self, name, path, finfo={}, lvl=0):
+    def __init__(self, name, levl=0, path="", finfo={}):
         self.name = name
         self.path = path
         self.fileMeta = finfo
@@ -29,20 +32,33 @@ class File(Visitable):
         visitor.visit_file(self.name, self.path)
 
 class Directory(Visitable):
-    def __init__(self, name, levl, path, dirPath, ld, lf):
+    def __init__(self, name, levl, parentPath, dirPath, ld, lf):
         self.name = name
         self.level = levl
-        self.path = path
+        self.parentPath = parentPath
         self.dirPath = dirPath
-        self.localDir = ld
-        self.localFile = lf
+        self.localDirCount = ld
+        self.localFileCount = lf
 
     def accept(self, visitor):
-        visitor.visit_directory(self.name, self.level, self.path,  self.dirPath, self.localDir, self.localFile, "")
+        visitor.visit_directory(self.name, self.level, self.parentPath,  self.dirPath, self.localDirCount, self.localFileCount, "")
+
+
+###################################################
+#
+#
+#
+# Actual visitors
+#
+#
+#
+###################################################
+
 
 # 4. Concrete visitor class
 class DirectoryTraverser(Visitor):
-    def __init__(self):
+    def __init__(self, criteria={}):
+        self.criteria = criteria
         self.file_count = 0
         self.directory_count = 0
 
@@ -57,10 +73,12 @@ class DirectoryTraverser(Visitor):
         self.directory_count += 1
 
 
+
 # 4i. Concrete visitor class
 # TODO: Not yet working; Incomplete
 class HTMLExporter(Visitor):
-    def __init__(self, dirT, fileT, pageT):
+    def __init__(self, dirT, fileT, pageT, criteria):
+        self.criteria = criteria
         self.file_count = 0
         self.directory_count = 0
 
@@ -90,6 +108,8 @@ class HTMLExporter(Visitor):
 
         
 
+
+# Not used.....
 # 5. Traverse the directory structure
 def traverse_directory(root_path, visitor):
     for item in os.listdir(root_path):

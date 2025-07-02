@@ -294,7 +294,7 @@ def openFile(filePath):
 
 # TODO: Not yet working when order changes. Fix this...
 #        ==> OK fixe. Tests needed
-def readHTMLTemplateFile(fname, dm, fm, pm):
+def readHTMLTemplateFile(fname, dm="", fm="", pm=""):
     
     with open(fname, 'r', encoding='utf8') as content_file:
                  content = content_file.read()
@@ -382,15 +382,13 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                       encodeUrl=False,                      
                       prolog="", 
                       fprolog="",  vrb=False,
-                      dirHandler=fsDefaultDIRECTORYHandler,
-                      fileHandler=fsDefaultFILEHandler,
                       objVisitor=None):
     
       
    try: 
     if maxLevel > 0:
        if lvl > maxLevel: 
-          return(0, 0, 0, 0, 0, "")
+          return(0, 0, 0)
 
 
     # Gather directories and files in directory identified by
@@ -447,7 +445,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                                               dirList, fileList,
                                               encodeUrl,
                                               prolog,  
-                                              fprolog,  vrb, dirHandler, fileHandler, objVisitor)  
+                                              fprolog,  vrb, objVisitor)  
 
             # Upate total number of directories and files that will
             # be propagated upwards.
@@ -493,7 +491,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
         
         fMeta = fileInfo(filePath)
-        v = handlers.File(encounteredFile, root, fMeta, lvl)
+        v = handlers.File(encounteredFile, lvl, root, fMeta)
         v.accept(objVisitor)
         
         '''
@@ -518,13 +516,14 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
        #return nDirs, nFiles, lnDirs, lnFiles, formatedContents
 
 
+d, f, p = readHTMLTemplateFile('html/template1.html', "", "", "")
 
 dT = handlers.DirectoryTraverser()
 someFunction(dT)
 
 
 #print(dT.file_count)
-rootData = ABSTRACTtraverse(root="F:\\home\\econ\\3-Proedria-2024-2025\\TODAY", maxLevel=1,
+rootData = ABSTRACTtraverse(root="/Users/manolistzagarakis/home(synced)/EAP", maxLevel=1,
                  inclusionPattern="", exclusionPattern="\.git", objVisitor=dT)
 
 print(f'Terminated with {rootData[0]}. Root directory: [LD:{rootData[1]}] [LF:{rootData[2]}]')
