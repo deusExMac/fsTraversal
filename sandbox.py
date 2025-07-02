@@ -524,7 +524,7 @@ someFunction(dT)
 
 
 #print(dT.file_count)
-rootData = ABSTRACTtraverse(root="exampleDir/", maxLevel=-1,
+rootData = ABSTRACTtraverse(root="F:\\home\\econ\\3-Proedria-2024-2025\\TODAY", maxLevel=1,
                  inclusionPattern="", exclusionPattern="\.git", objVisitor=dT)
 
 print(f'Terminated with {rootData[0]}. Root directory: [LD:{rootData[1]}] [LF:{rootData[2]}]')

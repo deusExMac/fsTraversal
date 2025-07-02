@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import os
+import clrprint
 
 # 1. Define the Visitable interface
 class Visitable(ABC):
@@ -46,11 +47,13 @@ class DirectoryTraverser(Visitor):
         self.directory_count = 0
 
     def visit_file(self, fn, file_path):
-        print(f"[F]ile: {fn} in {file_path}")
+        clrprint.clrprint('[F]', clr='green', end='')
+        print(f"{fn} in {file_path}")
         self.file_count += 1
 
     def visit_directory(self, name, lvl, parentPath, dirPath, ld, lf, subdir=""):
-        print(f"[D] {dirPath} [level:{lvl}] [LD:{ld}] [LF:{lf}]")
+        clrprint.clrprint('[D]', clr='red', end='')
+        print(f"{dirPath} [level:{lvl}] [LD:{ld}] [LF:{lf}]")
         self.directory_count += 1
 
 
