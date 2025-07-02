@@ -15,7 +15,7 @@ class Visitor(ABC):
         pass
 
     @abstractmethod
-    def visit_directory(self, dir_path):
+    def visit_directory(self, name, lvl, parentPath, dirPath, ld, lf, subdir=""):
         pass
 
 
