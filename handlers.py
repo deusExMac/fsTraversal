@@ -32,16 +32,17 @@ class File(Visitable):
         visitor.visit_file(self.name, self.path)
 
 class Directory(Visitable):
-    def __init__(self, name, levl, parentPath, dirPath, ld, lf):
+    def __init__(self, name, path, level, parent, ldc, lfc, subdir):
         self.name = name
-        self.level = levl
-        self.parentPath = parentPath
-        self.dirPath = dirPath
-        self.localDirCount = ld
-        self.localFileCount = lf
+        self.path = path
+        self.level = level
+        self.parent = parent
+        self.localDirCount = ldc
+        self.localFileCount = lfc
+        self.subdir = subdir
 
     def accept(self, visitor):
-        visitor.visit_directory(self.name, self.level, self.parentPath,  self.dirPath, self.localDirCount, self.localFileCount, "")
+        visitor.visit_directory(self.name, self.path, self.level, self.parent,  self.localDirCount, self.localFileCount, self.subdir)
 
 
 ###################################################
@@ -67,9 +68,9 @@ class DirectoryTraverser(Visitor):
         print(f"{fn} in {file_path}")
         self.file_count += 1
 
-    def visit_directory(self, name, lvl, parentPath, dirPath, ld, lf, subdir=""):
+    def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
         clrprint.clrprint('[D]', clr='red', end='')
-        print(f"{dirPath} [level:{lvl}] [LD:{ld}] [LF:{lf}]")
+        print(f"{path} [level:{level}] [LD:{ldc}] [LF:{lfc}]")
         self.directory_count += 1
 
 

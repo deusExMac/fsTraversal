@@ -459,7 +459,13 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                    return(subDirData[0], lnDirs, lnFiles)
 
         #dirHandler(encounteredDirectory, root, '[D]', None, lvl)
-        v = handlers.Directory(encounteredDirectory, lvl, root, directoryPath, subDirData[1], subDirData[2])
+        v = handlers.Directory(encounteredDirectory,
+                               directoryPath,
+                               lvl,
+                               root,
+                               subDirData[1],
+                               subDirData[2],
+                               "")
         v.accept(objVisitor)
         
         '''
