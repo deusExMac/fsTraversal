@@ -1,6 +1,33 @@
 from abc import ABC, abstractmethod
 import os
+import re
 import clrprint
+
+
+# Checks if obect name on complies to exclusion and inclusion pattern.
+# nameComplies returns True, if name does NOT match exclusion regex pattern (xP)
+# AND matches inclusion regex pattern (iP).
+# An empty imclusion regex pattern means no inclusion pattern i.e. all
+# object names are good.
+#
+# TODO: Has not been tested.
+def nameMatches( on, xP='', iP='', dbg=False ):
+    #print(xP, iP)
+    if xP!= "" and re.search(xP, on) is not None:
+       if dbg:
+              print( lvl*"-", "EXCLUDING:[", on, "] lvl:", lvl )               
+       return(False) 
+
+    if re.search(iP, on) is None:
+       if dbg:
+          print( lvl*"-", "NOT MATCHING INCLUSION:[", on, "] lvl:", lvl )
+       return(False)
+
+    return(True)
+
+
+
+
 
 # 1. Define the Visitable interface
 class Visitable(ABC):
@@ -64,11 +91,17 @@ class DirectoryTraverser(Visitor):
         self.directory_count = 0
 
     def visit_file(self, fn, file_path):
+        if not nameMatches(self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex') ):
+           return                
+            
         clrprint.clrprint('[F]', clr='green', end='')
         print(f"{fn} in {file_path}")
         self.file_count += 1
 
     def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
+        if not nameMatches(self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex') ):
+           return
+        
         clrprint.clrprint('[D]', clr='red', end='')
         print(f"{path} [level:{level}] [LD:{ldc}] [LF:{lfc}]")
         self.directory_count += 1
@@ -87,7 +120,9 @@ class HTMLExporter(Visitor):
         self.fileTemplate = fileT
         self.pageTemplate = pageT
         
-        self.formattedHTML = ""
+        # actual html page
+        self.htmlPage = ''
+        
 
 
 
@@ -101,10 +136,10 @@ class HTMLExporter(Visitor):
         self.directory_count += 1
 
         # TODO: Complete this
-        self.formattedHTML = self.formattedHTML + prolog.replace("${ID}", dId).replace("${DIRLINK}", makeHtmlLink(directoryPath, encounteredDirectory, encodeUrl) ).replace('${DIRNAME}', encounteredDirectory).replace('${LEVEL}', str(lvl)).replace('${DIRPATH}', directoryPath).replace('${PARENTPATH}', root.replace('\\', ' / ')).replace('${SUBDIRECTORY}', subDirData[4])
-        formatedContents = formatedContents.replace('${LNDIRS}', str(subDirData[2])).replace('${NDIRS}', str(subDirData[0]) if subDirData[0] >=0 else '0' )
-        formatedContents = formatedContents.replace('${LNFILES}', str(subDirData[3])).replace('${NFILES}', str(subDirData[1]) )
-        formatedContents = formatedContents.replace('${RLVLCOLOR}',  rClr)
+        self.htmlPage = self.htmlPage + prolog.replace("${ID}", dId).replace("${DIRLINK}", makeHtmlLink(directoryPath, encounteredDirectory, encodeUrl) ).replace('${DIRNAME}', encounteredDirectory).replace('${LEVEL}', str(lvl)).replace('${DIRPATH}', directoryPath).replace('${PARENTPATH}', root.replace('\\', ' / ')).replace('${SUBDIRECTORY}', subDirData[4])
+        self.htmlPage = self.htmlPage.replace('${LNDIRS}', str(subDirData[2])).replace('${NDIRS}', str(subDirData[0]) if subDirData[0] >=0 else '0' )
+        self.htmlPage = self.htmlPage.replace('${LNFILES}', str(subDirData[3])).replace('${NFILES}', str(subDirData[1]) )
+        self.htmlPage = self.htmlPage.replace('${RLVLCOLOR}',  rClr)
 
 
         

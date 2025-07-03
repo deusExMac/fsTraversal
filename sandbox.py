@@ -425,8 +425,8 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     # Does a depth first search (DFS) approach
     for encounteredDirectory in dirs:
          
-        if not nameComplies(encounteredDirectory, exclusionPattern, inclusionPattern): 
-           continue
+        #if not nameComplies(encounteredDirectory, exclusionPattern, inclusionPattern): 
+        #   continue
             
         directoryPath = normalizedPathJoin(root, encounteredDirectory) 
         #dirList.append(directoryPath)
@@ -487,8 +487,8 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     # Process all files in current directory
     for encounteredFile in files:
 
-        if not nameComplies(encounteredFile, exclusionPattern, inclusionPattern):
-           continue
+        #if not nameComplies(encounteredFile, exclusionPattern, inclusionPattern):
+        #   continue
         
         filePath = normalizedPathJoin(root, encounteredFile)          
  
@@ -524,13 +524,13 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 d, f, p = readHTMLTemplateFile('html/template1.html', "", "", "")
 
-dT = handlers.DirectoryTraverser()
+dT = handlers.DirectoryTraverser({'inclusionRegex':"", 'exclusionRegex':"\.git"})
 someFunction(dT)
 
 
 #print(dT.file_count)
 rootData = ABSTRACTtraverse(root="/Users/manolistzagarakis/home(synced)/EAP", maxLevel=1,
-                 inclusionPattern="", exclusionPattern="\.git", objVisitor=dT)
+                 inclusionPattern="2", exclusionPattern="", objVisitor=dT)
 
 print(f'Terminated with {rootData[0]}. Root directory: [LD:{rootData[1]}] [LF:{rootData[2]}]')
 print('######################################################')
