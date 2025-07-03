@@ -377,7 +377,6 @@ def someFunction(obj):
 #       3) Change name to indicate formated output 
 
 def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
-                      exclusionPattern="", inclusionPattern="",
                       dirList=None, fileList=None,
                       encodeUrl=False,                      
                       prolog="", 
@@ -441,7 +440,6 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         if recursive:
             # go into subdirectory and traverse it
             subDirData = ABSTRACTtraverse( directoryPath, lvl+1, recursive, maxLevel,
-                                              exclusionPattern, inclusionPattern,
                                               dirList, fileList,
                                               encodeUrl,
                                               prolog,  
@@ -524,13 +522,13 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 d, f, p = readHTMLTemplateFile('html/template1.html', "", "", "")
 
-dT = handlers.DirectoryTraverser({'inclusionRegex':"", 'exclusionRegex':"\.git"})
+dT = handlers.DirectoryTraverser({'inclusionRegex':"", 'exclusionRegex':""})
 someFunction(dT)
 
 
 #print(dT.file_count)
-rootData = ABSTRACTtraverse(root="/Users/manolistzagarakis/home(synced)/EAP", maxLevel=1,
-                 inclusionPattern="2", exclusionPattern="", objVisitor=dT)
+rootData = ABSTRACTtraverse(root="exampleDir", maxLevel=-1,
+                 objVisitor=dT)
 
 print(f'Terminated with {rootData[0]}. Root directory: [LD:{rootData[1]}] [LF:{rootData[2]}]')
 print('######################################################')
