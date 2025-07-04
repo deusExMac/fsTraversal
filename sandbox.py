@@ -354,6 +354,14 @@ def timeit(f):
 
 import handlers
 
+
+
+
+
+
+
+
+
 # TODO: Handlers should return an responseObject containing all necessary
 # stuf
 def fsDefaultDIRECTORYHandler(objName, parentPath, objType, objAttrs={}, objLvl=1):
@@ -377,7 +385,6 @@ def someFunction(obj):
 #       3) Change name to indicate formated output 
 
 def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
-                      dirList=None, fileList=None,
                       encodeUrl=False,                      
                       prolog="", 
                       fprolog="",  vrb=False,
@@ -395,7 +402,8 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     #
     # In case of error, quit returning special status
     try:
-     
+      clrprint.clrprint(f'Entering {root}', clr='maroon')
+      sys.stdout.flush()
       path, dirs, files = next( os.walk(root) )    
     except Exception as wEx:
       print('Exception during walk:', str(wEx) )
@@ -423,7 +431,8 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     # If recursive is True, traverse into each directory
     # Does a depth first search (DFS) approach
     for encounteredDirectory in dirs:
-         
+        sys.stdout.flush()
+        
         #if not nameComplies(encounteredDirectory, exclusionPattern, inclusionPattern): 
         #   continue
             
@@ -440,7 +449,6 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         if recursive:
             # go into subdirectory and traverse it
             subDirData = ABSTRACTtraverse( directoryPath, lvl+1, recursive, maxLevel,
-                                              dirList, fileList,
                                               encodeUrl,
                                               prolog,  
                                               fprolog,  vrb, objVisitor)  
@@ -484,7 +492,8 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     
     # Process all files in current directory
     for encounteredFile in files:
-
+        sys.stdout.flush()
+        
         #if not nameComplies(encounteredFile, exclusionPattern, inclusionPattern):
         #   continue
         
@@ -522,12 +531,12 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 d, f, p = readHTMLTemplateFile('html/template1.html', "", "", "")
 
-dT = handlers.DirectoryTraverser({'inclusionRegex':"", 'exclusionRegex':""})
+dT = handlers.DirectoryTraverser({'inclusionRegex':"", 'exclusionRegex':"", 'minFileSize':50000000, 'maxFileSize':-1})
 someFunction(dT)
 
 
 #print(dT.file_count)
-rootData = ABSTRACTtraverse(root="exampleDir", maxLevel=-1,
+rootData = ABSTRACTtraverse(root="/Users/manolistzagarakis/users/", maxLevel=4,
                  objVisitor=dT)
 
 print(f'Terminated with {rootData[0]}. Root directory: [LD:{rootData[1]}] [LF:{rootData[2]}]')

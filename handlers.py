@@ -56,7 +56,8 @@ class File(Visitable):
         self.fileMeta = finfo
 
     def accept(self, visitor):
-        visitor.visit_file(self.name, self.path)
+        visitor.visit_file(self.name, self.path, self.fileMeta)
+        
 
 class Directory(Visitable):
     def __init__(self, name, path, level, parent, ldc, lfc, subdir):
@@ -90,19 +91,28 @@ class DirectoryTraverser(Visitor):
         self.file_count = 0
         self.directory_count = 0
 
-    def visit_file(self, fn, file_path):
+    def visit_file(self, fn, file_path, finfo={}):
+        
         if not nameMatches(self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex') ):
            return                
-            
-        clrprint.clrprint('[F]', clr='green', end='')
-        print(f"{fn} in {file_path}")
+
+        if  self.criteria.get('minFileSize', '') != '':
+            if int(finfo.get('size', -2)) < self.criteria.get('minFileSize', -1):
+               return
+
+        if  self.criteria.get('maxFileSize', -1) >= 0:
+            if int(finfo.get('size', -2)) > self.criteria.get('maxFileSize', -1):
+               return    
+        
+        clrprint.clrprint('\t[F]', clr='green', end='')
+        print(f"{fn} in {file_path} {finfo['size']}")
         self.file_count += 1
 
     def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
         if not nameMatches(self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex') ):
            return
         
-        clrprint.clrprint('[D]', clr='red', end='')
+        clrprint.clrprint('\t[D]', clr='red', end='')
         print(f"{path} [level:{level}] [LD:{ldc}] [LF:{lfc}]")
         self.directory_count += 1
 
