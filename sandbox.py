@@ -418,14 +418,13 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     files.sort()
 
     
-    nDirs  = 0 # TOTAL number of directories
-    nFiles = 0 # TOTAL number of files
+    
     lnDirs = 0 # local number of directories i.e. number of directories in directory NOT including its subdirs
     lnFiles = 0 # local number of files i.e. number of files in directory NOT including files in its subdirs
-    formatedContents = "" # Formated directory and files
+    #formatedContents = "" # Formated directory and files
 
     # At each level, a different color for directory names 
-    rClr = random.choice(fontColorPalette)
+    #rClr = random.choice(fontColorPalette)
 
     # Process all directories in current directory.
     # If recursive is True, traverse into each directory
@@ -437,7 +436,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         directoryPath = normalizedPathJoin(root, encounteredDirectory) 
         #dirList.append(directoryPath)
 
-        nDirs +=1
+        
         lnDirs += 1       
         
         # The semantics in order: 
@@ -495,7 +494,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         
         filePath = normalizedPathJoin(root, encounteredFile)          
  
-        nFiles +=1
+        
         lnFiles += 1
 
         
@@ -521,17 +520,21 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
    except KeyboardInterrupt:
        print('Keyboard interrupt. Terminating')
-       sys.exit(-3)
-       #return nDirs, nFiles, lnDirs, lnFiles, formatedContents
+       #sys.exit(-3)
+       return 0, 0, 0
+
+
+
+
 
 
 d, f, p = readHTMLTemplateFile('html/template1.html', "", "", "")
 
-dT = handlers.DirectoryTraverser({'inclusionRegex':"bc",
+dT = handlers.DirectoryTraverser({'inclusionRegex':"",
                                   'exclusionRegex':"",
                                   'minFileSize':-1,
                                   'maxFileSize':-1})
-someFunction(dT)
+
 
 
 #print(dT.file_count)

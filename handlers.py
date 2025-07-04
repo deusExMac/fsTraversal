@@ -105,7 +105,7 @@ class DirectoryTraverser(Visitor):
             if int(finfo.get('size', -2)) > self.criteria.get('maxFileSize', -1):
                return    
         
-        clrprint.clrprint('\t[F]', clr='green', end='')
+        clrprint.clrprint(f'{level*"\t"}[F]', clr='green', end='')
         print(f"{fn} in {file_path} {finfo['size']}")
         self.file_count += 1
 
@@ -113,7 +113,7 @@ class DirectoryTraverser(Visitor):
         if not nameMatches(name, self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex'), level):
            return
         
-        clrprint.clrprint('\t[D]', clr='red', end='')
+        clrprint.clrprint(f'{level*"\t"}[D]', clr='red', end='')
         print(f"{path} [level:{level}] [LD:{ldc}] [LF:{lfc}]")
         self.directory_count += 1
 
