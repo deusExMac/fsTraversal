@@ -433,9 +433,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     for encounteredDirectory in dirs:
         sys.stdout.flush()
         
-        #if not nameComplies(encounteredDirectory, exclusionPattern, inclusionPattern): 
-        #   continue
-            
+        
         directoryPath = normalizedPathJoin(root, encounteredDirectory) 
         #dirList.append(directoryPath)
 
@@ -494,8 +492,6 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     for encounteredFile in files:
         sys.stdout.flush()
         
-        #if not nameComplies(encounteredFile, exclusionPattern, inclusionPattern):
-        #   continue
         
         filePath = normalizedPathJoin(root, encounteredFile)          
  
@@ -531,7 +527,10 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 d, f, p = readHTMLTemplateFile('html/template1.html', "", "", "")
 
-dT = handlers.DirectoryTraverser({'inclusionRegex':"", 'exclusionRegex':"", 'minFileSize':50000000, 'maxFileSize':-1})
+dT = handlers.DirectoryTraverser({'inclusionRegex':"bc",
+                                  'exclusionRegex':"",
+                                  'minFileSize':-1,
+                                  'maxFileSize':-1})
 someFunction(dT)
 
 

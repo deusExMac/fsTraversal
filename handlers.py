@@ -11,7 +11,7 @@ import clrprint
 # object names are good.
 #
 # TODO: Has not been tested.
-def nameMatches( on, xP='', iP='', dbg=False ):
+def nameMatches( on, xP='', iP='', lvl=-1, dbg=False ):
     #print(xP, iP)
     if xP!= "" and re.search(xP, on) is not None:
        if dbg:
@@ -53,10 +53,11 @@ class File(Visitable):
     def __init__(self, name, levl=0, path="", finfo={}):
         self.name = name
         self.path = path
+        self.level = levl
         self.fileMeta = finfo
 
     def accept(self, visitor):
-        visitor.visit_file(self.name, self.path, self.fileMeta)
+        visitor.visit_file(self.name, self.path, self.level, self.fileMeta)
         
 
 class Directory(Visitable):
@@ -91,9 +92,9 @@ class DirectoryTraverser(Visitor):
         self.file_count = 0
         self.directory_count = 0
 
-    def visit_file(self, fn, file_path, finfo={}):
-        
-        if not nameMatches(self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex') ):
+    def visit_file(self, fn, file_path, level, finfo={}):
+        #print(self.criteria)
+        if not nameMatches(fn, self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex'), level ):
            return                
 
         if  self.criteria.get('minFileSize', '') != '':
@@ -109,7 +110,7 @@ class DirectoryTraverser(Visitor):
         self.file_count += 1
 
     def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
-        if not nameMatches(self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex') ):
+        if not nameMatches(name, self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex'), level):
            return
         
         clrprint.clrprint('\t[D]', clr='red', end='')
