@@ -520,7 +520,8 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
        print('Keyboard interrupt. Terminating')
        #sys.exit(-3)
        return 0, 0, 0
-
+   except handlers.criteriaException as ce:
+       raise handlers.criteriaException(ce.errorCode, str(ce)) 
 
 
 
@@ -532,18 +533,23 @@ dT = handlers.DirectoryTraverser({'inclusionRegex':"",
                                   'exclusionRegex':"",
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
-                                  'maxDirs':5,
-                                  'maxFiles': 11})
+                                  'maxDirs':-1,
+                                  'maxFiles': -1})
 
 
 
 #print(dT.file_count)
-rootData = ABSTRACTtraverse(root="/Users/manolistzagarakis/home(synced)/users/tzag", maxLevel=2,
-                 objVisitor=dT)
 
-print(f'Terminated with {rootData[0]}. Root directory: [LD:{rootData[1]}] [LF:{rootData[2]}]')
-print('######################################################')
-print(f'Total directories:', dT.directory_count)
-print(f'Total files:', dT.file_count)
-sys.exit(-2)
+try:
+  rootData = ABSTRACTtraverse(root="/Users/manolistzagarakis/home(synced)/users/tzag", maxLevel=2,
+                 objVisitor=dT)
+except handlers.criteriaException as ce:
+    clrprint.clrprint('Terminated due to criterialExcpeption. EXCEPTION:', str(ce), clr='yellow')
+    #sys.exit(-7)
+else:    
+    print(f'Terminated with {rootData[0]}. Root directory: [LD:{rootData[1]}] [LF:{rootData[2]}]')
+    print('######################################################')
+    print(f'Total directories:', dT.directory_count)
+    print(f'Total files:', dT.file_count)
+    sys.exit(-2)
 

@@ -27,6 +27,12 @@ def nameMatches( on, xP='', iP='', lvl=-1, dbg=False ):
 
 
 
+class criteriaException(Exception):
+      def __init__(self, code=-1, message=''):
+          super().__init__(message)
+          self.errorCode = code
+          
+
 
 
 # 1. Define the Visitable interface
@@ -101,7 +107,7 @@ class DirectoryTraverser(Visitor):
 
         if self.criteria.get('maxFiles', -1) > 0:
            if self.file_count >= self.criteria.get('maxFiles', -1):
-              return
+              raise criteriaException(-11, 'maximum number of files reached.') 
             
         if  self.criteria.get('minFileSize', '') != '':
             if int(finfo.get('size', -2)) < self.criteria.get('minFileSize', -1):
@@ -123,7 +129,8 @@ class DirectoryTraverser(Visitor):
 
         if self.criteria.get('maxDirs', -1) > 0:
            if self.directory_count >= self.criteria.get('maxDirs', -1):
-              return
+              raise criteriaException(-10, 'maximum number of directories reached.') 
+              #return
 
         # counts are shown 1-based, not 0-based    
         clrprint.clrprint(f'{level*"\t"}[D-{self.directory_count+1}] ', clr='red', end='')
