@@ -534,17 +534,17 @@ dT = handlers.DirectoryTraverser({'inclusionRegex':"",
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
                                   'maxDirs':-1,
-                                  'maxFiles': -1})
+                                  'maxFiles':-1})
 
 
 
 #print(dT.file_count)
 
 try:
-  rootData = ABSTRACTtraverse(root="/Users/manolistzagarakis/home(synced)/users/tzag", maxLevel=2,
+  rootData = ABSTRACTtraverse(root="/Users/manolistzagarakis/users/tzag/MyCode/", maxLevel=3,
                  objVisitor=dT)
 except handlers.criteriaException as ce:
-    clrprint.clrprint('Terminated due to criterialExcpeption. EXCEPTION:', str(ce), clr='yellow')
+    clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
     #sys.exit(-7)
 else:    
     print(f'Terminated with {rootData[0]}. Root directory: [LD:{rootData[1]}] [LF:{rootData[2]}]')

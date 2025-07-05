@@ -117,7 +117,7 @@ class DirectoryTraverser(Visitor):
             if int(finfo.get('size', -2)) > self.criteria.get('maxFileSize', -1):
                return    
         
-        clrprint.clrprint(f'{level*"\t"}[F-{self.file_count}] ', clr='green', end='')
+        clrprint.clrprint(f'{level*"\t"}[F-{self.file_count+1}] ', clr='green', end='')
         print(f"{fn} in {file_path} {finfo['size']}")
         self.file_count += 1
 
