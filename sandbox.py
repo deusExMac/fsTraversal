@@ -357,29 +357,6 @@ import handlers
 
 
 
-
-
-
-
-
-# TODO: Handlers should return an responseObject containing all necessary
-# stuf
-def fsDefaultDIRECTORYHandler(objName, parentPath, objType, objAttrs={}, objLvl=1):
-    print(objType, '{', objName, '}: ', normalizedPathJoin(parentPath, objName), ' Level:', objLvl, sep='' )
-    return
-
-
-def fsDefaultFILEHandler(objName, parentPath, objType, objAttrs={}, objLvl=1):
-     fileMeta = fileInfo( normalizedPathJoin(parentPath, objName) )
-     print(objType, '{', objName, '}: ', normalizedPathJoin(parentPath, objName), ' Level:', objLvl, ' Size:', fileMeta['size'], sep='' )
-     #print(parentPath, objName, fileMeta['size'])
-     return
-                         
-
-def someFunction(obj):
-    print(obj.file_count)
-
-
 #
 # TODO: 1) Do we need epilog and fepilog??? 2) Check PSEUDOs - check DIRLINK etc
 #       3) Change name to indicate formated output 
