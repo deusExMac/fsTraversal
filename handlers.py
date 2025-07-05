@@ -38,11 +38,11 @@ class Visitable(ABC):
 # 2. Define the Visitor interface
 class Visitor(ABC):
     @abstractmethod
-    def visit_file(self, file_path):
+    def visit_file(self, fn, file_path, level, parent, finfo={}):
         pass
 
     @abstractmethod
-    def visit_directory(self, name, lvl, parentPath, dirPath, ld, lf, subdir=""):
+    def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
         pass
 
 
@@ -50,14 +50,15 @@ class Visitor(ABC):
 
 # 3. Concrete element classes (Files and Directories)
 class File(Visitable):
-    def __init__(self, name, levl=0, path="", finfo={}):
+    def __init__(self, name, path, level=0, parent="", finfo={}):
         self.name = name
         self.path = path
-        self.level = levl
+        self.level = level
+        self.parent = parent
         self.fileMeta = finfo
 
     def accept(self, visitor):
-        visitor.visit_file(self.name, self.path, self.level, self.fileMeta)
+        visitor.visit_file(self.name, self.path, self.level, self.parent, self.fileMeta)
         
 
 class Directory(Visitable):
@@ -92,11 +93,16 @@ class DirectoryTraverser(Visitor):
         self.file_count = 0
         self.directory_count = 0
 
-    def visit_file(self, fn, file_path, level, finfo={}):
+    def visit_file(self, fn, file_path, level, parent, finfo={}):
         #print(self.criteria)
         if not nameMatches(fn, self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex'), level ):
            return                
 
+
+        if self.criteria.get('maxFiles', -1) > 0:
+           if self.file_count >= self.criteria.get('maxFiles', -1):
+              return
+            
         if  self.criteria.get('minFileSize', '') != '':
             if int(finfo.get('size', -2)) < self.criteria.get('minFileSize', -1):
                return
@@ -105,15 +111,22 @@ class DirectoryTraverser(Visitor):
             if int(finfo.get('size', -2)) > self.criteria.get('maxFileSize', -1):
                return    
         
-        clrprint.clrprint(f'{level*"\t"}[F]', clr='green', end='')
+        clrprint.clrprint(f'{level*"\t"}[F-{self.file_count}] ', clr='green', end='')
         print(f"{fn} in {file_path} {finfo['size']}")
         self.file_count += 1
+
+
 
     def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
         if not nameMatches(name, self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex'), level):
            return
-        
-        clrprint.clrprint(f'{level*"\t"}[D]', clr='red', end='')
+
+        if self.criteria.get('maxDirs', -1) > 0:
+           if self.directory_count >= self.criteria.get('maxDirs', -1):
+              return
+
+        # counts are shown 1-based, not 0-based    
+        clrprint.clrprint(f'{level*"\t"}[D-{self.directory_count+1}] ', clr='red', end='')
         print(f"{path} [level:{level}] [LD:{ldc}] [LF:{lfc}]")
         self.directory_count += 1
 

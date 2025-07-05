@@ -386,8 +386,7 @@ def someFunction(obj):
 
 def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                       encodeUrl=False,                      
-                      prolog="", 
-                      fprolog="",  vrb=False,
+                      vrb=False,
                       objVisitor=None):
     
       
@@ -447,8 +446,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
             # go into subdirectory and traverse it
             subDirData = ABSTRACTtraverse( directoryPath, lvl+1, recursive, maxLevel,
                                               encodeUrl,
-                                              prolog,  
-                                              fprolog,  vrb, objVisitor)  
+                                              vrb, objVisitor)  
 
             # Upate total number of directories and files that will
             # be propagated upwards.
@@ -499,7 +497,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
         
         fMeta = fileInfo(filePath)
-        v = handlers.File(encounteredFile, lvl, root, fMeta)
+        v = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
         v.accept(objVisitor)
         
         '''
@@ -533,12 +531,14 @@ d, f, p = readHTMLTemplateFile('html/template1.html', "", "", "")
 dT = handlers.DirectoryTraverser({'inclusionRegex':"",
                                   'exclusionRegex':"",
                                   'minFileSize':-1,
-                                  'maxFileSize':-1})
+                                  'maxFileSize':-1,
+                                  'maxDirs':5,
+                                  'maxFiles': 11})
 
 
 
 #print(dT.file_count)
-rootData = ABSTRACTtraverse(root="/Users/manolistzagarakis/users/", maxLevel=4,
+rootData = ABSTRACTtraverse(root="/Users/manolistzagarakis/home(synced)/users/tzag", maxLevel=2,
                  objVisitor=dT)
 
 print(f'Terminated with {rootData[0]}. Root directory: [LD:{rootData[1]}] [LF:{rootData[2]}]')
