@@ -139,6 +139,9 @@ class DirectoryTraverser(Visitor):
 
 
 
+
+
+
 # 4i. Concrete visitor class
 # TODO: Not yet working; Incomplete
 class HTMLExporter(Visitor):
@@ -157,13 +160,13 @@ class HTMLExporter(Visitor):
 
 
 
-    def visit_file(self, file_path):
-        print(f"Processing file: {file_path}")
+    def visit_file(self, name, path, level, parent, finfo={}):
+        print(f"Processing file: {path}")
         self.file_count += 1
         
 
-    def visit_directory(self, dirName="", dir_path="", subdir=""):
-        print(f"Processing directory: {dir_path}")
+    def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
+        print(f"Processing directory: {path}")
         self.directory_count += 1
 
         # TODO: Complete this
