@@ -401,7 +401,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     #
     # In case of error, quit returning special status
     try:
-      clrprint.clrprint(f'{lvl*"\t"}Entering {root}', clr='maroon')
+      clrprint.clrprint(f'{lvl*"\t"}Inside {root}', clr='maroon')
       sys.stdout.flush()
       path, dirs, files = next( os.walk(root) )    
     except Exception as wEx:
@@ -541,7 +541,7 @@ dT = handlers.DirectoryTraverser({'inclusionRegex':"",
 #print(dT.file_count)
 
 try:
-  rootData = ABSTRACTtraverse(root="/Users/manolistzagarakis/users/tzag/MyCode/", maxLevel=3,
+  rootData = ABSTRACTtraverse(root="exampleDir", maxLevel=3,
                  objVisitor=dT)
 except handlers.criteriaException as ce:
     clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
