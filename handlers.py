@@ -44,7 +44,7 @@ class Visitable(ABC):
 # 2. Define the Visitor interface
 class Visitor(ABC):
     @abstractmethod
-    def visit_file(self, fn, file_path, level, parent, finfo={}):
+    def visit_file(self, name, path, level, parent, finfo={}):
         pass
 
     @abstractmethod
@@ -99,9 +99,9 @@ class DirectoryTraverser(Visitor):
         self.file_count = 0
         self.directory_count = 0
 
-    def visit_file(self, fn, file_path, level, parent, finfo={}):
+    def visit_file(self, name, path, level, parent, finfo={}):
         #print(self.criteria)
-        if not nameMatches(fn, self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex'), level ):
+        if not nameMatches(name, self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex'), level ):
            return                
 
 
@@ -118,7 +118,7 @@ class DirectoryTraverser(Visitor):
                return    
         
         clrprint.clrprint(f'{level*"\t"}[F-{self.file_count+1}] ', clr='green', end='')
-        print(f"{fn} in {file_path} {finfo['size']}")
+        print(f"{name} in {parent} {finfo['size']}")
         self.file_count += 1
 
 

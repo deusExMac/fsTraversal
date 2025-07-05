@@ -401,7 +401,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     #
     # In case of error, quit returning special status
     try:
-      clrprint.clrprint(f'Entering {root}', clr='maroon')
+      clrprint.clrprint(f'{lvl*"\t"}Entering {root}', clr='maroon')
       sys.stdout.flush()
       path, dirs, files = next( os.walk(root) )    
     except Exception as wEx:
@@ -534,7 +534,7 @@ dT = handlers.DirectoryTraverser({'inclusionRegex':"",
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
                                   'maxDirs':-1,
-                                  'maxFiles':-1})
+                                  'maxFiles':9})
 
 
 
