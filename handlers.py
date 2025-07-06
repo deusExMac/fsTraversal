@@ -159,8 +159,11 @@ class HTMLExporter(Visitor):
         
         # actual html page
         self.htmlPage = ''
-        
+        self.tmpHtml = ''
 
+        
+    def reset(self):
+        self.tmpHtml = '' 
 
 
     def visit_file(self, name, path, level, parent, finfo={}):
@@ -173,7 +176,7 @@ class HTMLExporter(Visitor):
         self.directory_count += 1
 
         # TODO: Complete this
-         
+        self.tmpHtml = self.tmpHtml + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir)
         self.htmlPage = self.htmlPage + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir)
         
         #self.htmlPage = self.htmlPage + prolog.replace("${ID}", dId).replace("${DIRLINK}", makeHtmlLink(directoryPath, encounteredDirectory, encodeUrl) ).replace('${DIRNAME}', encounteredDirectory).replace('${LEVEL}', str(lvl)).replace('${DIRPATH}', directoryPath).replace('${PARENTPATH}', root.replace('\\', ' / ')).replace('${SUBDIRECTORY}', subDirData[4])
@@ -181,6 +184,7 @@ class HTMLExporter(Visitor):
         #self.htmlPage = self.htmlPage.replace('${LNFILES}', str(subDirData[3])).replace('${NFILES}', str(subDirData[1]) )
         #self.htmlPage = self.htmlPage.replace('${RLVLCOLOR}',  rClr)
 
+   
 
         
 

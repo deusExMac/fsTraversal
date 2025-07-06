@@ -399,6 +399,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     
     lnDirs = 0 # local number of directories i.e. number of directories in directory NOT including its subdirs
     lnFiles = 0 # local number of files i.e. number of files in directory NOT including files in its subdirs
+    objVisitor.reset() 
     #formatedContents = "" # Formated directory and files
 
     # At each level, a different color for directory names 
@@ -439,13 +440,14 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                    return(subDirData[0], lnDirs, lnFiles)
 
         # TODO: fix objVisitor.htmlPage which is wrong...
+        #print(objVisitor.htmlPage)
         v = handlers.Directory(encounteredDirectory,
                                directoryPath,
                                lvl,
                                root,
                                subDirData[1],
                                subDirData[2],
-                               objVisitor.htmlPage)
+                               objVisitor.tmpHtml)
         v.accept(objVisitor)
         
         '''
@@ -506,7 +508,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 
 
-dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template3.html')
+dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
 
 defDT = handlers.DirectoryTraverser({'inclusionRegex':"",
                                   'exclusionRegex':"git|Rhistory|DS_Store",
@@ -525,7 +527,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
 
 
 
-#print(dT.file_count)
+
 
 try:
   rootData = ABSTRACTtraverse(root="exampleDir", maxLevel=3, objVisitor=hE)
