@@ -142,17 +142,18 @@ class DirectoryTraverser(Visitor):
 
 
 
-# 4i. Concrete visitor class
+# 4i. Another Concrete visitor class
 # TODO: Not yet working; Incomplete
 class HTMLExporter(Visitor):
     def __init__(self, dirT, fileT, pageT, criteria):
-        self.criteria = criteria
+        
         self.file_count = 0
         self.directory_count = 0
 
         self.dirTemplate = dirT
         self.fileTemplate = fileT
         self.pageTemplate = pageT
+        self.criteria = criteria
         
         # actual html page
         self.htmlPage = ''
