@@ -530,7 +530,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
 
 
 try:
-  rootData = ABSTRACTtraverse(root="exampleDir", maxLevel=3, objVisitor=hE)
+  rootData = ABSTRACTtraverse(root="exampleDir", maxLevel=2, objVisitor=hE)
 except handlers.criteriaException as ce:
     clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
     #sys.exit(-7)
