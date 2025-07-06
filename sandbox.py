@@ -292,9 +292,11 @@ def openFile(filePath):
 #text = re.search(r'Start\n.*?End', content, re.DOTALL).group()
 
 
+
+                                              
 # TODO: Not yet working when order changes. Fix this...
 #        ==> OK fixe. Tests needed
-def readHTMLTemplateFile(fname, dm="", fm="", pm=""):
+def readHTMLTemplateFile(fname, dm='<!---directorytemplate--->\n', fm='<!---filetemplate--->\n', pm='<!---pagetemplate--->\n'):
     
     with open(fname, 'r', encoding='utf8') as content_file:
                  content = content_file.read()
@@ -436,14 +438,14 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                if (subDirData[0] != -1):
                    return(subDirData[0], lnDirs, lnFiles)
 
-        #dirHandler(encounteredDirectory, root, '[D]', None, lvl)
+        # TODO: fix objVisitor.htmlPage which is wrong...
         v = handlers.Directory(encounteredDirectory,
                                directoryPath,
                                lvl,
                                root,
                                subDirData[1],
                                subDirData[2],
-                               "")
+                               objVisitor.htmlPage)
         v.accept(objVisitor)
         
         '''
@@ -504,9 +506,17 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 
 
-d, f, p = readHTMLTemplateFile('html/template1.html', "", "", "")
+dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template3.html')
 
-dT = handlers.DirectoryTraverser({'inclusionRegex':"",
+defDT = handlers.DirectoryTraverser({'inclusionRegex':"",
+                                  'exclusionRegex':"git|Rhistory|DS_Store",
+                                  'minFileSize':-1,
+                                  'maxFileSize':-1,
+                                  'maxDirs':-1,
+                                  'maxFiles':-1})
+
+
+hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
                                   'exclusionRegex':"git|Rhistory|DS_Store",
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
@@ -518,15 +528,19 @@ dT = handlers.DirectoryTraverser({'inclusionRegex':"",
 #print(dT.file_count)
 
 try:
-  rootData = ABSTRACTtraverse(root="exampleDir", maxLevel=3,
-                 objVisitor=dT)
+  rootData = ABSTRACTtraverse(root="exampleDir", maxLevel=3, objVisitor=hE)
 except handlers.criteriaException as ce:
     clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
     #sys.exit(-7)
 else:    
     print(f'Terminated with {rootData[0]}. Root directory: [LD:{rootData[1]}] [LF:{rootData[2]}]')
     print('######################################################')
-    print(f'Total directories:', dT.directory_count)
-    print(f'Total files:', dT.file_count)
-    sys.exit(-2)
+    print(f'Total directories:', hE.directory_count)
+    print(f'Total files:', hE.file_count)
+    #sys.exit(-2)
 
+import io
+htmlContent = pTemp.replace('${SUBDIRECTORY}', hE.htmlPage)
+print('Saving....')
+with open('sandBox.html', 'w', encoding='utf8') as f:
+               f.write(htmlContent)
