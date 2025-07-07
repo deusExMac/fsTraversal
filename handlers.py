@@ -6,6 +6,13 @@ import clrprint
 import random
 
 
+# Colors to choose from if color cycling is enabled (-c)
+fontColorPalette = ['#4287f5', '#801408', '#08259c', '#4560d1', '#0a690a', '#9c5f1e', '#9c1e87', '#1313f2', '#f21313', '#34ba4a', '#19084a', '#27889c', '#317534', '#e8740e', '#000000',
+                    '#1e5f85', '#2f2561', '#5c0c25', '#324530', '#f07e0c', '#e04e14', '#8f8824', '#478072', '#05998d',  '#1890a8', '#033e6b', '#0a2940', '#281a75', '#453043', '#b50e40',
+                    '#fcad03', '#03a1fc', '#24b332', '#851767', '#156e82', '#8c0a0a', '#b51d39', '#232791', '#6e8c0a', '#cc7a16', '#cc4016', '#051c80', '#9e981e', '#409e1e', '#09979c', '#9c0975']
+
+
+
 # Checks if obect name on complies to exclusion and inclusion pattern.
 # nameComplies returns True, if name does NOT match exclusion regex pattern (xP)
 # AND matches inclusion regex pattern (iP).
@@ -100,6 +107,7 @@ class DirectoryTraverser(Visitor):
         self.criteria = criteria
         self.file_count = 0
         self.directory_count = 0
+        self.tmpHtml = ''
 
     def visit_file(self, name, path, level, parent, finfo={}):
         #print(self.criteria)
@@ -176,8 +184,9 @@ class HTMLExporter(Visitor):
         self.directory_count += 1
 
         # TODO: Complete this
-        self.tmpHtml = self.tmpHtml + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir)
-        self.htmlPage = self.htmlPage + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir)
+        rClr = random.choice(fontColorPalette)
+        self.tmpHtml = self.tmpHtml + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)
+        self.htmlPage = self.htmlPage + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)
         
         #self.htmlPage = self.htmlPage + prolog.replace("${ID}", dId).replace("${DIRLINK}", makeHtmlLink(directoryPath, encounteredDirectory, encodeUrl) ).replace('${DIRNAME}', encounteredDirectory).replace('${LEVEL}', str(lvl)).replace('${DIRPATH}', directoryPath).replace('${PARENTPATH}', root.replace('\\', ' / ')).replace('${SUBDIRECTORY}', subDirData[4])
         #self.htmlPage = self.htmlPage.replace('${LNDIRS}', str(subDirData[2])).replace('${NDIRS}', str(subDirData[0]) if subDirData[0] >=0 else '0' )

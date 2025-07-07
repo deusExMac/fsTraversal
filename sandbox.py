@@ -368,10 +368,12 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                       vrb=False,
                       objVisitor=None):
     
-      
+
+   #objVisitor.reset()
+   
    try: 
     if maxLevel > 0:
-       if lvl > maxLevel: 
+       if lvl > maxLevel:
           return(0, 0, 0)
 
 
@@ -399,7 +401,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     
     lnDirs = 0 # local number of directories i.e. number of directories in directory NOT including its subdirs
     lnFiles = 0 # local number of files i.e. number of files in directory NOT including files in its subdirs
-    objVisitor.reset() 
+    #objVisitor.reset() 
     #formatedContents = "" # Formated directory and files
 
     # At each level, a different color for directory names 
@@ -417,6 +419,17 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
         
         lnDirs += 1       
+        # TODO: fix objVisitor.htmlPage which is wrong...
+        #print(objVisitor.htmlPage)
+        v = handlers.Directory(encounteredDirectory,
+                               directoryPath,
+                               lvl,
+                               root,
+                               -1,
+                               -1,
+                               objVisitor.tmpHtml)
+        v.accept(objVisitor)
+        #objVisitor.reset()
         
         # The semantics in order: 
         # total number of directories, total number of files, local number of dirs, local number of files,
@@ -439,16 +452,6 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                if (subDirData[0] != -1):
                    return(subDirData[0], lnDirs, lnFiles)
 
-        # TODO: fix objVisitor.htmlPage which is wrong...
-        #print(objVisitor.htmlPage)
-        v = handlers.Directory(encounteredDirectory,
-                               directoryPath,
-                               lvl,
-                               root,
-                               subDirData[1],
-                               subDirData[2],
-                               objVisitor.tmpHtml)
-        v.accept(objVisitor)
         
         '''
         # Prepare the entry for one single directory encountered
@@ -508,7 +511,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 
 
-dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
+dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template3.html')
 
 defDT = handlers.DirectoryTraverser({'inclusionRegex':"",
                                   'exclusionRegex':"git|Rhistory|DS_Store",
@@ -530,7 +533,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
 
 
 try:
-  rootData = ABSTRACTtraverse(root="exampleDir", maxLevel=2, objVisitor=hE)
+  rootData = ABSTRACTtraverse(root="exampleDir", maxLevel=3, objVisitor=defDT)
 except handlers.criteriaException as ce:
     clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
     #sys.exit(-7)
@@ -542,7 +545,7 @@ else:
     #sys.exit(-2)
 
 import io
-htmlContent = pTemp.replace('${SUBDIRECTORY}', hE.htmlPage)
+htmlContent = pTemp.replace('${SUBDIRECTORY}', hE.tmpHtml)
 print('Saving....')
 with open('sandBox.html', 'w', encoding='utf8') as f:
                f.write(htmlContent)
