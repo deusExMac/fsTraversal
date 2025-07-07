@@ -89,7 +89,9 @@ class Directory(Visitable):
     def accept(self, visitor):
         visitor.visit_directory(self.name, self.path, self.level, self.parent,  self.localDirCount, self.localFileCount, self.subdir)
 
-
+    def setHTML(self, visitor):
+        visitor.setHTML(self.name, self.path, self.level, self.parent,  self.localDirCount, self.localFileCount, self.subdir)
+        
 ###################################################
 #
 #
@@ -185,8 +187,10 @@ class HTMLExporter(Visitor):
 
         # TODO: Complete this
         rClr = random.choice(fontColorPalette)
+        print('Adding', name)
         self.tmpHtml = self.tmpHtml + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)
-        self.htmlPage = self.htmlPage + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)
+        print(self.tmpHtml)  
+        #self.htmlPage = self.htmlPage + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)
         
         #self.htmlPage = self.htmlPage + prolog.replace("${ID}", dId).replace("${DIRLINK}", makeHtmlLink(directoryPath, encounteredDirectory, encodeUrl) ).replace('${DIRNAME}', encounteredDirectory).replace('${LEVEL}', str(lvl)).replace('${DIRPATH}', directoryPath).replace('${PARENTPATH}', root.replace('\\', ' / ')).replace('${SUBDIRECTORY}', subDirData[4])
         #self.htmlPage = self.htmlPage.replace('${LNDIRS}', str(subDirData[2])).replace('${NDIRS}', str(subDirData[0]) if subDirData[0] >=0 else '0' )
@@ -194,8 +198,12 @@ class HTMLExporter(Visitor):
         #self.htmlPage = self.htmlPage.replace('${RLVLCOLOR}',  rClr)
 
    
-
+    def setHTML(self, name, path, level, parent, ldc, lfc, subdir):
+        rClr = random.choice(fontColorPalette)
+        self.tmpHtml = self.tmpHtml + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)
         
+    def append(self):
+        self.htmlPage = self.htmlPage + self.tmpHtml
 
 
 # Not used.....
