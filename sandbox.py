@@ -369,7 +369,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                       objVisitor=None):
     
 
-   #objVisitor.reset()
+  
    
    try: 
     if maxLevel > 0:
@@ -412,6 +412,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     # Process all directories in current directory.
     # If recursive is True, traverse into each directory
     # Does a depth first search (DFS) approach
+    tmpH = ''
     for encounteredDirectory in dirs:
         sys.stdout.flush()
         
@@ -457,6 +458,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                                -1,
                                objVisitor.tmpHtml)
         v.accept(objVisitor)
+        tmpH = tmpH + objVisitor.tmpHtml
         #objVisitor.append()
         '''
         # Prepare the entry for one single directory encountered
@@ -473,7 +475,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         
     
     
-    
+    objVisitor.tmpHtml = tmpH
     # Process all files in current directory
     for encounteredFile in files:
         sys.stdout.flush()
@@ -516,7 +518,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 
 
-dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template3.html')
+dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
 
 defDT = handlers.DirectoryTraverser({'inclusionRegex':"",
                                   'exclusionRegex':"git|Rhistory|DS_Store",
@@ -550,7 +552,7 @@ else:
     #sys.exit(-2)
 
 import io
-htmlContent = pTemp.replace('${SUBDIRECTORY}', hE.htmlPage)
+htmlContent = pTemp.replace('${SUBDIRECTORY}', hE.tmpHtml)
 print('Saving....')
 with open('sandBox.html', 'w', encoding='utf8') as f:
                f.write(htmlContent)

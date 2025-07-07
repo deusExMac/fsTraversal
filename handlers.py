@@ -188,7 +188,7 @@ class HTMLExporter(Visitor):
         # TODO: Complete this
         rClr = random.choice(fontColorPalette)
         print('Adding', name)
-        self.tmpHtml = self.tmpHtml + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)
+        self.tmpHtml = self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr) + self.tmpHtml 
         print(self.tmpHtml)  
         #self.htmlPage = self.htmlPage + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)
         
