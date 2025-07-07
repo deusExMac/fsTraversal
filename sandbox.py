@@ -457,7 +457,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                                -1,
                                objVisitor.tmpHtml)
         v.accept(objVisitor)
-        objVisitor.append()
+        #objVisitor.append()
         '''
         # Prepare the entry for one single directory encountered
         dId = "d" + str(lvl) + "-" + str( random.randint(0, 1000000) )
@@ -516,7 +516,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 
 
-dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
+dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template3.html')
 
 defDT = handlers.DirectoryTraverser({'inclusionRegex':"",
                                   'exclusionRegex':"git|Rhistory|DS_Store",
