@@ -182,6 +182,9 @@ class HTMLExporter(Visitor):
         
 
     def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
+        if name == "":
+           return
+        
         print(f"Processing directory: {path}")
         self.directory_count += 1
 

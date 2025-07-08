@@ -449,7 +449,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                if (subDirData[0] != -1):
                    return(subDirData[0], lnDirs, lnFiles)
 
-
+        
         v = handlers.Directory(encounteredDirectory,
                                directoryPath,
                                lvl,
@@ -476,6 +476,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     
     
     objVisitor.tmpHtml = tmpH
+    
     # Process all files in current directory
     for encounteredFile in files:
         sys.stdout.flush()
@@ -540,7 +541,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
 
 
 try:
-  rootData = ABSTRACTtraverse(root="exampleDir2", maxLevel=2, objVisitor=hE)
+  rootData = ABSTRACTtraverse(root="exampleDir2", maxLevel=3, objVisitor=hE)
 except handlers.criteriaException as ce:
     clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
     #sys.exit(-7)
