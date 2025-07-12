@@ -5,6 +5,10 @@ import clrprint
 
 import random
 
+# for stacks
+from collections import deque
+
+
 
 # Colors to choose from if color cycling is enabled (-c)
 fontColorPalette = ['#4287f5', '#801408', '#08259c', '#4560d1', '#0a690a', '#9c5f1e', '#9c1e87', '#1313f2', '#f21313', '#34ba4a', '#19084a', '#27889c', '#317534', '#e8740e', '#000000',
@@ -170,6 +174,7 @@ class HTMLExporter(Visitor):
         # actual html page
         self.htmlPage = ''
         self.tmpHtml = ''
+        self.stack = deque()
 
         
     def reset(self):
@@ -191,6 +196,8 @@ class HTMLExporter(Visitor):
         rClr = random.choice(fontColorPalette)
         print('Adding', name)
         self.tmpHtml = self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr) #+ self.tmpHtml 
+        self.stack.append(self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr))
+        
         #print(self.tmpHtml)  
         #self.htmlPage = self.htmlPage + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)
         
@@ -199,13 +206,19 @@ class HTMLExporter(Visitor):
         #self.htmlPage = self.htmlPage.replace('${LNFILES}', str(subDirData[3])).replace('${NFILES}', str(subDirData[1]) )
         #self.htmlPage = self.htmlPage.replace('${RLVLCOLOR}',  rClr)
 
+
+
    
     def setHTML(self, name, path, level, parent, ldc, lfc, subdir):
         rClr = random.choice(fontColorPalette)
         self.tmpHtml = self.tmpHtml + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)
         
+
     def append(self):
         self.htmlPage = self.htmlPage + self.tmpHtml
+
+
+
 
 
 # Not used.....

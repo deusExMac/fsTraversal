@@ -461,7 +461,9 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                                subDirData[2],
                                subDirData[3])
         v.accept(objVisitor)
-        tmpH = tmpH + objVisitor.tmpHtml #+ subDirData[3] #objVisitor.tmpHtml
+        if objVisitor.tmpHtml != '':
+           tmpH = tmpH + objVisitor.tmpHtml #+ subDirData[3] #objVisitor.tmpHtml
+        
         #print(tmpH)
         #objVisitor.append()
         '''
@@ -558,6 +560,8 @@ else:
     #sys.exit(-2)
 
 import io
+
+#rrr = hE.stack.pop()
 htmlContent = pTemp.replace('${SUBDIRECTORY}', rootData[3]).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', str(rootData[1])).replace('${LNFILES}', str(rootData[2]))
 htmlContent = htmlContent.replace('${NDIRS}', str(hE.directory_count)).replace('${NFILES}', str(hE.file_count))
 
