@@ -558,7 +558,9 @@ else:
     #sys.exit(-2)
 
 import io
-htmlContent = pTemp.replace('${SUBDIRECTORY}', rootData[3]).replace('${INITIALDIRECTORY}', initialDir)
+htmlContent = pTemp.replace('${SUBDIRECTORY}', rootData[3]).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', str(rootData[1])).replace('${LNFILES}', str(rootData[2]))
+htmlContent = htmlContent.replace('${NDIRS}', str(hE.directory_count)).replace('${NFILES}', str(hE.file_count))
+
 print('Saving....')
 with open('sandBox.html', 'w', encoding='utf8') as f:
                f.write(htmlContent)

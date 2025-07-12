@@ -9,7 +9,7 @@
 <!---directorytemplate--->
 <li id="${ID}">
   <details ${OPENSTATE}>
-    <summary class='folder fsitem' onmouseover="showTextPath(this, '${DIRNAME}', '${PARENTPATH}', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="${RLVLCOLOR}">${DIRNAME}</font><span class='detail'>(<font color='red'><i>${LEVEL}</i></font>, ${LNDIRS}, ${LNFILES} | ${NDIRS}, ${NFILES} )</span></summary><ul><li>==${SUBDIRECTORY}==</li></ul>
+    <summary class='folder fsitem' onmouseover="showTextPath(this, '${DIRNAME}', '${PARENTPATH}', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="${RLVLCOLOR}">${DIRNAME}</font><span class='detail'> (<font color='red'><i>${LEVEL}</i></font>, ${LNDIRS}, ${LNFILES} | ${NDIRS}, ${NFILES} )</span></summary><ul><li>==${SUBDIRECTORY}==</li></ul>
    </details>
 </li>
 
@@ -311,7 +311,7 @@ ${INTROTEXT}</div>
   <li>
     <details open>
       <summary class="folder"><img src="html/fld7.png" style="margin-left:-7px;margin-right:5px;">
-          ${INITIALDIRECTORY}(${LNDIRS} - ${LNFILES})
+          ${INITIALDIRECTORY} (${LNDIRS} - ${LNFILES} / ${NDIRS} - ${NFILES})
       </summary>
         <ul>
            ${SUBDIRECTORY}
