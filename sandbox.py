@@ -457,8 +457,8 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                                directoryPath,
                                lvl,
                                root,
-                               -1,
-                               -1,
+                               subDirData[1],
+                               subDirData[2],
                                subDirData[3])
         v.accept(objVisitor)
         tmpH = tmpH + objVisitor.tmpHtml #+ subDirData[3] #objVisitor.tmpHtml
@@ -543,9 +543,10 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
 
 
 
-
+initialDir = "exampleDir2"
 try:
-  rootData = ABSTRACTtraverse(root="exampleDir2", maxLevel=3, objVisitor=hE)
+    
+  rootData = ABSTRACTtraverse(root=initialDir, maxLevel=3, objVisitor=hE)
 except handlers.criteriaException as ce:
     clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
     #sys.exit(-7)
@@ -557,7 +558,7 @@ else:
     #sys.exit(-2)
 
 import io
-htmlContent = pTemp.replace('${SUBDIRECTORY}', rootData[3])
+htmlContent = pTemp.replace('${SUBDIRECTORY}', rootData[3]).replace('${INITIALDIRECTORY}', initialDir)
 print('Saving....')
 with open('sandBox.html', 'w', encoding='utf8') as f:
                f.write(htmlContent)
