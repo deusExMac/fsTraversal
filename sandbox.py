@@ -362,6 +362,7 @@ import handlers
 #
 # TODO: 1) Do we need epilog and fepilog??? 2) Check PSEUDOs - check DIRLINK etc
 #       3) Change name to indicate formated output 
+tmpH = ''
 
 def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                       encodeUrl=False,                      
@@ -375,7 +376,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     if maxLevel > 0:
        if lvl > maxLevel:
           objVisitor.tmpHtml = ''
-          return(0, 0, 0)
+          return(0, 0, 0, "")
 
 
     # Gather directories and files in directory identified by
@@ -389,9 +390,9 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     except Exception as wEx:
       print('Exception during walk:', str(wEx) )
       if ON_TRAVERSE_ERROR_QUIT:
-         return(-2, 0, 0)
+         return(-2, 0, 0, "")
       else:
-         return(0, 0, 0) 
+         return(0, 0, 0, "") 
 
 
     # sort directory and files
@@ -402,7 +403,9 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     
     lnDirs = 0 # local number of directories i.e. number of directories in directory NOT including its subdirs
     lnFiles = 0 # local number of files i.e. number of files in directory NOT including files in its subdirs
-    #objVisitor.tmpHtml = ''
+    objVisitor.tmpHtml = ''
+    tmpH = ''
+    
     #objVisitor.reset() 
     #formatedContents = "" # Formated directory and files
 
@@ -430,7 +433,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         # The semantics in order: 
         # total number of directories, total number of files, local number of dirs, local number of files,
         # formatted display of subdirectory 
-        subDirData = (0,0,0)
+        subDirData = (0,0,0, "xxx")
         if recursive:
             
             # go into subdirectory and traverse it
@@ -447,7 +450,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
             #else:
             if subDirData[0] < 0:
                if (subDirData[0] != -1):
-                   return(subDirData[0], lnDirs, lnFiles)
+                   return(subDirData[0], lnDirs, lnFiles, tmpH)
 
         
         v = handlers.Directory(encounteredDirectory,
@@ -456,9 +459,10 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                                root,
                                -1,
                                -1,
-                               objVisitor.tmpHtml)
+                               subDirData[3])
         v.accept(objVisitor)
-        tmpH = tmpH + objVisitor.tmpHtml
+        tmpH = tmpH + objVisitor.tmpHtml #+ subDirData[3] #objVisitor.tmpHtml
+        #print(tmpH)
         #objVisitor.append()
         '''
         # Prepare the entry for one single directory encountered
@@ -475,7 +479,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         
     
     
-    objVisitor.tmpHtml = tmpH
+    #objVisitor.tmpHtml = tmpH
     
     # Process all files in current directory
     for encounteredFile in files:
@@ -484,7 +488,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         
         filePath = normalizedPathJoin(root, encounteredFile)          
  
-        
+        clrprint.clrprint(filePath, clr="yellow")
         lnFiles += 1
 
         
@@ -506,12 +510,12 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     # lnDirs:  number of directories in this directory only, lnFiles: number of files
     # in this directory only, formatedContents: complete formated content up to this
     # point
-    return 0, lnDirs, lnFiles
+    return 0, lnDirs, lnFiles, tmpH
 
    except KeyboardInterrupt:
        print('Keyboard interrupt. Terminating')
        #sys.exit(-3)
-       return 0, 0, 0
+       return(0, 0, 0, tmpH)
    except handlers.criteriaException as ce:
        raise handlers.criteriaException(ce.errorCode, str(ce)) 
 
@@ -553,7 +557,7 @@ else:
     #sys.exit(-2)
 
 import io
-htmlContent = pTemp.replace('${SUBDIRECTORY}', hE.tmpHtml)
+htmlContent = pTemp.replace('${SUBDIRECTORY}', rootData[3])
 print('Saving....')
 with open('sandBox.html', 'w', encoding='utf8') as f:
                f.write(htmlContent)
