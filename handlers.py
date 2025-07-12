@@ -206,7 +206,7 @@ class HTMLExporter(Visitor):
         #self.htmlPage = self.htmlPage.replace('${LNFILES}', str(subDirData[3])).replace('${NFILES}', str(subDirData[1]) )
         #self.htmlPage = self.htmlPage.replace('${RLVLCOLOR}',  rClr)
 
-
+    
 
    
     def setHTML(self, name, path, level, parent, ldc, lfc, subdir):

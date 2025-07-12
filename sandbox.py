@@ -464,8 +464,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         if objVisitor.tmpHtml != '':
            tmpH = tmpH + objVisitor.tmpHtml #+ subDirData[3] #objVisitor.tmpHtml
         
-        #print(tmpH)
-        #objVisitor.append()
+        
         '''
         # Prepare the entry for one single directory encountered
         dId = "d" + str(lvl) + "-" + str( random.randint(0, 1000000) )
