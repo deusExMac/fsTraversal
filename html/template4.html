@@ -1,3 +1,20 @@
+
+
+
+
+
+
+
+
+<!---directorytemplate--->
+[${DIRNAME} / ${LEVEL}]
+
+
+<!---filetemplate--->
+<li class="fle fsitem" onmouseover="showTextPath(this, '${FILENAME}', '${PARENTPATH}', '${FILEEXTENSION}')" onmouseout="unhighlight(this);"><img src='html/${FILEEXTENSION}.png' width="24" height="24" style='margin-left:-7px;margin-right:5px;'>${FILELINK} (${FILESIZE}, [${FILELASTMODIFIED}])</li>
+
+
+<!---pagetemplate--->
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
@@ -290,10 +307,10 @@ ${INTROTEXT}</div>
   <li>
     <details open>
       <summary class="folder"><img src="html/fld7.png" style="margin-left:-7px;margin-right:5px;">
-          exampleDir2 (3 - 1 / 10 - 6)
+          ${INITIALDIRECTORY} (${LNDIRS} - ${LNFILES} / ${NDIRS} - ${NFILES})
       </summary>
         <ul>
-           [1 / 1][2 / 1][3 / 1]
+           ${SUBDIRECTORY}
         </ul>
       </details>
     </li>

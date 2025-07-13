@@ -197,9 +197,27 @@ class HTMLExporter(Visitor):
         rClr = random.choice(fontColorPalette)
         print('Adding', name)
         self.tmpHtml = self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr) #+ self.tmpHtml 
-        if level == 1:
-           self.stack.append( {'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)} )
+        #if level == 1:
 
+        # TODO: Next is wrong...
+        if (len(self.stack) <= 0):
+            print(f'>>Adding level {level}')
+            self.stack.append( {'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} )
+        else:    
+           curr = self.stack.pop()
+           if curr['level'] == level:
+              print(f'Adding to current LEVEL: {curr["level"]} new: {level}...') 
+              self.stack.append( {'level':level, 'html':curr['html'] + ' ' +  self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} )
+           elif (curr['level'] - level) == 1:
+              #self.stack.append(curr) 
+              print(f'Adding subdir: {curr["level"]} new: {level}...')  
+              self.stack.append({'level':level, 'html': self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', curr['html']).replace('${RLVLCOLOR}', rClr)} )
+           else:
+               print(f'APPENDING to existing LEVEL: {curr["level"]} new: {level}...') 
+               self.stack.append( {'level':level, 'html':curr['html'] + ' ' + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} ) 
+                
+        self.displayStack()
+           
         #self.stack.append(level*'\t' + path)
 
         #print(self.tmpHtml)  
@@ -212,12 +230,24 @@ class HTMLExporter(Visitor):
 
 
 
+    def displayStack(self):
+         lst = []
+         while  len(self.stack) > 0:
+                sv = self.stack.pop()
+                lst.append(sv)
+                print(sv)
+
+         for i in lst:
+             self.stack.append(i)
+
+             
+
     def unwindStack(self, level=1):
          htmlC = ''
          while  len(self.stack) > 0:
               sv = self.stack.pop()
               if sv['level'] == level:
-                 htmlC = sv['html'] + htmlC
+                htmlC = sv['html'] + htmlC
               
          return(htmlC)     
 
