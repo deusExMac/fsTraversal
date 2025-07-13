@@ -567,3 +567,14 @@ htmlContent = htmlContent.replace('${NDIRS}', str(hE.directory_count)).replace('
 print('Saving....')
 with open('sandBox.html', 'w', encoding='utf8') as f:
                f.write(htmlContent)
+
+
+print('Saving stack...')
+h = hE.unwindStack()
+h = pTemp.replace('${SUBDIRECTORY}', h).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', '-1').replace('${LNFILES}', '-5')
+htmlContent = htmlContent.replace('${NDIRS}', str(hE.directory_count)).replace('${NFILES}', str(hE.file_count))
+
+with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
+     sf.write(h) 
+     
+

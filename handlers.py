@@ -183,6 +183,7 @@ class HTMLExporter(Visitor):
 
     def visit_file(self, name, path, level, parent, finfo={}):
         print(f"Processing file: {path}")
+        #self.stack.append(self.fileTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${FILENAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', "red"))
         self.file_count += 1
         
 
@@ -196,8 +197,11 @@ class HTMLExporter(Visitor):
         rClr = random.choice(fontColorPalette)
         print('Adding', name)
         self.tmpHtml = self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr) #+ self.tmpHtml 
-        self.stack.append(self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr))
-        
+        if level == 1:
+           self.stack.append( {'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)} )
+
+        #self.stack.append(level*'\t' + path)
+
         #print(self.tmpHtml)  
         #self.htmlPage = self.htmlPage + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)
         
@@ -206,7 +210,23 @@ class HTMLExporter(Visitor):
         #self.htmlPage = self.htmlPage.replace('${LNFILES}', str(subDirData[3])).replace('${NFILES}', str(subDirData[1]) )
         #self.htmlPage = self.htmlPage.replace('${RLVLCOLOR}',  rClr)
 
-    
+
+
+    def unwindStack(self, level=1):
+         htmlC = ''
+         while  len(self.stack) > 0:
+              sv = self.stack.pop()
+              if sv['level'] == level:
+                 htmlC = sv['html'] + htmlC
+              
+         return(htmlC)     
+
+
+        
+    def showStack(self):
+        while  len(self.stack) > 0:
+              sv = self.stack.pop()
+              print(sv)
 
    
     def setHTML(self, name, path, level, parent, ldc, lfc, subdir):
