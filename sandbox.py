@@ -524,7 +524,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 
 
-dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
+dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template4.html')
 
 defDT = handlers.DirectoryTraverser({'inclusionRegex':"",
                                   'exclusionRegex':"git|Rhistory|DS_Store",
@@ -544,10 +544,10 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
 
 
 
-initialDir = "exampleDir2"
+initialDir = "exampleDir1"
 try:
     
-  rootData = ABSTRACTtraverse(root=initialDir, maxLevel=3, objVisitor=hE)
+  rootData = ABSTRACTtraverse(root=initialDir, maxLevel=2, objVisitor=hE)
 except handlers.criteriaException as ce:
     clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
     #sys.exit(-7)
@@ -570,6 +570,7 @@ with open('sandBox.html', 'w', encoding='utf8') as f:
 
 
 print('Saving stack...')
+print('Total of [', len(hE.stack), '] items in stack.', end='')
 h = hE.unwindStack()
 h = pTemp.replace('${SUBDIRECTORY}', h).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', '-1').replace('${LNFILES}', '-5')
 htmlContent = htmlContent.replace('${NDIRS}', str(hE.directory_count)).replace('${NFILES}', str(hE.file_count))

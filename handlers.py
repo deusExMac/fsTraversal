@@ -201,23 +201,45 @@ class HTMLExporter(Visitor):
 
         # TODO: Next is wrong...
         if (len(self.stack) <= 0):
-            print(f'>>Adding level {level}')
-            self.stack.append( {'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} )
+            print(f'>>Adding FOLDER {name} at level {level}')
+            self.stack.append( {'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} ) 
         else:    
            curr = self.stack.pop()
            if curr['level'] == level:
               print(f'Adding to current LEVEL: {curr["level"]} new: {level}...') 
               self.stack.append( {'level':level, 'html':curr['html'] + ' ' +  self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} )
+              # TODO: here same as below in merging...  
            elif (curr['level'] - level) == 1:
               #self.stack.append(curr) 
-              print(f'Adding subdir: {curr["level"]} new: {level}...')  
-              self.stack.append({'level':level, 'html': self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', curr['html']).replace('${RLVLCOLOR}', rClr)} )
+              print(f'Adding subdir: {curr["level"]} new: {level}...')
+              mergedDir = {'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', curr['html']).replace('${RLVLCOLOR}', rClr)}
+              #self.stack.append({'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', curr['html']).replace('${RLVLCOLOR}', rClr)} )
+              tmpLst = []
+              print('***before: stack size:', len(self.stack))
+              while True:         
+                    if len(self.stack) <= 0:
+                       self.stack.append(mergedDir) 
+                       break
+                    
+                    itm = self.stack.pop()
+                    if itm['level'] != level:
+                       self.stack.append(itm)
+                       break
+
+                    mergedDir['html'] = itm['html'] +  mergedDir['html']
+                    
+                    
+              self.stack.append(mergedDir)
+
+              
+                  
            else:
                print(f'Pushing new to existing LEVEL: {curr["level"]} new: {level}...')
+               #if (curr['level'] < level):
                self.stack.append(curr)
                self.stack.append( {'level':level, 'html': self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} ) 
                 
-        self.displayStack()
+        #self.displayStack()
            
         #self.stack.append(level*'\t' + path)
 
@@ -233,13 +255,17 @@ class HTMLExporter(Visitor):
 
     def displayStack(self):
          lst = []
+         pos=1
+         print('Total of', len(self.stack), 'items in stack.')
          while  len(self.stack) > 0:
                 sv = self.stack.pop()
                 lst.append(sv)
+                print('______' + str(pos) + '______\n', end='')
                 print(sv)
-                print('###')
+                print('_________')
+                pos +=1
 
-         for i in lst:
+         for i in lst[::-1]:
              self.stack.append(i)
 
              
@@ -248,8 +274,10 @@ class HTMLExporter(Visitor):
          htmlC = ''
          while  len(self.stack) > 0:
               sv = self.stack.pop()
+              
               if sv['level'] == level:
-                htmlC = sv['html'] + htmlC
+                 print('---\n', sv, '---\n') 
+                 htmlC = sv['html'] + htmlC
               
          return(htmlC)     
 
