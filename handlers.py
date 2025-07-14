@@ -213,8 +213,9 @@ class HTMLExporter(Visitor):
               print(f'Adding subdir: {curr["level"]} new: {level}...')  
               self.stack.append({'level':level, 'html': self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', curr['html']).replace('${RLVLCOLOR}', rClr)} )
            else:
-               print(f'APPENDING to existing LEVEL: {curr["level"]} new: {level}...') 
-               self.stack.append( {'level':level, 'html':curr['html'] + ' ' + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} ) 
+               print(f'Pushing new to existing LEVEL: {curr["level"]} new: {level}...')
+               self.stack.append(curr)
+               self.stack.append( {'level':level, 'html': self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} ) 
                 
         self.displayStack()
            
@@ -236,6 +237,7 @@ class HTMLExporter(Visitor):
                 sv = self.stack.pop()
                 lst.append(sv)
                 print(sv)
+                print('###')
 
          for i in lst:
              self.stack.append(i)
