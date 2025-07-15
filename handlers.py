@@ -113,7 +113,7 @@ class DirectoryTraverser(Visitor):
         self.criteria = criteria
         self.file_count = 0
         self.directory_count = 0
-        self.tmpHtml = ''
+        
 
     def visit_file(self, name, path, level, parent, finfo={}):
         
@@ -171,14 +171,10 @@ class HTMLExporter(Visitor):
         self.pageTemplate = pageT
         self.criteria = criteria
         
-        # actual html page
-        self.htmlPage = ''
-        self.tmpHtml = ''
         self.stack = deque()
 
         
-    def reset(self):
-        self.tmpHtml = '' 
+     
 
 
     def visit_file(self, name, path, level, parent, finfo={}):
@@ -196,7 +192,7 @@ class HTMLExporter(Visitor):
         # TODO: Complete this
         rClr = random.choice(fontColorPalette)
         print('Adding directory:', name)
-        self.tmpHtml = self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr) #+ self.tmpHtml 
+        #self.tmpHtml = self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr) #+ self.tmpHtml 
         #if level == 1:
 
         # TODO: Next is wrong...
@@ -241,15 +237,7 @@ class HTMLExporter(Visitor):
                 
         #self.displayStack()
            
-        #self.stack.append(level*'\t' + path)
-
-        #print(self.tmpHtml)  
-        #self.htmlPage = self.htmlPage + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)
         
-        #self.htmlPage = self.htmlPage + prolog.replace("${ID}", dId).replace("${DIRLINK}", makeHtmlLink(directoryPath, encounteredDirectory, encodeUrl) ).replace('${DIRNAME}', encounteredDirectory).replace('${LEVEL}', str(lvl)).replace('${DIRPATH}', directoryPath).replace('${PARENTPATH}', root.replace('\\', ' / ')).replace('${SUBDIRECTORY}', subDirData[4])
-        #self.htmlPage = self.htmlPage.replace('${LNDIRS}', str(subDirData[2])).replace('${NDIRS}', str(subDirData[0]) if subDirData[0] >=0 else '0' )
-        #self.htmlPage = self.htmlPage.replace('${LNFILES}', str(subDirData[3])).replace('${NFILES}', str(subDirData[1]) )
-        #self.htmlPage = self.htmlPage.replace('${RLVLCOLOR}',  rClr)
 
 
 
@@ -289,15 +277,9 @@ class HTMLExporter(Visitor):
               print(sv)
 
    
-    def setHTML(self, name, path, level, parent, ldc, lfc, subdir):
-        rClr = random.choice(fontColorPalette)
-        self.tmpHtml = self.tmpHtml + self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr)
-        
+            
 
-    def append(self):
-        self.htmlPage = self.htmlPage + self.tmpHtml
-
-
+    
 
 
 

@@ -362,7 +362,7 @@ import handlers
 #
 # TODO: 1) Do we need epilog and fepilog??? 2) Check PSEUDOs - check DIRLINK etc
 #       3) Change name to indicate formated output 
-tmpH = ''
+#tmpH = ''
 
 def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                       encodeUrl=False,                      
@@ -375,7 +375,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
    try: 
     if maxLevel > 0:
        if lvl > maxLevel:
-          objVisitor.tmpHtml = ''
+          #objVisitor.tmpHtml = ''
           return(0, 0, 0, "")
 
 
@@ -403,8 +403,8 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     
     lnDirs = 0 # local number of directories i.e. number of directories in directory NOT including its subdirs
     lnFiles = 0 # local number of files i.e. number of files in directory NOT including files in its subdirs
-    objVisitor.tmpHtml = ''
-    tmpH = ''
+    #objVisitor.tmpHtml = ''
+    #tmpH = ''
     
     #objVisitor.reset() 
     #formatedContents = "" # Formated directory and files
@@ -450,7 +450,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
             #else:
             if subDirData[0] < 0:
                if (subDirData[0] != -1):
-                   return(subDirData[0], lnDirs, lnFiles, tmpH)
+                   return(subDirData[0], lnDirs, lnFiles, '')
 
         
         v = handlers.Directory(encounteredDirectory,
@@ -461,8 +461,8 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                                subDirData[2],
                                subDirData[3])
         v.accept(objVisitor)
-        if objVisitor.tmpHtml != '':
-           tmpH = tmpH + objVisitor.tmpHtml #+ subDirData[3] #objVisitor.tmpHtml
+        #if objVisitor.tmpHtml != '':
+        #   tmpH = tmpH + objVisitor.tmpHtml #+ subDirData[3] #objVisitor.tmpHtml
         
         
         '''
@@ -511,12 +511,12 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     # lnDirs:  number of directories in this directory only, lnFiles: number of files
     # in this directory only, formatedContents: complete formated content up to this
     # point
-    return 0, lnDirs, lnFiles, tmpH
+    return 0, lnDirs, lnFiles, ''
 
    except KeyboardInterrupt:
        print('Keyboard interrupt. Terminating')
        #sys.exit(-3)
-       return(0, 0, 0, tmpH)
+       return(0, 0, 0, '')
    except handlers.criteriaException as ce:
        raise handlers.criteriaException(ce.errorCode, str(ce)) 
 
@@ -544,10 +544,10 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
 
 
 
-initialDir = "/Users/manolistzagarakis/home(synced)"
+initialDir = "/Users/manolistzagarakis/home(synced)/econ"
 try:
     
-  rootData = ABSTRACTtraverse(root=initialDir, maxLevel=2, objVisitor=hE)
+  rootData = ABSTRACTtraverse(root=initialDir, maxLevel=-1, objVisitor=hE)
 except handlers.criteriaException as ce:
     clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
     #sys.exit(-7)
@@ -561,6 +561,7 @@ else:
 import io
 
 #rrr = hE.stack.pop()
+'''
 htmlContent = pTemp.replace('${SUBDIRECTORY}', rootData[3]).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', str(rootData[1])).replace('${LNFILES}', str(rootData[2]))
 htmlContent = htmlContent.replace('${NDIRS}', str(hE.directory_count)).replace('${NFILES}', str(hE.file_count))
 
@@ -568,12 +569,13 @@ print('Saving....')
 with open('sandBox.html', 'w', encoding='utf8') as f:
                f.write(htmlContent)
 
+'''
 
 print('Saving stack...')
 print('Total of [', len(hE.stack), '] items in stack.', end='')
 h = hE.unwindStack()
 h = pTemp.replace('${SUBDIRECTORY}', h).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', '-1').replace('${LNFILES}', '-5')
-htmlContent = htmlContent.replace('${NDIRS}', str(hE.directory_count)).replace('${NFILES}', str(hE.file_count))
+#htmlContent = htmlContent.replace('${NDIRS}', str(hE.directory_count)).replace('${NFILES}', str(hE.file_count))
 
 with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
      sf.write(h) 
