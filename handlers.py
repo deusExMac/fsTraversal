@@ -195,7 +195,7 @@ class HTMLExporter(Visitor):
 
         # TODO: Complete this
         rClr = random.choice(fontColorPalette)
-        print('Adding', name)
+        print('Adding directory:', name)
         self.tmpHtml = self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr) #+ self.tmpHtml 
         #if level == 1:
 
@@ -211,14 +211,14 @@ class HTMLExporter(Visitor):
               # TODO: here same as below in merging...  
            elif (curr['level'] - level) == 1:
               #self.stack.append(curr) 
-              print(f'Adding subdir: {curr["level"]} new: {level}...')
+              print(f'Adding subdir: top in stack {curr["level"]} new: {level}...')
               mergedDir = {'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', curr['html']).replace('${RLVLCOLOR}', rClr)}
               #self.stack.append({'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', curr['html']).replace('${RLVLCOLOR}', rClr)} )
               tmpLst = []
               print('***before: stack size:', len(self.stack))
               while True:         
                     if len(self.stack) <= 0:
-                       self.stack.append(mergedDir) 
+                       #self.stack.append(mergedDir) 
                        break
                     
                     itm = self.stack.pop()
