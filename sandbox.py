@@ -527,7 +527,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
 
 defDT = handlers.DirectoryTraverser({'inclusionRegex':"",
-                                  'exclusionRegex':"git|Rhistory|DS_Store",
+                                  'exclusionRegex':r"git|Rhistory|DS_Store|stfolder",
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
                                   'maxDirs':-1,
@@ -544,7 +544,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
 
 
 
-initialDir = "F:\\home\\econ"
+initialDir = "/Users/manolistzagarakis/home(synced)"
 try:
     
   rootData = ABSTRACTtraverse(root=initialDir, maxLevel=2, objVisitor=hE)
