@@ -209,8 +209,12 @@ class HTMLExporter(Visitor):
            self.stack.append({'level':level, 'html': fileHtml})
         else:
            curr = self.stack.pop()
-           curr['html'] = curr['html'] + fileHtml
-           self.stack.append(curr)
+           if curr['level'] < level:
+              self.stack.append(curr)
+              self.stack.append({'level':level, 'html': fileHtml})
+           else:    
+               curr['html'] = curr['html'] + fileHtml
+               self.stack.append(curr)
         
 
 
