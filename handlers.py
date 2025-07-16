@@ -190,26 +190,24 @@ class HTMLExporter(Visitor):
 
     # TODO: This is not working correctly.
     def visit_file(self, name, path, level, parent, finfo={}, urlEncode=True):
+        
         clrprint.clrprint(f"Processing file: {path} level {level}") 
         self.file_count += 1
 
-        if len(self.stack) > 0:
-           curr = self.stack.pop()
-           print('Directory:', curr['html'])
-        else:
-           curr = {'level':level, 'html':''} 
         
-        curr['html'] =  curr['html'] + self.fileTemplate.replace('${FILELINK}', htmlLink(path, name, urlEncode)).replace('${FILENAME}', name).replace('${FILEPATH}', path.replace('\\', '/')).replace('${LEVEL}', str(level)).replace('${PARENTPATH}', parent.replace('\\', ' / '))
+        fileHtml =  self.fileTemplate.replace('${FILELINK}', htmlLink(path, name, urlEncode)).replace('${FILENAME}', name).replace('${FILEPATH}', path.replace('\\', '/')).replace('${LEVEL}', str(level)).replace('${PARENTPATH}', parent.replace('\\', ' / '))
         if finfo:
-           curr['html'] = curr['html'].replace('${FILESIZE}', finfo['size']).replace('${FILELASTMODIFIED}', finfo['lastmodified'])
+           fileHtml = fileHtml.replace('${FILESIZE}', finfo['size']).replace('${FILELASTMODIFIED}', finfo['lastmodified'])
 
         filename, fileExtension = os.path.splitext(path)
         if os.path.exists('html/' + fileExtension[1:] + '.png'):
-           curr['html'] = curr['html'].replace('${FILEEXTENSION}', fileExtension[1:])
+           fileHtml = fileHtml.replace('${FILEEXTENSION}', fileExtension[1:])
         else: 
-           curr['html'] = curr['html'].replace('${FILEEXTENSION}', 'ukn')
+           fileHtml = fileHtml.replace('${FILEEXTENSION}', 'ukn')
+
            
-        self.stack.append(curr)
+        self.stack.append({'level':level, 'html': fileHtml})
+
 
 
 
