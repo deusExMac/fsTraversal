@@ -205,8 +205,13 @@ class HTMLExporter(Visitor):
         else: 
            fileHtml = fileHtml.replace('${FILEEXTENSION}', 'ukn')
 
-           
-        self.stack.append({'level':level, 'html': fileHtml})
+        if len(self.stack) <= 0:   
+           self.stack.append({'level':level, 'html': fileHtml})
+        else:
+           curr = self.stack.pop()
+           curr['html'] = curr['html'] + fileHtml
+           self.stack.append(curr)
+        
 
 
 
