@@ -8,6 +8,7 @@ import random
 # for stacks
 from collections import deque
 
+import urllib
 
 
 # Colors to choose from if color cycling is enabled (-c)
@@ -156,7 +157,18 @@ class DirectoryTraverser(Visitor):
 
 
 
+def htmlLink(itemPath, displayAnchor, urlEncode):
+    
+    if urlEncode:
+      return '<a href="' + urllib.parse.quote(itemPath.encode('utf8') ) + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>' 
 
+    # TODO: Do we need encode/decode here???
+    if os.path.isabs(itemPath):
+       return '<a href="file://' + itemPath.encode('utf8').decode() + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>'
+    else:
+       return '<a href="' + itemPath.encode('utf8').decode() + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>' 
+
+    
 
 # 4i. Another Concrete visitor class
 # TODO: Not yet working; Incomplete
@@ -176,18 +188,39 @@ class HTMLExporter(Visitor):
         
      
 
-
-    def visit_file(self, name, path, level, parent, finfo={}):
-        print(f"Processing file: {path}")
-        #self.stack.append(self.fileTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${FILENAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', "red"))
+    # TODO: This is not working correctly.
+    def visit_file(self, name, path, level, parent, finfo={}, urlEncode=True):
+        clrprint.clrprint(f"Processing file: {path} level {level}") 
         self.file_count += 1
+
+        if len(self.stack) > 0:
+           curr = self.stack.pop()
+           print('Directory:', curr['html'])
+        else:
+           curr = {'level':level, 'html':''} 
         
+        curr['html'] =  curr['html'] + self.fileTemplate.replace('${FILELINK}', htmlLink(path, name, urlEncode)).replace('${FILENAME}', name).replace('${FILEPATH}', path.replace('\\', '/')).replace('${LEVEL}', str(level)).replace('${PARENTPATH}', parent.replace('\\', ' / '))
+        if finfo:
+           curr['html'] = curr['html'].replace('${FILESIZE}', finfo['size']).replace('${FILELASTMODIFIED}', finfo['lastmodified'])
+
+        filename, fileExtension = os.path.splitext(path)
+        if os.path.exists('html/' + fileExtension[1:] + '.png'):
+           curr['html'] = curr['html'].replace('${FILEEXTENSION}', fileExtension[1:])
+        else: 
+           curr['html'] = curr['html'].replace('${FILEEXTENSION}', 'ukn')
+           
+        self.stack.append(curr)
+
+
+
 
     def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
         
         
-        print(f"Processing directory: {path}")
+        #print(f"Processing directory: {path}")
         self.directory_count += 1
+
+        
 
         # TODO: Complete this
         rClr = random.choice(fontColorPalette)
@@ -197,24 +230,23 @@ class HTMLExporter(Visitor):
 
         # TODO: Next is wrong...
         if (len(self.stack) <= 0):
-            print(f'>>Adding FOLDER {name} at level {level}')
+            #print(f'>>Adding FOLDER {name} at level {level}')
             self.stack.append( {'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} ) 
         else:    
            curr = self.stack.pop()
            if curr['level'] == level:
-              print(f'Adding to current LEVEL: {curr["level"]} new: {level}...') 
+              #print(f'Adding to current LEVEL: {curr["level"]} new: {level}...') 
               self.stack.append( {'level':level, 'html':curr['html'] + ' ' +  self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} )
               # TODO: here same as below in merging...  
            elif (curr['level'] - level) == 1:
               #self.stack.append(curr) 
-              print(f'Adding subdir: top in stack {curr["level"]} new: {level}...')
+              #print(f'Adding subdir: top in stack {curr["level"]} new: {level}...')
               mergedDir = {'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', curr['html']).replace('${RLVLCOLOR}', rClr)}
               #self.stack.append({'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', curr['html']).replace('${RLVLCOLOR}', rClr)} )
               tmpLst = []
-              print('***before: stack size:', len(self.stack))
+              #print('***before: stack size:', len(self.stack))
               while True:         
                     if len(self.stack) <= 0:
-                       #self.stack.append(mergedDir) 
                        break
                     
                     itm = self.stack.pop()
@@ -226,8 +258,6 @@ class HTMLExporter(Visitor):
                     
                     
               self.stack.append(mergedDir)
-
-              
                   
            else:
                print(f'Pushing new to existing LEVEL: {curr["level"]} new: {level}...')
@@ -297,9 +327,4 @@ def traverse_directory(root_path, visitor):
             traverse_directory(item_path, visitor) # Recursive call for subdirectories
 
 
-# Example Usage
-#root_directory = "/path/to/your/directory"  # Replace with your directory
-#traverser = DirectoryTraverser()
-#traverse_directory(root_directory, traverser)
-#print(f"Total files: {traverser.file_count}")
-#print(f"Total directories: {traverser.directory_count}")
+

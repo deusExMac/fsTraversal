@@ -489,7 +489,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         
         filePath = normalizedPathJoin(root, encounteredFile)          
  
-        clrprint.clrprint(filePath, clr="yellow")
+        #clrprint.clrprint(filePath, clr="yellow")
         lnFiles += 1
 
         
@@ -544,7 +544,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
 
 
 
-initialDir = "/Users/manolistzagarakis/home(synced)/econ"
+initialDir = "exampleDir1"
 try:
     
   rootData = ABSTRACTtraverse(root=initialDir, maxLevel=-1, objVisitor=hE)
