@@ -191,6 +191,22 @@ class HTMLExporter(Visitor):
 
     # TODO: This is not working correctly.
     def visit_file(self, name, path, level, parent, finfo={}, urlEncode=False):
+
+        if not nameMatches(name, self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex'), level ):
+           return
+
+        if self.criteria.get('maxFiles', -1) > 0:
+           if self.file_count >= self.criteria.get('maxFiles', -1):
+              raise criteriaException(-11, 'maximum number of files reached.') 
+            
+        if  self.criteria.get('minFileSize', '') != '':
+            if int(finfo.get('size', -2)) < self.criteria.get('minFileSize', -1):
+               return
+
+        if  self.criteria.get('maxFileSize', -1) >= 0:
+            if int(finfo.get('size', -2)) > self.criteria.get('maxFileSize', -1):
+               return    
+
         
         clrprint.clrprint(f"Processing file: {path} level {level}") 
         self.file_count += 1
@@ -224,7 +240,15 @@ class HTMLExporter(Visitor):
 
     def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
         
-        
+        if not nameMatches(name, self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex'), level ):
+           return
+
+
+        if self.criteria.get('maxDirs', -1) > 0:
+           if self.directory_count >= self.criteria.get('maxDirs', -1):
+              raise criteriaException(-10, 'maximum number of directories reached.')
+
+            
         #print(f"Processing directory: {path}")
         self.directory_count += 1
 

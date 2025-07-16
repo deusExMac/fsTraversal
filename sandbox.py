@@ -535,7 +535,7 @@ defDT = handlers.DirectoryTraverser({'inclusionRegex':"",
 
 
 hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
-                                  'exclusionRegex':"git|Rhistory|DS_Store",
+                                  'exclusionRegex':"git|Rhistory|DS_Store|stfolder",
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
                                   'maxDirs':-1,
@@ -544,10 +544,10 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
 
 
 
-initialDir = "F:\\home\\users\\tzag\\"
+initialDir = "/Users/manolistzagarakis/home(synced)/econ"
 try:
     
-  rootData = ABSTRACTtraverse(root=initialDir, maxLevel=1, objVisitor=hE)
+  rootData = ABSTRACTtraverse(root=initialDir, maxLevel=2, objVisitor=hE)
 except handlers.criteriaException as ce:
     clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
     #sys.exit(-7)
