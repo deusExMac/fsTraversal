@@ -544,10 +544,10 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
 
 
 
-initialDir = "exampleDir1"
+initialDir = "F:\\home\\users\\tzag\\"
 try:
     
-  rootData = ABSTRACTtraverse(root=initialDir, maxLevel=-1, objVisitor=hE)
+  rootData = ABSTRACTtraverse(root=initialDir, maxLevel=1, objVisitor=hE)
 except handlers.criteriaException as ce:
     clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
     #sys.exit(-7)

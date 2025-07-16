@@ -160,7 +160,8 @@ class DirectoryTraverser(Visitor):
 def htmlLink(itemPath, displayAnchor, urlEncode):
     
     if urlEncode:
-      return '<a href="' + urllib.parse.quote(itemPath.encode('utf8') ) + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>' 
+      # TODO: Does this work?  
+      return '<a href="' + urllib.parse.quote(itemPath.encode('utf8')) + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>' 
 
     # TODO: Do we need encode/decode here???
     if os.path.isabs(itemPath):
@@ -189,7 +190,7 @@ class HTMLExporter(Visitor):
      
 
     # TODO: This is not working correctly.
-    def visit_file(self, name, path, level, parent, finfo={}, urlEncode=True):
+    def visit_file(self, name, path, level, parent, finfo={}, urlEncode=False):
         
         clrprint.clrprint(f"Processing file: {path} level {level}") 
         self.file_count += 1
