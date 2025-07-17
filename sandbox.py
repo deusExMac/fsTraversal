@@ -534,11 +534,12 @@ defDT = handlers.DirectoryTraverser({'dirinclusionPattern':"",
                                   'maxFiles':-1})
 
 
-hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
+hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"docx",
                                   'fileexclusionPattern':"git|Rhistory|DS_Store|stfolder",
+                                  'dirinclusionPattern': r'(?i)x',               
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
-                                  'maxDirs':-1,
+                                  'maxDirs':3,
                                   'maxFiles':-1})
 
 
