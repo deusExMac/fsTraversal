@@ -26,7 +26,7 @@ fontColorPalette = ['#4287f5', '#801408', '#08259c', '#4560d1', '#0a690a', '#9c5
 #
 # TODO: Has not been tested.
 def nameMatches( on, xP='', iP='', lvl=-1, dbg=False ):
-    #print(xP, iP)
+    print('Pattern:', xP, iP)
     if xP!= "" and re.search(xP, on) is not None:
        if dbg:
               print( lvl*"-", "EXCLUDING:[", on, "] lvl:", lvl )               
@@ -192,7 +192,7 @@ class HTMLExporter(Visitor):
     # TODO: This is not working correctly.
     def visit_file(self, name, path, level, parent, finfo={}, urlEncode=False):
 
-        if not nameMatches(name, self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex'), level ):
+        if not nameMatches(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern'), '' ):
            return
 
         if self.criteria.get('maxFiles', -1) > 0:
@@ -240,7 +240,7 @@ class HTMLExporter(Visitor):
 
     def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
         
-        if not nameMatches(name, self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex'), level ):
+        if not nameMatches(name, self.criteria.get('direxclusionPattern', ''), self.criteria.get('dirinclusionPatern'), ''):
            return
 
 

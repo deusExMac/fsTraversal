@@ -526,16 +526,16 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
 
-defDT = handlers.DirectoryTraverser({'inclusionRegex':"",
-                                  'exclusionRegex':r"git|Rhistory|DS_Store|stfolder",
+defDT = handlers.DirectoryTraverser({'dirinclusionPattern':"",
+                                  'direxclusionPattern':r"git|Rhistory|DS_Store|stfolder",
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
                                   'maxDirs':-1,
                                   'maxFiles':-1})
 
 
-hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'inclusionRegex':"",
-                                  'exclusionRegex':"git|Rhistory|DS_Store|stfolder",
+hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
+                                  'fileexclusionPattern':"git|Rhistory|DS_Store|stfolder",
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
                                   'maxDirs':-1,
