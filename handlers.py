@@ -236,6 +236,65 @@ class HTMLExporter(Visitor):
         
 
 
+    # TODO: test this
+    def addDirectory(self, lvl, fldr):
+        if len(self.stack) <= 0:
+           self.stack.append( {'type':'directory', 'level':level, 'html':fldr} )  
+             
+        curr = self.stack.pop()
+        if curr['level'] == lvl: 
+           self.stack.append( {'type':'directory', 'level':lvl, 'html':curr['html'] + ' ' + fldr } )
+        elif (curr['level'] - lvl) == 1:
+              sentry = {'type':'directory', 'level':lvl, 'html':fldr}
+              while True:
+                  if len(self.stack) <= 0:
+                       break
+                  itm = self.stack.pop()
+                  if itm['level'] != level:
+                     self.stack.append(itm)
+                     break
+
+                  sentry['html'] = itm['html'] +  sentry['html']
+
+              self.stack.append(sentry)
+
+        else:
+              self.stack.append(curr)
+              self.stack.append({'level':level, 'html': fldr})
+              
+
+
+
+
+    # TODO: Inclomplete...
+    def addDirectory2(self, lvl, fldr):
+        if len(self.stack) <= 0:
+           self.stack.append( {'type':'directory', 'level':level, 'html':fldr} )  
+             
+        curr = self.stack.pop()
+        if curr['level'] == lvl: 
+           self.stack.append( {'type':'directory', 'level':lvl, 'html':curr['html'] + ' ' + fldr } )
+        elif (curr['level'] - lvl) == 1:
+              sentry = {'type':'directory', 'level':lvl, 'html':fldr}
+              while True:
+                  if len(self.stack) <= 0:
+                       break
+                  itm = self.stack.pop()
+                  if itm['level'] != level:
+                     self.stack.append(itm)
+                     break
+
+                  sentry['html'] = itm['html'] +  sentry['html']
+
+              self.stack.append(sentry)
+
+        else:
+              self.stack.append(curr)
+              self.stack.append({'level':level, 'html': fldr})
+              
+           
+
+
 
 
 
@@ -261,7 +320,7 @@ class HTMLExporter(Visitor):
         #self.tmpHtml = self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr) #+ self.tmpHtml 
         #if level == 1:
 
-        # TODO: Next is wrong...
+        # TODO: Next should be replaced by addDirectory...
         if (len(self.stack) <= 0):
             #print(f'>>Adding FOLDER {name} at level {level}')
             self.stack.append( {'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} ) 
