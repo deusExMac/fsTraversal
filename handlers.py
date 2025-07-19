@@ -1,3 +1,4 @@
+import sys
 from abc import ABC, abstractmethod
 import os
 import re
@@ -271,6 +272,39 @@ class HTMLExporter(Visitor):
 
 
 
+
+    def addDirectory2(self, level, fldr):
+        if len(self.stack) <= 0:
+           self.stack.append( {'type':'directory', 'level':level, 'html':fldr} )
+           return
+             
+        top = self.stack.pop()
+        if top['level'] == level:
+           # New directory is at the same level as existing one. So, concatenate it 
+           self.stack.append( {'type':'directory', 'level':level, 'html':top['html'] + ' ' + fldr } )
+        elif (top['level'] - level) == 1:
+              # New directory is at a higher level than current. This means we return from a deeper level
+              # i.e. top stack is the subdirectory of the encounterred directory
+              sentry = {'type':'directory', 'level':level, 'html':fldr.replace('${SUBDIRECTORY}', top['html'])}
+              while True:
+                   
+                  if len(self.stack) <= 0:
+                       break
+                  itm = self.stack.pop()
+                  if itm['level'] != level:
+                     self.stack.append(itm)
+                     break
+
+                  clrprint.clrprint('>>> Found same level. Concatenating...', clr='red') 
+                  sentry['html'] = itm['html'] +  sentry['html']
+
+              self.stack.append(sentry)
+
+        else:
+              self.stack.append(top)
+              self.stack.append({'level':level, 'html': fldr})
+ 
+        return
 
 
               
