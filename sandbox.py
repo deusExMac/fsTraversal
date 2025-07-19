@@ -526,6 +526,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
 
+'''
 defDT = handlers.DirectoryTraverser({'dirinclusionPattern':"",
                                   'direxclusionPattern':r"git|Rhistory|DS_Store|stfolder",
                                   'minFileSize':-1,
@@ -533,22 +534,27 @@ defDT = handlers.DirectoryTraverser({'dirinclusionPattern':"",
                                   'maxDirs':-1,
                                   'maxFiles':-1})
 
+'''
 
-hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"docx",
-                                  'fileexclusionPattern':"git|Rhistory|DS_Store|stfolder",
-                                  'dirinclusionPattern': r'(?i)x',               
+
+
+
+hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
+                                  'fileexclusionPattern':"git|Rhistory|DS_Store",
+                                  'dirinclusionPattern': '',
+                                  'direxclusionPattern':'stfolder',
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
-                                  'maxDirs':3,
+                                  'maxDirs':-1,
                                   'maxFiles':-1})
 
 
 
 
-initialDir = "/Users/manolistzagarakis/home(synced)/econ"
+initialDir = "/Users/manolistzagarakis/home(synced)/econ/1-MSc-Direction-2022"
 try:
     
-  rootData = ABSTRACTtraverse(root=initialDir, maxLevel=2, objVisitor=hE)
+  rootData = ABSTRACTtraverse(root=initialDir, maxLevel=3, objVisitor=hE)
 except handlers.criteriaException as ce:
     clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
     #sys.exit(-7)

@@ -26,8 +26,8 @@ fontColorPalette = ['#4287f5', '#801408', '#08259c', '#4560d1', '#0a690a', '#9c5
 #
 # TODO: Has not been tested.
 def nameMatches( on, xP='', iP='', lvl=-1, dbg=False ):
-    print('Exclusion pattern:', xP)
-    print('inclusion pattern:', iP)
+    #print('Exclusion pattern:', xP)
+    #print('inclusion pattern:', iP)
     if xP!= "" and re.search(xP, on) is not None:
        if dbg:
               print( lvl*"-", "EXCLUDING:[", on, "] lvl:", lvl )               
@@ -236,17 +236,21 @@ class HTMLExporter(Visitor):
         
 
 
-    # TODO: test this
-    def addDirectory(self, lvl, fldr):
+    # TODO: Seems to work but test this more...
+    def addDirectory(self, level, fldr):
         if len(self.stack) <= 0:
            self.stack.append( {'type':'directory', 'level':level, 'html':fldr} )  
              
-        curr = self.stack.pop()
-        if curr['level'] == lvl: 
-           self.stack.append( {'type':'directory', 'level':lvl, 'html':curr['html'] + ' ' + fldr } )
-        elif (curr['level'] - lvl) == 1:
-              sentry = {'type':'directory', 'level':lvl, 'html':fldr}
+        top = self.stack.pop()
+        if top['level'] == level:
+           # New directory is at the same level as existing one. So, concatenate it 
+           self.stack.append( {'type':'directory', 'level':level, 'html':top['html'] + ' ' + fldr } )
+        elif (top['level'] - level) == 1:
+              # New directory is at a higher level than current. This means we return from a deeper level
+              # i.e. top stack is the subdirectory of the encounterred directory
+              sentry = {'type':'directory', 'level':level, 'html':fldr.replace('${SUBDIRECTORY}', top['html'])}
               while True:
+                   
                   if len(self.stack) <= 0:
                        break
                   itm = self.stack.pop()
@@ -254,43 +258,21 @@ class HTMLExporter(Visitor):
                      self.stack.append(itm)
                      break
 
+                  clrprint.clrprint('>>> Found same level. Concatenating...', clr='red') 
                   sentry['html'] = itm['html'] +  sentry['html']
 
               self.stack.append(sentry)
 
         else:
-              self.stack.append(curr)
+              self.stack.append(top)
               self.stack.append({'level':level, 'html': fldr})
-              
+
+        return      
 
 
 
 
-    # TODO: Inclomplete...
-    def addDirectory2(self, lvl, fldr):
-        if len(self.stack) <= 0:
-           self.stack.append( {'type':'directory', 'level':level, 'html':fldr} )  
-             
-        curr = self.stack.pop()
-        if curr['level'] == lvl: 
-           self.stack.append( {'type':'directory', 'level':lvl, 'html':curr['html'] + ' ' + fldr } )
-        elif (curr['level'] - lvl) == 1:
-              sentry = {'type':'directory', 'level':lvl, 'html':fldr}
-              while True:
-                  if len(self.stack) <= 0:
-                       break
-                  itm = self.stack.pop()
-                  if itm['level'] != level:
-                     self.stack.append(itm)
-                     break
 
-                  sentry['html'] = itm['html'] +  sentry['html']
-
-              self.stack.append(sentry)
-
-        else:
-              self.stack.append(curr)
-              self.stack.append({'level':level, 'html': fldr})
               
            
 
@@ -311,14 +293,14 @@ class HTMLExporter(Visitor):
             
         #print(f"Processing directory: {path}")
         self.directory_count += 1
+       
+        self.addDirectory(level, self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', random.choice(fontColorPalette)) )
 
-        
-
+        '''
         # TODO: Complete this
         rClr = random.choice(fontColorPalette)
         print('Adding directory:', name)
-        #self.tmpHtml = self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', subdir).replace('${RLVLCOLOR}', rClr) #+ self.tmpHtml 
-        #if level == 1:
+        
 
         # TODO: Next should be replaced by addDirectory...
         if (len(self.stack) <= 0):
@@ -334,7 +316,7 @@ class HTMLExporter(Visitor):
               #self.stack.append(curr) 
               #print(f'Adding subdir: top in stack {curr["level"]} new: {level}...')
               mergedDir = {'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', curr['html']).replace('${RLVLCOLOR}', rClr)}
-              #self.stack.append({'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', curr['html']).replace('${RLVLCOLOR}', rClr)} )
+              
               tmpLst = []
               #print('***before: stack size:', len(self.stack))
               while True:         
@@ -358,7 +340,7 @@ class HTMLExporter(Visitor):
                self.stack.append( {'level':level, 'html': self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} ) 
                 
         #self.displayStack()
-           
+        '''   
         
 
 
