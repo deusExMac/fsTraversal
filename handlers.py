@@ -287,9 +287,9 @@ class HTMLExporter(Visitor):
           clrprint.clrprint(f'Concatenating same level L:{level} {fldr}', clr='blue') 
           self.stack.append( {'type':'directory', 'level':level, 'html':top['html'] + ' ' + fldr } )
        elif (level - top['level']) == 1:
-              # New directory is at a higher level than current. This means we return from a deeper level
-              # i.e. top stack is the subdirectory of the encounterred directory
-              clrprint.clrprint(f'Adding to stack subdirectory L:{level} {fldr}', clr='blue')
+              # New directory is at a lower level (greater level) than current. This means we are
+              # going deeper. Hence, add it to the stack
+              clrprint.clrprint(f'Adding to stack 2 items: current L:{level} {fldr}', clr='blue')
               self.stack.append(top)
               self.stack.append( {'type':'directory', 'level':level, 'html':fldr} )
 
@@ -311,23 +311,39 @@ class HTMLExporter(Visitor):
               '''
 
        else:
-               
-              clrprint.clrprint(f'Generating SUBDIRECTORIES {fldr}', clr='blue') 
-              subd = '' 
+              #self.stack.append(top)
+              #if level < top['level']:
+              #    self.stack.append(topDir)
+                  
+              clrprint.clrprint(f'Items in stack:{len(self.stack)} Current directory: {fldr}', clr='yellow')
+              clrprint.clrprint(f'Adding SUBDIR for encounterred current L:{level} {fldr}', clr='blue')
+              subd = top['html']
+              topDir = self.stack.pop()
+              topDir['html'] = topDir['html'].replace('${SUBDIRECTORY}', subd)
+              topDir['html'] = topDir['html'] + ' ' + fldr
+              self.stack.append(topDir) 
+              
+              '''
               while True:
                     if len(self.stack) <= 0:
+                       print('>>>>>> empty stack') 
                        break
+                    
                     itm = self.stack.pop()
                     if itm['level'] == level:
                        subd = itm['html'] + subd
                     elif level - itm['level'] == 1:
-                         itm['html'] = itm['html'].replace('${SUBDIRECTORY}', subd)
-                         self.stack.append(itm)
+                         top['html'] = top['html'].replace('${SUBDIRECTORY}', subd)
+                         #print(itm)
+                         #self.stack.append(itm)
                          break
+              ''' 
+              #clrprint.clrprint(f'Generated SUBDIRECTORIES L:{level} {itm["html"]}', clr='blue')
+              #clrprint.clrprint(f'Adding to stack L:{level} {fldr}', clr='blue')
+              
 
-              clrprint.clrprint(f'Generated SUBDIRECTORIES L:{level} {itm["html"]}', clr='blue')
-              clrprint.clrprint(f'Adding to stack L:{level} {fldr}', clr='blue')
-              self.stack.append({'type':'directory', 'level':level, 'html':fldr}) 
+              #self.stack.append(top)
+              #self.stack.append({'type':'directory', 'level':level, 'html':fldr}) 
                     
               #clrprint.clrprint(f'Appending to stack {fldr}', clr='blue') 
               #self.stack.append(top)

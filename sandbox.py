@@ -533,7 +533,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 
 
-dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template5.html')
+dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
 
 '''
 defDT = handlers.DirectoryTraverser({'dirinclusionPattern':"",
@@ -560,7 +560,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "exampleDir1/"
+initialDir = "exampleDir4/"
 try:
     
   rootData = ABSTRACTtraverse(root=initialDir, maxLevel=3, objVisitor=hE)
