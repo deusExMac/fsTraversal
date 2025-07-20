@@ -272,19 +272,28 @@ class HTMLExporter(Visitor):
 
 
 
+    # First (directory) Encountered First Added
+    def addDirectoryFEFA(self, level, fldr):
+       
+       if len(self.stack) <= 0:
+          clrprint.clrprint(f'Adding to stack L:{level} {fldr}', clr='blue') 
+          self.stack.append( {'type':'directory', 'level':level, 'html':fldr} )
+          return
 
-    def addDirectory2(self, level, fldr):
-        if len(self.stack) <= 0:
-           self.stack.append( {'type':'directory', 'level':level, 'html':fldr} )
-           return
-             
-        top = self.stack.pop()
-        if top['level'] == level:
-           # New directory is at the same level as existing one. So, concatenate it 
-           self.stack.append( {'type':'directory', 'level':level, 'html':top['html'] + ' ' + fldr } )
-        elif (top['level'] - level) == 1:
+       top = self.stack.pop()     
+        
+       if top['level'] == level:
+          # New directory is at the same level as existing one. So, concatenate it
+          clrprint.clrprint(f'Concatenating same level L:{level} {fldr}', clr='blue') 
+          self.stack.append( {'type':'directory', 'level':level, 'html':top['html'] + ' ' + fldr } )
+       elif (level - top['level']) == 1:
               # New directory is at a higher level than current. This means we return from a deeper level
               # i.e. top stack is the subdirectory of the encounterred directory
+              clrprint.clrprint(f'Adding to stack subdirectory L:{level} {fldr}', clr='blue')
+              self.stack.append(top)
+              self.stack.append( {'type':'directory', 'level':level, 'html':fldr} )
+
+              '''
               sentry = {'type':'directory', 'level':level, 'html':fldr.replace('${SUBDIRECTORY}', top['html'])}
               while True:
                    
@@ -299,12 +308,32 @@ class HTMLExporter(Visitor):
                   sentry['html'] = itm['html'] +  sentry['html']
 
               self.stack.append(sentry)
+              '''
 
-        else:
-              self.stack.append(top)
-              self.stack.append({'level':level, 'html': fldr})
+       else:
+               
+              clrprint.clrprint(f'Generating SUBDIRECTORIES {fldr}', clr='blue') 
+              subd = '' 
+              while True:
+                    if len(self.stack) <= 0:
+                       break
+                    itm = self.stack.pop()
+                    if itm['level'] == level:
+                       subd = itm['html'] + subd
+                    elif level - itm['level'] == 1:
+                         itm['html'] = itm['html'].replace('${SUBDIRECTORY}', subd)
+                         self.stack.append(itm)
+                         break
+
+              clrprint.clrprint(f'Generated SUBDIRECTORIES L:{level} {itm["html"]}', clr='blue')
+              clrprint.clrprint(f'Adding to stack L:{level} {fldr}', clr='blue')
+              self.stack.append({'type':'directory', 'level':level, 'html':fldr}) 
+                    
+              #clrprint.clrprint(f'Appending to stack {fldr}', clr='blue') 
+              #self.stack.append(top)
+              #self.stack.append({'level':level, 'html': fldr})
  
-        return
+       return
 
 
               
@@ -328,7 +357,7 @@ class HTMLExporter(Visitor):
         #print(f"Processing directory: {path}")
         self.directory_count += 1
        
-        self.addDirectory(level, self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', random.choice(fontColorPalette)) )
+        self.addDirectoryFEFA(level, self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRPATH}", path).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', random.choice(fontColorPalette)) )
 
         '''
         # TODO: Complete this
@@ -398,10 +427,13 @@ class HTMLExporter(Visitor):
 
     def unwindStack(self, level=1):
          htmlC = ''
+         cnt = 0
          while  len(self.stack) > 0:
               sv = self.stack.pop()
-              print(sv)
+              #print(sv)
               if sv['level'] == level:
+                 cnt += 1
+                 clrprint.clrprint(f'[{cnt}]', clr='red', end='')
                  print('---\n', sv, '---\n') 
                  htmlC = sv['html'] + htmlC
               

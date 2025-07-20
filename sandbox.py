@@ -435,7 +435,16 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
         # formatted display of subdirectory 
         subDirData = (0,0,0, "xxx")
         if recursive:
-            
+
+            v = handlers.Directory(encounteredDirectory,
+                               directoryPath,
+                               lvl,
+                               root,
+                               -1,
+                               -2,
+                               '')
+            v.accept(objVisitor)
+        
             # go into subdirectory and traverse it
             subDirData = ABSTRACTtraverse( directoryPath, lvl+1, recursive, maxLevel,
                                               encodeUrl,
@@ -452,7 +461,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                if (subDirData[0] != -1):
                    return(subDirData[0], lnDirs, lnFiles, '')
 
-        
+        '''
         v = handlers.Directory(encounteredDirectory,
                                directoryPath,
                                lvl,
@@ -461,8 +470,8 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
                                subDirData[2],
                                subDirData[3])
         v.accept(objVisitor)
-        #if objVisitor.tmpHtml != '':
-        #   tmpH = tmpH + objVisitor.tmpHtml #+ subDirData[3] #objVisitor.tmpHtml
+        '''
+        
         
         
         '''
@@ -524,7 +533,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
 
 
 
-dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
+dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template5.html')
 
 '''
 defDT = handlers.DirectoryTraverser({'dirinclusionPattern':"",
@@ -551,7 +560,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "/Users/manolistzagarakis/home(synced)/econ/1-MSc-Direction-2022"
+initialDir = "exampleDir1/"
 try:
     
   rootData = ABSTRACTtraverse(root=initialDir, maxLevel=3, objVisitor=hE)
@@ -567,6 +576,10 @@ else:
 
 import io
 
+clrprint.clrprint('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%', clr='yellow')
+hE.displayStack()
+clrprint.clrprint('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%', clr='yellow')
+
 #rrr = hE.stack.pop()
 '''
 htmlContent = pTemp.replace('${SUBDIRECTORY}', rootData[3]).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', str(rootData[1])).replace('${LNFILES}', str(rootData[2]))
@@ -579,7 +592,7 @@ with open('sandBox.html', 'w', encoding='utf8') as f:
 '''
 
 print('Saving stack...')
-print('Total of [', len(hE.stack), '] items in stack.', end='')
+print('Total of [', len(hE.stack), '] items in stack.', sep='')
 h = hE.unwindStack()
 h = pTemp.replace('${SUBDIRECTORY}', h).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', '-1').replace('${LNFILES}', '-5')
 #htmlContent = htmlContent.replace('${NDIRS}', str(hE.directory_count)).replace('${NFILES}', str(hE.file_count))
