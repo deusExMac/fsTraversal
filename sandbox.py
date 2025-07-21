@@ -359,6 +359,28 @@ from collections import deque
 
 theSTACK = deque()
 
+
+def testTraversal():
+    fsTraversal('exampleDir3', 1)
+    showStack(theSTACK)
+    
+   
+def showStack(stk):
+    sc= []
+    while True:
+        if len(stk) == 0:
+           print('Empty stack. terminating') 
+           break
+
+        sc.append(stk.pop())
+
+    icnt = 0
+    sL = len(sc)
+    for itm in sc:
+        icnt += 1
+        print(f'({sL-icnt+1}) {itm}')
+        
+        
 def fsTraversal(root, lvl):
     try:
       clrprint.clrprint(f'{lvl*"\t"}Inside {root}', clr='maroon')
@@ -380,7 +402,8 @@ def fsTraversal(root, lvl):
         sys.stdout.flush()
         
         
-        directoryPath = normalizedPathJoin(root, encounteredDirectory) 
+        directoryPath = normalizedPathJoin(root, encounteredDirectory)
+        clrprint.clrprint('Pushing:', directoryPath, clr='yellow')
         theSTACK.append(directoryPath + ' : [' + str(lvl) + ']')
         
         #lnDirs += 1       
