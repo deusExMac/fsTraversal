@@ -355,9 +355,67 @@ def timeit(f):
 
 
 import handlers
+from collections import deque
+
+theSTACK = deque()
+
+def fsTraversal(root, lvl):
+    try:
+      clrprint.clrprint(f'{lvl*"\t"}Inside {root}', clr='maroon')
+      sys.stdout.flush()
+      path, dirs, files = next( os.walk(root) )    
+    except Exception as wEx:
+      print('Exception during walk:', str(wEx) )
+      if ON_TRAVERSE_ERROR_QUIT:
+         return(-2, 0, 0, "")
+      else:
+         return(0, 0, 0, "")
+
+        
+    dirs.sort()
+    files.sort()
+
+    
+    for encounteredDirectory in dirs:
+        sys.stdout.flush()
+        
+        
+        directoryPath = normalizedPathJoin(root, encounteredDirectory) 
+        theSTACK.append(directoryPath + ' : [' + str(lvl) + ']')
+        
+        #lnDirs += 1       
+          
+        
+        # The semantics in order: 
+        # total number of directories, total number of files, local number of dirs, local number of files,
+        # formatted display of subdirectory 
+        subDirData = (0,0,0, "xxx")
+        #if recursive:
+        '''
+        v = handlers.Directory(encounteredDirectory,
+                               directoryPath,
+                               lvl,
+                               root,
+                               -1,
+                               -2,
+                               '')
+        v.accept(objVisitor)
+        '''
+        
+            # go into subdirectory and traverse it
+        subDirData = fsTraversal( directoryPath, lvl+1)  
+        if subDirData[0] < 0:
+               if (subDirData[0] != -1):
+                   return(subDirData[0], -1, -1, '')
+
+        
+
+    return 0, -1, -1, ''
 
 
 
+
+    
 
 #
 # TODO: 1) Do we need epilog and fepilog??? 2) Check PSEUDOs - check DIRLINK etc
