@@ -377,7 +377,7 @@ def merge(stk, cLvl=-1):
     sDir = ''
     print(f'START MERGING currLevel={cLvl}...')
     while True:
-          if len(stk) <= 1:
+          if len(stk) <= 0:
              print('Single stack.') 
              break
             
@@ -390,7 +390,8 @@ def merge(stk, cLvl=-1):
           elif cLvl - top['level'] == 1:
                sDir = top['name'] + ' || SUBDIRS:[' + sDir + ']'
                stk.append({'level':top['level'], 'name':sDir})
-               #break
+               cLvl = top['level']
+               break
 
           clrprint.clrprint(f'sdir {sDir}', clr="yellow")
 
@@ -448,7 +449,7 @@ def fsTraversal(root, lvl):
         
         
         directoryPath = normalizedPathJoin(root, encounteredDirectory)
-        
+        clrprint.clrprint('Processing:', directoryPath, f' total of {len(theSTACK)}', clr='yellow')
         if len(theSTACK) > 0:
            top = theSTACK.pop()
            theSTACK.append(top) 
