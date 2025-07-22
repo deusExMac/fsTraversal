@@ -399,8 +399,12 @@ def merge(newD, stk):
              # collect all at the same level and concatenate them
              sDir = top['name']
              while True:
+
+                 if len(stk) <= 0:
+                     break
+                    
                  s = stk.pop()
-                 print(f'\t{s}')
+                 #print(f'\t{s}')
                  if s['level'] == top['level']:
                     sDir = sDir + '|' + s['name']
                     print(sDir)
@@ -410,7 +414,8 @@ def merge(newD, stk):
                       break
             
              #break
-      
+          
+             
           clrprint.clrprint(f'Returning', clr="yellow")
           print(f'END MERGING...')
 
@@ -418,7 +423,9 @@ def merge(newD, stk):
     
     #v = {'level':top['level'], 'name':sDir}
     #clrprint.clrprint(f"Pushed {v}")
-    print('END MERGING...') 
+    print('END MERGING...')
+    if newD['level'] <= 0:
+             stk.append({'level':s['level'], 'name':sDir})
     return(sDir)        
               
     
@@ -426,6 +433,7 @@ def merge(newD, stk):
     
 def testTraversal(d='exampleDir3'):
     fsTraversal(d, 1)
+    merge({'level':0, 'name':''}, theSTACK)
     showStack(theSTACK)
     
    
