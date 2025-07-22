@@ -431,6 +431,9 @@ def testTraversal(d='exampleDir3'):
     fsTraversal(d, 1)
     merge({'level':0, 'name':''}, theSTACK)
     showStack(theSTACK)
+
+
+
     
    
 def showStack(stk):
