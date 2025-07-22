@@ -367,33 +367,52 @@ from collections import deque
 
 theSTACK = deque()
 
-def merge(stk, cLvl=-1):
-    #global theSTACK
+def merge(newD, stk):
+    
 
     print(f'Total of {len(theSTACK)} in stack')
-    #showStack(theSTACK)
-    #import sys
-    #sys.exit(-1)
+    
     sDir = ''
-    print(f'START MERGING currLevel={cLvl}...')
+    print(f'START MERGING...')
     while True:
           if len(stk) <= 0:
-             print('Single stack.') 
+             print('Stack 0 or 1 item. Quitting...')
+             print(f'END MERGING (no merging)...')
              break
-            
-          top = stk.pop()
-          #print(len(stk))
-          print('POPPED:', top)
-          #clrprint.clrprint(f"{top['name']}", clr="blue")
-          if top['level'] == cLvl:
-             sDir = sDir +  '+' + top['name'] 
-          elif cLvl - top['level'] == 1:
-               sDir = top['name'] + ' || SUBDIRS:[' + sDir + ']'
-               stk.append({'level':top['level'], 'name':sDir})
-               cLvl = top['level']
-               break
 
-          clrprint.clrprint(f'sdir {sDir}', clr="yellow")
+          top = stk.pop()
+          if newD['level'] >= top['level']:
+             stk.append(top)
+             print(f'END MERGING (no merging)...')
+             return
+            
+          
+          print('POPPED:', top)
+          
+          #if top['level'] == newD['level']:
+          #sDir = sDir +  '+' + top['name']
+          #   stk.append(newD)
+          #   break
+          print('>>>>Comparing [', top, '] to [', newD, ']')
+          if top['level'] - newD['level'] > 0:
+             print('DOING MERGING OPERATION....') 
+             # collect all at the same level and concatenate them
+             sDir = top['name']
+             while True:
+                 s = stk.pop()
+                 print(f'\t{s}')
+                 if s['level'] == top['level']:
+                    sDir = sDir + '|' + s['name']
+                    print(sDir)
+                 elif top['level'] - s['level'] == 1:
+                      sDir = s['name'] + ' || SUBDIRS:[' + sDir + ']'
+                      stk.append({'level':s['level'], 'name':sDir})
+                      break
+            
+             #break
+      
+          clrprint.clrprint(f'Returning', clr="yellow")
+          print(f'END MERGING...')
 
           
     
@@ -450,12 +469,14 @@ def fsTraversal(root, lvl):
         
         directoryPath = normalizedPathJoin(root, encounteredDirectory)
         clrprint.clrprint('Processing:', directoryPath, f' total of {len(theSTACK)}', clr='yellow')
+        merge({'level':lvl, 'name':directoryPath}, theSTACK)
+        '''
         if len(theSTACK) > 0:
            top = theSTACK.pop()
            theSTACK.append(top) 
            if lvl < top['level']:
               merge(theSTACK, top['level'])
-               
+        '''       
                   
         theSTACK.append( {'level':lvl, 'name':directoryPath})
         clrprint.clrprint('PUSHED:', directoryPath, f' total of {len(theSTACK)}', clr='yellow')
