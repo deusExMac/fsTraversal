@@ -388,11 +388,6 @@ def merge(newD, stk):
             
           
           print('POPPED:', top)
-          
-          #if top['level'] == newD['level']:
-          #sDir = sDir +  '+' + top['name']
-          #   stk.append(newD)
-          #   break
           print('>>>>Comparing [', top, '] to [', newD, ']')
           if top['level'] - newD['level'] > 0:
              print('DOING MERGING OPERATION....') 
@@ -426,6 +421,7 @@ def merge(newD, stk):
     print('END MERGING...')
     if newD['level'] <= 0:
              stk.append({'level':s['level'], 'name':sDir})
+             
     return(sDir)        
               
     
