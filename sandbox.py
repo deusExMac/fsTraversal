@@ -356,13 +356,54 @@ def timeit(f):
 
 import handlers
 
+
+
+
+
+
 ####################### FOR TESTING ONLY (START) #########################
 
 from collections import deque
 
 theSTACK = deque()
 
+def merge(stk, cLvl=-1):
+    #global theSTACK
 
+    print(f'Total of {len(theSTACK)} in stack')
+    #showStack(theSTACK)
+    #import sys
+    #sys.exit(-1)
+    sDir = ''
+    print(f'START MERGING currLevel={cLvl}...')
+    while True:
+          if len(stk) <= 1:
+             print('Single stack.') 
+             break
+            
+          top = stk.pop()
+          #print(len(stk))
+          print('POPPED:', top)
+          #clrprint.clrprint(f"{top['name']}", clr="blue")
+          if top['level'] == cLvl:
+             sDir = sDir +  '+' + top['name'] 
+          elif cLvl - top['level'] == 1:
+               sDir = top['name'] + ' || SUBDIRS:[' + sDir + ']'
+               stk.append({'level':top['level'], 'name':sDir})
+               #break
+
+          clrprint.clrprint(f'sdir {sDir}', clr="yellow")
+
+          
+    
+    #v = {'level':top['level'], 'name':sDir}
+    #clrprint.clrprint(f"Pushed {v}")
+    print('END MERGING...') 
+    return(sDir)        
+              
+    
+
+    
 def testTraversal(d='exampleDir3'):
     fsTraversal(d, 1)
     showStack(theSTACK)
@@ -385,6 +426,7 @@ def showStack(stk):
         
         
 def fsTraversal(root, lvl):
+    #global theSTACK
     try:
       clrprint.clrprint(f'{lvl*"\t"}Inside {root}', clr='maroon')
       sys.stdout.flush()
@@ -406,8 +448,16 @@ def fsTraversal(root, lvl):
         
         
         directoryPath = normalizedPathJoin(root, encounteredDirectory)
-        clrprint.clrprint('Pushing:', directoryPath, clr='yellow')
-        theSTACK.append(directoryPath + ' : [' + str(lvl) + ']')
+        
+        if len(theSTACK) > 0:
+           top = theSTACK.pop()
+           theSTACK.append(top) 
+           if lvl < top['level']:
+              merge(theSTACK, top['level'])
+               
+                  
+        theSTACK.append( {'level':lvl, 'name':directoryPath})
+        clrprint.clrprint('PUSHED:', directoryPath, f' total of {len(theSTACK)}', clr='yellow')
         
         #lnDirs += 1       
           
