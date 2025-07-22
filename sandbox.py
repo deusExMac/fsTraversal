@@ -355,13 +355,16 @@ def timeit(f):
 
 
 import handlers
+
+####################### FOR TESTING ONLY (START) #########################
+
 from collections import deque
 
 theSTACK = deque()
 
 
-def testTraversal():
-    fsTraversal('exampleDir3', 1)
+def testTraversal(d='exampleDir3'):
+    fsTraversal(d, 1)
     showStack(theSTACK)
     
    
@@ -437,7 +440,7 @@ def fsTraversal(root, lvl):
 
 
 
-
+####################### FOR TESTING ONLY (END) #########################
     
 
 #
