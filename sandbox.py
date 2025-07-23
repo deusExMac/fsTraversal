@@ -426,11 +426,78 @@ def merge(newD, stk):
               
     
 
+def newMERGE(newD, stk):
+    
+    print(f'Total of {len(theSTACK)} in stack')
+    
+    sDir = ''
+    print(f'START MERGING...')
+    while True:
+          if len(stk) <= 0:
+             print('Stack 0 or 1 item. Quitting...')
+             print(f'END MERGING (no merging)...')
+             break
+
+          top = stk.pop()
+          if newD['level'] >= top['level']:
+             stk.append(top)
+             print(f'END MERGING (no merging)...')
+             return
+            
+          
+          print('POPPED:', top)
+          print('>>>>Comparing [', top, '] to [', newD, ']')
+          if top['level'] - newD['level'] > 0:
+             print('DOING MERGING OPERATION....') 
+             # collect all at the same level and concatenate them
+             sDir = top['html']
+             while True:
+
+                 if len(stk) <= 0:
+                     break
+                    
+                 s = stk.pop()
+                 #print(f'\t{s}')
+                 if s['level'] == top['level']:
+                    sDir = sDir + ' ' + s['html']
+                    print(sDir)
+                 elif top['level'] - s['level'] == 1:
+                      sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
+                      stk.append({'level':s['level'], 'name':s['name'], 'html':sDir})
+                      break
+            
+             #break
+          
+             
+          clrprint.clrprint(f'Returning', clr="yellow")
+          print(f'END MERGING...')
+
+          
+    
+    #v = {'level':top['level'], 'name':sDir}
+    #clrprint.clrprint(f"Pushed {v}")
+    print('END MERGING...')
+    if newD['level'] <= 0:
+       stk.append({'level':s['level'], 'name':s['name'], 'html':sDir})
+             
+    return(sDir)
+
+
+
+
+
+
     
 def testTraversal(d='exampleDir3'):
     fsTraversal(d, 1)
-    merge({'level':0, 'name':''}, theSTACK)
-    showStack(theSTACK)
+    newMERGE({'level':0, 'name':''}, theSTACK)
+    fp = theSTACK.pop()
+    clrprint.clrprint('[', fp, ']', clr='maroon')
+    htmlFullPage = pTemp.replace('${SUBDIRECTORY}', fp['html']).replace('${INITIALDIRECTORY}', d)
+    with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
+     sf.write(htmlFullPage) 
+    
+    #showStack(theSTACK)
 
 
 
@@ -476,16 +543,14 @@ def fsTraversal(root, lvl):
         
         directoryPath = normalizedPathJoin(root, encounteredDirectory)
         clrprint.clrprint('Processing:', directoryPath, f' total of {len(theSTACK)}', clr='yellow')
-        merge({'level':lvl, 'name':directoryPath}, theSTACK)
-        '''
-        if len(theSTACK) > 0:
-           top = theSTACK.pop()
-           theSTACK.append(top) 
-           if lvl < top['level']:
-              merge(theSTACK, top['level'])
-        '''       
-                  
-        theSTACK.append( {'level':lvl, 'name':directoryPath})
+        
+        nD = {'level':lvl, 'name':directoryPath, 'dname':encounteredDirectory, 'lndir':-1, 'lnfiles':-1, 'html':''}
+        newMERGE(nD, theSTACK)
+
+        dId = "d" + str(lvl) + "-" + str( random.randint(0, 1000000) )      
+        nD['html'] = dTemp.replace('${ID}', dId).replace('${DIRNAME}', encounteredDirectory).replace('${PATH}', directoryPath).replace('${RLEVELCOLOR}', random.choice(fontColorPalette))
+        theSTACK.append(nD)
+        
         clrprint.clrprint('PUSHED:', directoryPath, f' total of {len(theSTACK)}', clr='yellow')
         
         #lnDirs += 1       
