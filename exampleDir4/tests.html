@@ -11,14 +11,14 @@
 
 <body>
 
-<ul class="itm">
- <li></li>
- <li>b</li>
- <li>c</li>
-</ul>
+<ul id="shouldBeDeleted" class="itm"><li></li></ul>
 
 <script language="javascript">
-$(".itm"):empty(li).remove();
+var element = document.querySelector("ul:has(li:empty)");
+
+alert(element.id);
+element.remove();
+//$("ul.itm:has(:empty(li))").remove();
 </script>
 
 </body>

@@ -324,11 +324,20 @@ ${INTROTEXT}</div>
 
 </div> <!--outer div -->
 
-<script language="javascript">
-<script language="javascript">
-$(".subdirectory"):empty(li).remove();
+<script>
+
+// TODO: Not working...
+var elements = document.querySelectorAll("ul.subdirectory:has(li:empty)");
+//alert(element.id);
+if (elements){
+    alert('Found total of ' + elements.length);
+    //element.remove();
+    elements.forEach(eul => eul.remove());
+}else{
+    alert('Nothing.');
+}
+
 </script>
-  </script>
 
 </body>
 
