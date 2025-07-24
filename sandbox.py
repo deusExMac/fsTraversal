@@ -420,7 +420,7 @@ def merge(newD, stk):
     #clrprint.clrprint(f"Pushed {v}")
     print('END MERGING...')
     if newD['level'] <= 0:
-             stk.append({'level':s['level'], 'name':sDir})
+       stk.append({'level':s['level'], 'name':sDir})
              
     return(sDir)        
               
@@ -459,8 +459,8 @@ def newMERGE(newD, stk):
                  s = stk.pop()
                  #print(f'\t{s}')
                  if s['level'] == top['level']:
-                    sDir = sDir + ' ' + s['html']
-                    print(sDir)
+                    sDir = s['html'] + ' ' + sDir
+                    #print(sDir)
                  elif top['level'] - s['level'] == 1:
                       sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
                       stk.append({'level':s['level'], 'name':s['name'], 'html':sDir})
@@ -548,7 +548,7 @@ def fsTraversal(root, lvl):
         newMERGE(nD, theSTACK)
 
         dId = "d" + str(lvl) + "-" + str( random.randint(0, 1000000) )      
-        nD['html'] = dTemp.replace('${ID}', dId).replace('${DIRNAME}', encounteredDirectory).replace('${PATH}', directoryPath).replace('${RLEVELCOLOR}', random.choice(fontColorPalette))
+        nD['html'] = dTemp.replace('${ID}', dId).replace('${DIRNAME}', encounteredDirectory).replace('${PATH}', directoryPath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
         theSTACK.append(nD)
         
         clrprint.clrprint('PUSHED:', directoryPath, f' total of {len(theSTACK)}', clr='yellow')
