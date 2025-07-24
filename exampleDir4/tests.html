@@ -1,0 +1,26 @@
+<head>
+	<script type='text/javascript' src='html/jquery-3.7.1.js'></script>
+
+<style>
+.itm li:empty{display:none}
+.itm li *:empty{display:none}
+</style>
+
+</head>
+<html>
+
+<body>
+
+<ul class="itm">
+ <li></li>
+ <li>b</li>
+ <li>c</li>
+</ul>
+
+<script language="javascript">
+$(".itm"):empty(li).remove();
+</script>
+
+</body>
+
+</html>

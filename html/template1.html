@@ -325,11 +325,9 @@ ${INTROTEXT}</div>
 </div> <!--outer div -->
 
 <script language="javascript">
-// TODO: test this  
-window.onload = function(){
-    $('ul.subdirectory:empty(li)').hide(); // Will not alter layout
-    // $('.nested:not(:has(li))').css("display", "none"); // Will alter layout
-    }
+<script language="javascript">
+$(".subdirectory"):empty(li).remove();
+</script>
   </script>
 
 </body>
