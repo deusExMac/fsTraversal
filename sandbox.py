@@ -494,6 +494,9 @@ def testTraversal(d='exampleDir3'):
     fp = theSTACK.pop()
     clrprint.clrprint('[', fp, ']', clr='maroon')
     htmlFullPage = pTemp.replace('${SUBDIRECTORY}', fp['html']).replace('${INITIALDIRECTORY}', d)
+    # not working.
+    htmlFullPage=htmlFullPage.replace('${SUBDIRECTORY}', '')
+    
     with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
      sf.write(htmlFullPage) 
     
