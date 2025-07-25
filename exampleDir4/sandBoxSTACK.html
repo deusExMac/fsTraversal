@@ -327,7 +327,7 @@ ${INTROTEXT}</div>
    </details>
 </li> <li id="d1-886959">
   <details ${OPENSTATE}>
-    <summary class='folder fsitem' onmouseover="showTextPath(this, 'D3.3', '${PARENTPATH}', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#033e6b">D3.3</font><span class='detail'> (<font color='red'><i>1</i></font>, ${LNDIRS}, ${LNFILES} | ${NDIRS}, ${NFILES} )</span></summary><ul class="subdirectory"><li></li></ul>
+    <summary class='folder fsitem' onmouseover="showTextPath(this, 'D3.3', '${PARENTPATH}', 'dir')" onmouseout="unhighlight(this);"><img src='html/fld6.png' width="24" height="24"  style='margin-left:-7px;margin-right:5px;'><font color="#033e6b">D3.3</font><span class='detail'> (<font color='red'><i>1</i></font>, ${LNDIRS}, ${LNFILES} | ${NDIRS}, ${NFILES} )</span></summary><ul class="subdirectory"><li>xxx</li></ul>
    </details>
 </li>
         </ul>
@@ -343,11 +343,17 @@ ${INTROTEXT}</div>
 
 // TODO: Not working...
 //var elements = document.querySelectorAll("ul.subdirectory:has(li:empty)");
-var elements = document.querySelectorAll("ul:has(li:only-child:empty)");
+
+//var elements = document.querySelectorAll("ul.subdirectory > :has(li:contains('^xxx$'))");
+
+elements = null
+$("ul.subdirectory > :has(li[class*='xxx'])").remove();
 //alert(element.id);
 if (elements){
-    alert('Found total of ' + elements.length);
-    //element.remove();
+    alert(elements);
+    //alert('Found total of [' + elements.length + ']');
+    //alert('Found!');
+    //elements.remove();
     //elements.forEach(eul => eul.remove());
 }else{
     alert('Nothing.');
