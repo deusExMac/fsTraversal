@@ -359,7 +359,7 @@ ${INTROTEXT}</div>
 //var elements = document.querySelectorAll("ul.subdirectory > :not(:has(li:first-child > details))");
 
 // TODO: Is the next correct?
-var elements = document.querySelectorAll("ul.subdirectory > :not(:has(li:first-child:empty))");
+var elements = document.querySelectorAll("ul.subdirectory :not(:has( > li:first-child:empty))");
 
 //elements = null
 //$("summary > ul.subdirectory > :has(li:empty)").remove();
