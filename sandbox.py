@@ -523,7 +523,7 @@ def showStack(stk):
         
         
 def fsTraversal(root, lvl):
-    #global theSTACK
+    
     try:
       clrprint.clrprint(f'{lvl*"\t"}Inside {root}', clr='maroon')
       sys.stdout.flush()
@@ -539,15 +539,32 @@ def fsTraversal(root, lvl):
     dirs.sort()
     files.sort()
 
-    
+    '''
+    for encounteredFile in files:
+        sys.stdout.flush()
+        
+        
+        filePath = normalizedPathJoin(root, encounteredFile)          
+ 
+        #clrprint.clrprint(filePath, clr="yellow")
+        lnFiles += 1
+
+        
+        fMeta = fileInfo(filePath)
+        v = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
+        v.accept(objVisitor)
+    '''
+
+        
     for encounteredDirectory in dirs:
         sys.stdout.flush()
         
         
         directoryPath = normalizedPathJoin(root, encounteredDirectory)
         clrprint.clrprint('Processing:', directoryPath, f' total of {len(theSTACK)}', clr='yellow')
+
         
-        nD = {'level':lvl, 'name':directoryPath, 'dname':encounteredDirectory, 'lndir':-1, 'lnfiles':-1, 'html':''}
+        nD = {'type':'directory', 'level':lvl, 'name':directoryPath, 'dname':encounteredDirectory, 'lndir':-1, 'lnfiles':-1, 'html':''}
         newMERGE(nD, theSTACK)
 
         dId = "d" + str(lvl) + "-" + str( random.randint(0, 1000000) )      
@@ -581,7 +598,36 @@ def fsTraversal(root, lvl):
                if (subDirData[0] != -1):
                    return(subDirData[0], -1, -1, '')
 
+
+
+    clrprint.clrprint(f'Stack size:{len(theSTACK)} [{root}]', clr='yellow')
+    for encounteredFile in files:
         
+        sys.stdout.flush()
+        
+        
+        filePath = normalizedPathJoin(root, encounteredFile)          
+        clrprint.clrprint(f'\t{filePath}', clr='yellow')
+        
+        #clrprint.clrprint(filePath, clr="yellow")
+        #lnFiles += 1
+
+        
+        fMeta = fileInfo(filePath)
+
+        '''
+        nF={'type':'file',  'level':lvl, 'name':filePath, 'dname':encounteredFile, 'html':''}
+        nF['html'] = fTemp.replace('${FILELINK}', makeHtmlLink(filePath, encounteredFile, False)).replace('${FILENAME}', encounteredFile).replace('${PATH}', filePath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
+
+        d = theSTACK.pop()
+        print(f'Adding file {encounteredFile} to directory [{d["name"]}]' )
+        d['html'] = d['html'] + fTemp.replace('${FILELINK}', makeHtmlLink(filePath, encounteredFile, False)).replace('${FILENAME}', encounteredFile).replace('${PATH}', filePath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
+        theSTACK.append(d) 
+        '''
+        
+        #v = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
+        #v.accept(objVisitor)
+     
 
     return 0, -1, -1, ''
 
