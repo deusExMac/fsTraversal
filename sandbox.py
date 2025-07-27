@@ -545,7 +545,7 @@ def showStack(stk):
         print(f'({sL-icnt+1}) {itm}')
 '''        
         
-def fsTraversal(root, lvl):
+def fsTraversal(root, lvl, visitor=None):
     
     try:
       clrprint.clrprint(f'{lvl*"\t"}Inside {root}', clr='maroon')
@@ -571,12 +571,9 @@ def fsTraversal(root, lvl):
         
         
         filePath = normalizedPathJoin(root, encounteredFile)          
-        #clrprint.clrprint(f'\t{filePath}', clr='yellow')
-        
-        
         fMeta = fileInfo(filePath)
 
-        
+        # Next in file handler
         nF={'type':'file',  'level':lvl, 'name':filePath, 'dname':encounteredFile, 'html':''}
         nF['html'] = fTemp.replace('${FILELINK}', makeHtmlLink(filePath, encounteredFile, False)).replace('${FILENAME}', encounteredFile).replace('${PATH}', filePath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
         filename, fileExtension = os.path.splitext(encounteredFile)
@@ -595,7 +592,8 @@ def fsTraversal(root, lvl):
         directoryPath = normalizedPathJoin(root, encounteredDirectory)
         #clrprint.clrprint('Processing:', directoryPath, f' total of {len(theSTACK)}', clr='yellow')
 
-        
+
+        # Next in directory handler
         nD = {'type':'directory', 'level':lvl, 'name':directoryPath, 'dname':encounteredDirectory, 'lndir':-1, 'lnfiles':-1, 'html':''}
         newMERGE(nD, theSTACK)
 
@@ -603,7 +601,6 @@ def fsTraversal(root, lvl):
         nD['html'] = dTemp.replace('${ID}', dId).replace('${DIRNAME}', encounteredDirectory).replace('${PATH}', directoryPath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
         theSTACK.append(nD)
         
-        #clrprint.clrprint('PUSHED:', directoryPath, f' stack size: {len(theSTACK)}', clr='yellow')
         
         #lnDirs += 1       
           
@@ -625,7 +622,7 @@ def fsTraversal(root, lvl):
         '''
         
             # go into subdirectory and traverse it
-        subDirData = fsTraversal( directoryPath, lvl+1)  
+        subDirData = fsTraversal( directoryPath, lvl+1, visitor)  
         if subDirData[0] < 0:
                if (subDirData[0] != -1):
                    return(subDirData[0], -1, -1, '')
