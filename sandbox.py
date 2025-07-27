@@ -386,62 +386,7 @@ def showStack(stk=theSTACK):
 
 
 
-def merge(newD, stk):
     
-
-    #print(f'Total of {len(theSTACK)} in stack')
-    
-    sDir = ''
-    #print(f'START MERGING...')
-    while True:
-          if len(stk) <= 0:
-             #print('Stack 0 or 1 item. Quitting...')
-             #print(f'END MERGING (no merging)...')
-             break
-
-          top = stk.pop()
-          if newD['level'] >= top['level']:
-             stk.append(top)
-             #print(f'END MERGING (no merging)...')
-             return
-            
-          
-          #print('POPPED:', top)
-          #print('>>>>Comparing [', top, '] to [', newD, ']')
-          if top['level'] - newD['level'] > 0:
-             #print('DOING MERGING OPERATION....') 
-             # collect all at the same level and concatenate them
-             sDir = top['name']
-             while True:
-
-                 if len(stk) <= 0:
-                     break
-                    
-                 s = stk.pop()
-                 #print(f'\t{s}')
-                 if s['level'] == top['level']:
-                    sDir = sDir + '|' + s['name']
-                    #print(sDir)
-                 elif top['level'] - s['level'] == 1:
-                      sDir = s['name'] + ' || SUBDIRS:[' + sDir + ']'
-                      stk.append({'level':s['level'], 'name':sDir})
-                      break
-            
-             #break
-          
-             
-          #clrprint.clrprint(f'Returning', clr="yellow")
-          #print(f'END MERGING...')
-
-          
-    
-    #v = {'level':top['level'], 'name':sDir}
-    #clrprint.clrprint(f"Pushed {v}")
-    #print('END MERGING...')
-    if newD['level'] <= 0:
-       stk.append({'level':s['level'], 'name':sDir})
-             
-    return(sDir)        
               
     
 
@@ -528,22 +473,7 @@ def testTraversal(d='exampleDir3'):
 
 
     
-'''   
-def showStack(stk):
-    sc= []
-    while True:
-        if len(stk) == 0:
-           print('Empty stack. terminating') 
-           break
-
-        sc.append(stk.pop())
-
-    icnt = 0
-    sL = len(sc)
-    for itm in sc:
-        icnt += 1
-        print(f'({sL-icnt+1}) {itm}')
-'''        
+        
         
 def fsTraversal(root, lvl, visitor=None):
     
@@ -578,7 +508,10 @@ def fsTraversal(root, lvl, visitor=None):
         nF['html'] = fTemp.replace('${FILELINK}', makeHtmlLink(filePath, encounteredFile, False)).replace('${FILENAME}', encounteredFile).replace('${PATH}', filePath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
         filename, fileExtension = os.path.splitext(encounteredFile)
         nF['html'] = nF['html'].replace('${FILEEXTENSION}', fileExtension[1:])
-        theSTACK.append(nF) 
+        theSTACK.append(nF)
+
+        #fv = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
+        #fv.accept(visitor)
         
         
         
@@ -608,17 +541,18 @@ def fsTraversal(root, lvl, visitor=None):
         # The semantics in order: 
         # total number of directories, total number of files, local number of dirs, local number of files,
         # formatted display of subdirectory 
-        subDirData = (0,0,0, "xxx")
+        #subDirData = (0,0,0, "xxx")
         #if recursive:
+
         '''
-        v = handlers.Directory(encounteredDirectory,
+        dH = handlers.Directory(encounteredDirectory,
                                directoryPath,
                                lvl,
                                root,
                                -1,
                                -2,
                                '')
-        v.accept(objVisitor)
+        dH.accept(visitor)
         '''
         
             # go into subdirectory and traverse it
@@ -837,7 +771,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "/Users/manolistzagarakis/home(synced)/econ"
+initialDir = "/Users/manolistzagarakis/Python-k-foldCrossValidation"
 
 testTraversal(initialDir)
 clrprint.clrprint('Finished.', clr='yellow')

@@ -188,8 +188,53 @@ class HTMLExporter(Visitor):
         
         self.stack = deque()
 
+
         
-     
+    def mergeDir(newD, stk):
+    
+        sDir = ''
+        while True:
+              if len(stk) <= 0:
+                 break
+
+              top = stk.pop()
+              if newD['level'] >= top['level']:
+                 stk.append(top)
+                 return
+            
+              if top['level'] - newD['level'] > 0:
+                
+             
+                 sDir = top['html']
+                 while True:
+
+                     if len(stk) <= 0:
+                        break
+                    
+                     s = stk.pop()      
+                     if s['level'] == top['level']:
+                        if s['type']=='directory': 
+                           sDir = s['html'] + ' ' + sDir
+                        else:
+                           sDir = sDir + ' ' + s['html']
+                       
+                    
+                     elif top['level'] - s['level'] == 1:
+                          sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
+                          stk.append({'type':'directory', 'level':s['level'], 'name':s['name'], 'html':sDir})
+                          break
+          
+             
+        if newD['level'] <= 0:
+           stk.append({'level':s['level'], 'name':s['name'], 'html':sDir})
+             
+        return(sDir)
+
+
+
+#############
+
+
 
     # TODO: This is not working correctly.
     def visit_file(self, name, path, level, parent, finfo={}, urlEncode=False):
@@ -369,57 +414,12 @@ class HTMLExporter(Visitor):
            if self.directory_count >= self.criteria.get('maxDirs', -1):
               raise criteriaException(-10, 'maximum number of directories reached.')
 
-            
-        #print(f"Processing directory: {path}")
+    
         self.directory_count += 1
        
-        self.addDirectoryFEFA(level, self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRPATH}", path).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', random.choice(fontColorPalette)) )
+        #self.addDirectoryFEFA(level, self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRPATH}", path).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', random.choice(fontColorPalette)) )
 
-        '''
-        # TODO: Complete this
-        rClr = random.choice(fontColorPalette)
-        print('Adding directory:', name)
-        
-
-        # TODO: Next should be replaced by addDirectory...
-        if (len(self.stack) <= 0):
-            #print(f'>>Adding FOLDER {name} at level {level}')
-            self.stack.append( {'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} ) 
-        else:    
-           curr = self.stack.pop()
-           if curr['level'] == level:
-              #print(f'Adding to current LEVEL: {curr["level"]} new: {level}...') 
-              self.stack.append( {'level':level, 'html':curr['html'] + ' ' +  self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} )
-              # TODO: here same as below in merging...  
-           elif (curr['level'] - level) == 1:
-              #self.stack.append(curr) 
-              #print(f'Adding subdir: top in stack {curr["level"]} new: {level}...')
-              mergedDir = {'level':level, 'html':self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${SUBDIRECTORY}', curr['html']).replace('${RLVLCOLOR}', rClr)}
-              
-              tmpLst = []
-              #print('***before: stack size:', len(self.stack))
-              while True:         
-                    if len(self.stack) <= 0:
-                       break
-                    
-                    itm = self.stack.pop()
-                    if itm['level'] != level:
-                       self.stack.append(itm)
-                       break
-
-                    mergedDir['html'] = itm['html'] +  mergedDir['html']
-                    
-                    
-              self.stack.append(mergedDir)
-                  
-           else:
-               print(f'Pushing new to existing LEVEL: {curr["level"]} new: {level}...')
-               #if (curr['level'] < level):
-               self.stack.append(curr)
-               self.stack.append( {'level':level, 'html': self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', rClr)} ) 
-                
-        #self.displayStack()
-        '''   
+           
         
 
 
