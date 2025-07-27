@@ -389,27 +389,27 @@ def showStack(stk=theSTACK):
 def merge(newD, stk):
     
 
-    print(f'Total of {len(theSTACK)} in stack')
+    #print(f'Total of {len(theSTACK)} in stack')
     
     sDir = ''
-    print(f'START MERGING...')
+    #print(f'START MERGING...')
     while True:
           if len(stk) <= 0:
-             print('Stack 0 or 1 item. Quitting...')
-             print(f'END MERGING (no merging)...')
+             #print('Stack 0 or 1 item. Quitting...')
+             #print(f'END MERGING (no merging)...')
              break
 
           top = stk.pop()
           if newD['level'] >= top['level']:
              stk.append(top)
-             print(f'END MERGING (no merging)...')
+             #print(f'END MERGING (no merging)...')
              return
             
           
-          print('POPPED:', top)
-          print('>>>>Comparing [', top, '] to [', newD, ']')
+          #print('POPPED:', top)
+          #print('>>>>Comparing [', top, '] to [', newD, ']')
           if top['level'] - newD['level'] > 0:
-             print('DOING MERGING OPERATION....') 
+             #print('DOING MERGING OPERATION....') 
              # collect all at the same level and concatenate them
              sDir = top['name']
              while True:
@@ -421,7 +421,7 @@ def merge(newD, stk):
                  #print(f'\t{s}')
                  if s['level'] == top['level']:
                     sDir = sDir + '|' + s['name']
-                    print(sDir)
+                    #print(sDir)
                  elif top['level'] - s['level'] == 1:
                       sDir = s['name'] + ' || SUBDIRS:[' + sDir + ']'
                       stk.append({'level':s['level'], 'name':sDir})
@@ -430,14 +430,14 @@ def merge(newD, stk):
              #break
           
              
-          clrprint.clrprint(f'Returning', clr="yellow")
-          print(f'END MERGING...')
+          #clrprint.clrprint(f'Returning', clr="yellow")
+          #print(f'END MERGING...')
 
           
     
     #v = {'level':top['level'], 'name':sDir}
     #clrprint.clrprint(f"Pushed {v}")
-    print('END MERGING...')
+    #print('END MERGING...')
     if newD['level'] <= 0:
        stk.append({'level':s['level'], 'name':sDir})
              
@@ -447,7 +447,7 @@ def merge(newD, stk):
 
 def newMERGE(newD, stk):
     
-    print(f'Total of {len(theSTACK)} in stack')
+    #print(f'Total of {len(theSTACK)} in stack')
     
     sDir = ''
     #print(f'START MERGING...')
@@ -492,7 +492,7 @@ def newMERGE(newD, stk):
              #break
           
              
-          clrprint.clrprint(f'Returning', clr="yellow")
+          #clrprint.clrprint(f'Returning', clr="yellow")
           #print(f'END MERGING...')
 
           
@@ -571,7 +571,7 @@ def fsTraversal(root, lvl):
         
         
         filePath = normalizedPathJoin(root, encounteredFile)          
-        clrprint.clrprint(f'\t{filePath}', clr='yellow')
+        #clrprint.clrprint(f'\t{filePath}', clr='yellow')
         
         
         fMeta = fileInfo(filePath)
@@ -593,7 +593,7 @@ def fsTraversal(root, lvl):
         
         
         directoryPath = normalizedPathJoin(root, encounteredDirectory)
-        clrprint.clrprint('Processing:', directoryPath, f' total of {len(theSTACK)}', clr='yellow')
+        #clrprint.clrprint('Processing:', directoryPath, f' total of {len(theSTACK)}', clr='yellow')
 
         
         nD = {'type':'directory', 'level':lvl, 'name':directoryPath, 'dname':encounteredDirectory, 'lndir':-1, 'lnfiles':-1, 'html':''}
@@ -603,7 +603,7 @@ def fsTraversal(root, lvl):
         nD['html'] = dTemp.replace('${ID}', dId).replace('${DIRNAME}', encounteredDirectory).replace('${PATH}', directoryPath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
         theSTACK.append(nD)
         
-        clrprint.clrprint('PUSHED:', directoryPath, f' total of {len(theSTACK)}', clr='yellow')
+        #clrprint.clrprint('PUSHED:', directoryPath, f' stack size: {len(theSTACK)}', clr='yellow')
         
         #lnDirs += 1       
           
@@ -665,6 +665,7 @@ def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
     try:
       clrprint.clrprint(f'{lvl*"\t"}Inside {root}', clr='maroon')
       sys.stdout.flush()
+      
       path, dirs, files = next( os.walk(root) )    
     except Exception as wEx:
       print('Exception during walk:', str(wEx) )
@@ -839,7 +840,16 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "exampleDir4/"
+initialDir = "/Users/manolistzagarakis/home(synced)/econ"
+
+testTraversal(initialDir)
+clrprint.clrprint('Finished.', clr='yellow')
+sys.exit(-2)
+
+
+
+
+
 try:
     
   rootData = ABSTRACTtraverse(root=initialDir, maxLevel=3, objVisitor=hE)
