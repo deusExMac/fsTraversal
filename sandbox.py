@@ -450,24 +450,24 @@ def newMERGE(newD, stk):
     print(f'Total of {len(theSTACK)} in stack')
     
     sDir = ''
-    print(f'START MERGING...')
+    #print(f'START MERGING...')
     while True:
           if len(stk) <= 0:
-             print('Stack 0 or 1 item. Quitting...')
-             print(f'END MERGING (no merging)...')
+             #print('Stack 0 or 1 item. Quitting...')
+             #print(f'END MERGING (no merging)...')
              break
 
           top = stk.pop()
           if newD['level'] >= top['level']:
              stk.append(top)
-             print(f'END MERGING (no merging)...')
+             #print(f'END MERGING (no merging)...')
              return
             
           
-          print('POPPED:', top)
-          print('>>>>Comparing [', top, '] to [', newD, ']')
+          #print('POPPED:', top)
+          #print('>>>>Comparing [', top, '] to [', newD, ']')
           if top['level'] - newD['level'] > 0:
-             print('DOING MERGING OPERATION....') 
+             #print('DOING MERGING OPERATION....') 
              # collect all at the same level and concatenate them
              sDir = top['html']
              while True:
@@ -493,13 +493,13 @@ def newMERGE(newD, stk):
           
              
           clrprint.clrprint(f'Returning', clr="yellow")
-          print(f'END MERGING...')
+          #print(f'END MERGING...')
 
           
     
     #v = {'level':top['level'], 'name':sDir}
     #clrprint.clrprint(f"Pushed {v}")
-    print('END MERGING...')
+    #print('END MERGING...')
     if newD['level'] <= 0:
        stk.append({'level':s['level'], 'name':s['name'], 'html':sDir})
              
@@ -515,7 +515,7 @@ def testTraversal(d='exampleDir3'):
     fsTraversal(d, 1)
     newMERGE({'type':'directory', 'level':0, 'name':''}, theSTACK)
     fp = theSTACK.pop()
-    clrprint.clrprint('[', fp, ']', clr='maroon')
+    #clrprint.clrprint('[', fp, ']', clr='maroon')
     htmlFullPage = pTemp.replace('${SUBDIRECTORY}', fp['html']).replace('${INITIALDIRECTORY}', d)
     # not working.
     htmlFullPage=htmlFullPage.replace('${SUBDIRECTORY}', '')
@@ -562,21 +562,7 @@ def fsTraversal(root, lvl):
     dirs.sort()
     files.sort()
 
-    '''
-    for encounteredFile in files:
-        sys.stdout.flush()
-        
-        
-        filePath = normalizedPathJoin(root, encounteredFile)          
- 
-        #clrprint.clrprint(filePath, clr="yellow")
-        lnFiles += 1
-
-        
-        fMeta = fileInfo(filePath)
-        v = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
-        v.accept(objVisitor)
-    '''
+    
 
     
     for encounteredFile in files:
@@ -593,6 +579,8 @@ def fsTraversal(root, lvl):
         
         nF={'type':'file',  'level':lvl, 'name':filePath, 'dname':encounteredFile, 'html':''}
         nF['html'] = fTemp.replace('${FILELINK}', makeHtmlLink(filePath, encounteredFile, False)).replace('${FILENAME}', encounteredFile).replace('${PATH}', filePath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
+        filename, fileExtension = os.path.splitext(encounteredFile)
+        nF['html'] = nF['html'].replace('${FILEEXTENSION}', fileExtension[1:])
         theSTACK.append(nF) 
         
         
@@ -641,31 +629,6 @@ def fsTraversal(root, lvl):
         if subDirData[0] < 0:
                if (subDirData[0] != -1):
                    return(subDirData[0], -1, -1, '')
-
-
-
-    
-    
-
-    #clrprint.clrprint('********************[Start] Before iterating files********************************', clr='yellow')
-    #showStack()
-    #clrprint.clrprint('********************[End]***********************************************', clr='yellow')
-
-    '''
-    for encounteredFile in files:
-        
-        sys.stdout.flush()
-        
-        
-        filePath = normalizedPathJoin(root, encounteredFile)          
-        clrprint.clrprint(f'\t{filePath}', clr='yellow')
-        
-        
-
-        
-        fMeta = fileInfo(filePath)
-
-    '''    
      
 
     return 0, -1, -1, ''
