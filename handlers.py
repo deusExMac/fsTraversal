@@ -189,7 +189,8 @@ class HTMLExporter(Visitor):
         self.stack = deque()
 
 
-        
+
+    # TODO: Test this    
     def mergeDir(newD, stk):
     
         sDir = ''
@@ -203,8 +204,6 @@ class HTMLExporter(Visitor):
                  return
             
               if top['level'] - newD['level'] > 0:
-                
-             
                  sDir = top['html']
                  while True:
 
