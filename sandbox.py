@@ -367,6 +367,25 @@ from collections import deque
 
 theSTACK = deque()
 
+
+def showStack(stk=theSTACK):
+         lst = []
+         pos=1
+         print('Total of', len(stk), 'items in stack.')
+         while  len(stk) > 0:
+                sv = stk.pop()
+                lst.append(sv)
+                print('______' + str(pos) + '______\n', end='')
+                print(sv)
+                print('_________')
+                pos +=1
+
+         for i in lst[::-1]:
+             stk.append(i)
+
+
+
+
 def merge(newD, stk):
     
 
@@ -459,11 +478,15 @@ def newMERGE(newD, stk):
                  s = stk.pop()
                  #print(f'\t{s}')
                  if s['level'] == top['level']:
-                    sDir = s['html'] + ' ' + sDir
+                    if s['type']=='directory': 
+                       sDir = s['html'] + ' ' + sDir
+                    else:
+                       sDir = sDir + ' ' + s['html']
+                       
                     #print(sDir)
                  elif top['level'] - s['level'] == 1:
                       sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
-                      stk.append({'level':s['level'], 'name':s['name'], 'html':sDir})
+                      stk.append({'type':'directory', 'level':s['level'], 'name':s['name'], 'html':sDir})
                       break
             
              #break
@@ -490,7 +513,7 @@ def newMERGE(newD, stk):
     
 def testTraversal(d='exampleDir3'):
     fsTraversal(d, 1)
-    newMERGE({'level':0, 'name':''}, theSTACK)
+    newMERGE({'type':'directory', 'level':0, 'name':''}, theSTACK)
     fp = theSTACK.pop()
     clrprint.clrprint('[', fp, ']', clr='maroon')
     htmlFullPage = pTemp.replace('${SUBDIRECTORY}', fp['html']).replace('${INITIALDIRECTORY}', d)
@@ -505,7 +528,7 @@ def testTraversal(d='exampleDir3'):
 
 
     
-   
+'''   
 def showStack(stk):
     sc= []
     while True:
@@ -520,7 +543,7 @@ def showStack(stk):
     for itm in sc:
         icnt += 1
         print(f'({sL-icnt+1}) {itm}')
-        
+'''        
         
 def fsTraversal(root, lvl):
     
@@ -554,6 +577,27 @@ def fsTraversal(root, lvl):
         v = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
         v.accept(objVisitor)
     '''
+
+    
+    for encounteredFile in files:
+        
+        sys.stdout.flush()
+        
+        
+        filePath = normalizedPathJoin(root, encounteredFile)          
+        clrprint.clrprint(f'\t{filePath}', clr='yellow')
+        
+        
+        fMeta = fileInfo(filePath)
+
+        
+        nF={'type':'file',  'level':lvl, 'name':filePath, 'dname':encounteredFile, 'html':''}
+        nF['html'] = fTemp.replace('${FILELINK}', makeHtmlLink(filePath, encounteredFile, False)).replace('${FILENAME}', encounteredFile).replace('${PATH}', filePath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
+        theSTACK.append(nF) 
+        
+        
+        
+
 
         
     for encounteredDirectory in dirs:
@@ -600,7 +644,14 @@ def fsTraversal(root, lvl):
 
 
 
-    clrprint.clrprint(f'Stack size:{len(theSTACK)} [{root}]', clr='yellow')
+    
+    
+
+    #clrprint.clrprint('********************[Start] Before iterating files********************************', clr='yellow')
+    #showStack()
+    #clrprint.clrprint('********************[End]***********************************************', clr='yellow')
+
+    '''
     for encounteredFile in files:
         
         sys.stdout.flush()
@@ -609,24 +660,12 @@ def fsTraversal(root, lvl):
         filePath = normalizedPathJoin(root, encounteredFile)          
         clrprint.clrprint(f'\t{filePath}', clr='yellow')
         
-        #clrprint.clrprint(filePath, clr="yellow")
-        #lnFiles += 1
+        
 
         
         fMeta = fileInfo(filePath)
 
-        '''
-        nF={'type':'file',  'level':lvl, 'name':filePath, 'dname':encounteredFile, 'html':''}
-        nF['html'] = fTemp.replace('${FILELINK}', makeHtmlLink(filePath, encounteredFile, False)).replace('${FILENAME}', encounteredFile).replace('${PATH}', filePath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
-
-        d = theSTACK.pop()
-        print(f'Adding file {encounteredFile} to directory [{d["name"]}]' )
-        d['html'] = d['html'] + fTemp.replace('${FILELINK}', makeHtmlLink(filePath, encounteredFile, False)).replace('${FILENAME}', encounteredFile).replace('${PATH}', filePath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
-        theSTACK.append(d) 
-        '''
-        
-        #v = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
-        #v.accept(objVisitor)
+    '''    
      
 
     return 0, -1, -1, ''
