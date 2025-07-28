@@ -408,8 +408,9 @@ def newMERGE(newD, stk):
              #print(f'END MERGING (no merging)...')
              return
             
-          
-          #print('POPPED:', top)
+          if newD['level'] == 0:
+             print('POPPED:', top)
+             
           #print('>>>>Comparing [', top, '] to [', newD, ']')
           if top['level'] - newD['level'] > 0:
              #print('DOING MERGING OPERATION....') 
@@ -460,6 +461,7 @@ def testTraversal(d='exampleDir3'):
     fsTraversal(d, 1)
     newMERGE({'type':'directory', 'level':0, 'name':''}, theSTACK)
     fp = theSTACK.pop()
+    
     #clrprint.clrprint('[', fp, ']', clr='maroon')
     htmlFullPage = pTemp.replace('${SUBDIRECTORY}', fp['html']).replace('${INITIALDIRECTORY}', d)
     # not working.
@@ -771,7 +773,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "/Users/manolistzagarakis/Python-k-foldCrossValidation"
+initialDir = "exampleDir"
 
 testTraversal(initialDir)
 clrprint.clrprint('Finished.', clr='yellow')
