@@ -392,29 +392,27 @@ def showStack(stk=theSTACK):
 
 def newMERGE(newD, stk):
     
-    #print(f'Total of {len(theSTACK)} in stack')
+    
     
     sDir = ''
-    #print(f'START MERGING...')
+    
     while True:
           if len(stk) <= 0:
-             #print('Stack 0 or 1 item. Quitting...')
-             #print(f'END MERGING (no merging)...')
              break
 
           top = stk.pop()
           if newD['level'] >= top['level']:
              stk.append(top)
-             #print(f'END MERGING (no merging)...')
              return
             
           if newD['level'] == 0:
              print('POPPED:', top)
              
-          #print('>>>>Comparing [', top, '] to [', newD, ']')
-          if top['level'] - newD['level'] > 0:
-             #print('DOING MERGING OPERATION....') 
-             # collect all at the same level and concatenate them
+          
+          if top['level'] - newD['level'] > 0: 
+             # This means that the new directory encounterred
+             # is at a higher level. Hence collect all at the
+             # same level and merge/concatenate them
              sDir = top['html']
              while True:
 
@@ -422,14 +420,12 @@ def newMERGE(newD, stk):
                      break
                     
                  s = stk.pop()
-                 #print(f'\t{s}')
                  if s['level'] == top['level']:
                     if s['type']=='directory': 
                        sDir = s['html'] + ' ' + sDir
                     else:
                        sDir = sDir + ' ' + s['html']
                        
-                    #print(sDir)
                  elif top['level'] - s['level'] == 1:
                       sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
                       stk.append({'type':'directory', 'level':s['level'], 'name':s['name'], 'html':sDir})
