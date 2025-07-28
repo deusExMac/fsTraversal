@@ -433,15 +433,7 @@ def newMERGE(newD, stk):
             
              #break
           
-             
-          #clrprint.clrprint(f'Returning', clr="yellow")
-          #print(f'END MERGING...')
-
-          
     
-    #v = {'level':top['level'], 'name':sDir}
-    #clrprint.clrprint(f"Pushed {v}")
-    #print('END MERGING...')
     if newD['level'] <= 0:
        stk.append({'level':s['level'], 'name':s['name'], 'html':sDir})
              
