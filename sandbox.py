@@ -462,6 +462,7 @@ def newMERGE(newD, stk):
 
     
 def testTraversal(d='exampleDir3'):
+    #theSTACK.append({'level':0, 'name':d, 'dname':d, 'html':''})
     fsTraversal(d, 1)
     showStack2()
     newMERGE({'type':'directory', 'level':0, 'name':''}, theSTACK)
