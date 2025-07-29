@@ -423,7 +423,10 @@ def newMERGE(newD, stk):
              print('POPPED:', top)
              
           
-          if top['level'] - newD['level'] > 0: 
+          if top['level'] - newD['level'] > 0:
+             if newD['level'] == 0:
+                clrprint.clrprint(f"triggering merging.....", clr='yellow')
+                
              # This means that the new directory encounterred
              # is at a higher level. Hence collect all at the
              # same level and merge/concatenate them
@@ -450,7 +453,8 @@ def newMERGE(newD, stk):
           
     
     if newD['level'] <= 0:
-       print('++++++++++++++++++++\n', s, '++++++++++++++++++++++\n') 
+       print('++++++++++++++++++++\n', s, '++++++++++++++++++++++\n')
+       # This is just to get/return sDir when everything is done.
        stk.append({'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
              
     return(sDir)
