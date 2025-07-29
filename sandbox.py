@@ -428,14 +428,14 @@ def newMERGE(newD, stk):
                        
                  elif top['level'] - s['level'] == 1:
                       sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
-                      stk.append({'type':'directory', 'level':s['level'], 'name':s['name'], 'html':sDir})
+                      stk.append({'type':'directory', 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
                       break
             
              #break
           
     
     if newD['level'] <= 0:
-       stk.append({'level':s['level'], 'name':s['name'], 'html':sDir})
+       stk.append({'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
              
     return(sDir)
 
