@@ -453,7 +453,7 @@ def newMERGE(newD, stk):
           
     
     if newD['level'] <= 0:
-       print('++++++++++++++++++++\n', s, '++++++++++++++++++++++\n')
+       print('++++++++++++++++++++\n', s, '\n++++++++++++++++++++++\n')
        # This is just to get/return sDir when everything is done.
        stk.append({'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
              
@@ -473,7 +473,7 @@ def testTraversal(d='exampleDir3'):
     showStack2()
     fp = theSTACK.pop()
     
-    clrprint.clrprint('[', fp, ']', clr='maroon')
+    #clrprint.clrprint('[', fp, ']', clr='maroon')
     htmlFullPage = pTemp.replace('${SUBDIRECTORY}', fp['html']).replace('${INITIALDIRECTORY}', d)
     # not working.
     htmlFullPage=htmlFullPage.replace('${SUBDIRECTORY}', '')
