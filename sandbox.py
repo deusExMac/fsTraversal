@@ -367,11 +367,25 @@ from collections import deque
 
 theSTACK = deque()
 
+def showStack2(stk=theSTACK):
+         lst = []
+         pos=1
+         clrprint.clrprint('Total of', len(stk), 'items in stack.', clr='yellow')
+         while  len(stk) > 0:
+                sv = stk.pop()
+                lst.append(sv)
+                clrprint.clrprint(f"{pos}) [{sv['name']}] [{sv['level']}]", clr='yellow')
+                pos +=1
+
+         for i in lst[::-1]:
+             stk.append(i)
+
+
 
 def showStack(stk=theSTACK):
          lst = []
          pos=1
-         print('Total of', len(stk), 'items in stack.')
+         clrprint.clrprint('Total of', len(stk), 'items in stack.', clr='yellow')
          while  len(stk) > 0:
                 sv = stk.pop()
                 lst.append(sv)
@@ -393,7 +407,7 @@ def showStack(stk=theSTACK):
 def newMERGE(newD, stk):
     
     
-    
+    clrprint.clrprint(f"Seen: {newD['name']}", clr='maroon')
     sDir = ''
     
     while True:
@@ -429,12 +443,14 @@ def newMERGE(newD, stk):
                  elif top['level'] - s['level'] == 1:
                       sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
                       stk.append({'type':'directory', 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
+                      showStack2()
                       break
             
              #break
           
     
     if newD['level'] <= 0:
+       print('++++++++++++++++++++\n', s, '++++++++++++++++++++++\n') 
        stk.append({'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
              
     return(sDir)
@@ -447,10 +463,12 @@ def newMERGE(newD, stk):
     
 def testTraversal(d='exampleDir3'):
     fsTraversal(d, 1)
+    showStack2()
     newMERGE({'type':'directory', 'level':0, 'name':''}, theSTACK)
+    showStack2()
     fp = theSTACK.pop()
     
-    #clrprint.clrprint('[', fp, ']', clr='maroon')
+    clrprint.clrprint('[', fp, ']', clr='maroon')
     htmlFullPage = pTemp.replace('${SUBDIRECTORY}', fp['html']).replace('${INITIALDIRECTORY}', d)
     # not working.
     htmlFullPage=htmlFullPage.replace('${SUBDIRECTORY}', '')
@@ -524,7 +542,7 @@ def fsTraversal(root, lvl, visitor=None):
         nD['html'] = dTemp.replace('${ID}', dId).replace('${DIRNAME}', encounteredDirectory).replace('${PATH}', directoryPath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
         theSTACK.append(nD)
         
-        
+        showStack2()
         #lnDirs += 1       
           
         
@@ -761,7 +779,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "exampleDir"
+initialDir = "exampleDir6"
 
 testTraversal(initialDir)
 clrprint.clrprint('Finished.', clr='yellow')
