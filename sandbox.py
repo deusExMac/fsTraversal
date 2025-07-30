@@ -448,6 +448,8 @@ def newMERGE(newD, stk):
                       stk.append({'type':'directory', 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
                       showStack2()
                       break
+                      
+                           
             
              #break
           
