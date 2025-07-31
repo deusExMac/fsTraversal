@@ -403,8 +403,104 @@ def showStack(stk=theSTACK):
     
               
     
-
+# This is working!
 def newMERGE(newD, stk):
+    
+    
+    clrprint.clrprint(f"Seen: {newD['name']}", clr='maroon')
+    sDir = ''
+    #mode = False
+    while True:
+          
+            
+          if len(stk) <= 0:
+             break
+
+          top = stk.pop()
+          if newD['level'] >= top['level']:
+             stk.append(top)
+             return
+            
+          if newD['level'] == 0:
+             print('POPPED:', top)
+             
+          
+          if top['level'] - newD['level'] > 0:
+             if newD['level'] == 0:
+                clrprint.clrprint(f"triggering merging.....", clr='yellow')
+                
+             # This means that the new directory encounterred
+             # is at a higher level. Hence collect all at the
+             # same level and merge/concatenate them
+             sDir = top['html']
+             while True:
+
+                 if len(stk) <= 0:
+                     #top['html'] = sDir
+                     #stk.append(top)
+                     #clrprint.clrprint(f"[Empty stack] After adding top.....", clr='maroon')
+                     #showStack2()
+                     #print(f'_____________{top["name"]}__________________')
+                     #print(top['html'])
+                     #print('___________________________________________')
+                     break
+                    
+                 s = stk.pop()
+                 if s['level'] == top['level']:
+                    if s['type']=='directory': 
+                       sDir = s['html'] + ' ' + sDir
+                    else:
+                       sDir = sDir + ' ' + s['html']
+                       
+                 elif top['level'] - s['level'] == 1:
+                        
+                      sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
+                      #stk.append({'type':'directory', 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
+                      #top = {'type':'directory', 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir}
+                      top = s
+                      sDir = top['html']
+                      while True:
+                           showStack2()
+                           if len(stk) <= 0:
+                              break
+                            
+                           s = stk.pop()
+                           if s['level'] == top['level']:
+                              if s['type']=='directory': 
+                                 sDir = top['html'] + ' ' + sDir
+                              else:
+                                 sDir = sDir + ' ' + s['html'] 
+                           else:
+                               stk.append(s)
+                               break
+
+                      top['html'] = sDir
+                      stk.append(top)
+                      print(top)
+                      break
+                      #sDir = top['html']
+                      #mode = True
+
+                      #showStack2()
+                      #break
+                      
+                           
+            
+             #break
+          
+    
+    #if newD['level'] <= 0:
+    #   print('++++++++++++++++++++\n', s, '\n++++++++++++++++++++++\n')
+       # This is just to get/return sDir when everything is done.
+    #   stk.append({'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
+             
+    return(sDir)
+
+
+
+
+# This is working of working newMERGE!
+def newMERGE_BACKUP(newD, stk):
     
     
     clrprint.clrprint(f"Seen: {newD['name']}", clr='maroon')
@@ -454,28 +550,27 @@ def newMERGE(newD, stk):
              #break
           
     
-    if newD['level'] <= 0:
-       print('++++++++++++++++++++\n', s, '\n++++++++++++++++++++++\n')
+    #if newD['level'] <= 0:
+    #   print('++++++++++++++++++++\n', s, '\n++++++++++++++++++++++\n')
        # This is just to get/return sDir when everything is done.
-       stk.append({'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
+    #   stk.append({'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
              
     return(sDir)
 
 
 
 
-
-
     
 def testTraversal(d='exampleDir3'):
-    #theSTACK.append({'level':0, 'name':d, 'dname':d, 'html':''})
+    theSTACK.append({'type':'directory', 'level':0, 'name':d, 'dname':d, 'html':''})
     fsTraversal(d, 1)
+    print('Last show stack...')
     showStack2()
     newMERGE({'type':'directory', 'level':0, 'name':''}, theSTACK)
-    showStack2()
+    #showStack2()
     fp = theSTACK.pop()
     
-    #clrprint.clrprint('[', fp, ']', clr='maroon')
+    clrprint.clrprint('[', fp, ']', clr='maroon')
     htmlFullPage = pTemp.replace('${SUBDIRECTORY}', fp['html']).replace('${INITIALDIRECTORY}', d)
     # not working.
     htmlFullPage=htmlFullPage.replace('${SUBDIRECTORY}', '')
