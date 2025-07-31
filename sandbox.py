@@ -426,6 +426,9 @@ def newMERGE(newD, stk):
              
           
           if top['level'] - newD['level'] > 0:
+             # The new directory that WILL be added is at a higher level than to current
+             # top of the list. i.e. we went one or more levels up.
+             # At this point top is the last directory/file found at the deepest level
              if newD['level'] == 0:
                 clrprint.clrprint(f"triggering merging.....", clr='yellow')
                 
@@ -444,7 +447,8 @@ def newMERGE(newD, stk):
                      #print(top['html'])
                      #print('___________________________________________')
                      break
-                    
+
+                 # get object below top (deepest encounterred)   
                  s = stk.pop()
                  if s['level'] == top['level']:
                     if s['type']=='directory': 
@@ -455,8 +459,10 @@ def newMERGE(newD, stk):
                  elif top['level'] - s['level'] == 1:
                         
                       sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
-                      #stk.append({'type':'directory', 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
-                      #top = {'type':'directory', 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir}
+                      stk.append({'type':'directory', 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
+                      #break
+                      
+                      top = {'type':'directory', 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir}
                       top = s
                       sDir = top['html']
                       while True:
@@ -566,7 +572,7 @@ def testTraversal(d='exampleDir3'):
     fsTraversal(d, 1)
     print('Last show stack...')
     showStack2()
-    newMERGE({'type':'directory', 'level':0, 'name':''}, theSTACK)
+    #newMERGE({'type':'directory', 'level':0, 'name':''}, theSTACK)
     #showStack2()
     fp = theSTACK.pop()
     
