@@ -468,47 +468,11 @@ def newMERGE(newD={'type':'directory', 'level':0, 'name':''}, stk=None):
                  elif top['level'] - s['level'] == 1:
                       clrprint.clrprint(f"\t[Collapse]: Replacing subdir to [{s['name']}]", clr='yellow')  
                       sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
-                      #stk.append({'type':'directory', 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
-                      #break
-                      
                       top = {'type':'directory', 'collapsed':True, 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir}
-                      #top = s
+                      
                       sDir = top['html']
-                      #while True:
-                      #     showStack2()
-                      #     if len(stk) <= 0:
-                      #        break
-                      #      
-                      #     s = stk.pop()
-                      #     if s['level'] == top['level']:
-                      #        if s['type']=='directory': 
-                      #           sDir = top['html'] + ' ' + sDir
-                      #        else:
-                      #           sDir = sDir + ' ' + s['html'] 
-                      #     else:
-                      #         stk.append(s)
-                      #         break
-                      #
-                      #top['html'] = sDir
-                      #stk.append(top)
-                      #print(top)
-                      #break
                       
-                      #sDir = top['html']
-                      #mode = True
-
-                      #showStack2()
-                      #break
                       
-                           
-            
-             #break
-          
-    
-    #if newD['level'] <= 0:
-    #   print('++++++++++++++++++++\n', s, '\n++++++++++++++++++++++\n')
-       # This is just to get/return sDir when everything is done.
-    #   stk.append({'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
              
     return(sDir)
 
@@ -900,11 +864,15 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "exampleDir1"
+initialDir = "exampleDir7"
 
 testTraversal(initialDir)
 clrprint.clrprint('Finished.', clr='yellow')
 sys.exit(-2)
+
+
+
+
 
 
 
