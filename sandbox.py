@@ -404,7 +404,7 @@ def showStack(stk=theSTACK):
               
     
 # This is working!
-def newMERGE(newD, stk):
+def newMERGE(newD={'type':'directory', 'level':0, 'name':''}, stk=None):
     
     
     clrprint.clrprint(f"Seen: [{newD['name']}] Level[{newD['level']}]", clr='maroon')
@@ -446,14 +446,17 @@ def newMERGE(newD, stk):
 
                  # get object below top (deepest encounterred)   
                  s = stk.pop()
-                 clrprint.clrprint(f"[Collapse]: popped [{s['name']}][{s['level']}]->[{s['collapsed']}] [top:{top['name']}][{top['level']}]->[{top['collapsed']}] [newD:{newD['name']}]", clr='maroon') 
+                 clrprint.clrprint(f"[Collapse]: popped [{s['name']}][{s['level']}]->[{s['collapsed']}] [top:{top['name']}][{top['level']}]->[{top['collapsed']}] [newD:{newD['name']}] [{newD['level']}]", clr='maroon') 
                  if s['level'] == newD['level']:
                     clrprint.clrprint(f"\t[Collapse]: stopping... [{s['level']}]", clr='yellow') 
                     top['html'] = sDir
-                    stk.append(s)
+                    
+                    s['html'] = s['html'].replace('${SUBDIRECTORY}', top['html']) 
+                    stk.append(s) 
                     stk.append(top)
-                     
-                    break
+                        
+                    return
+                
                 
                  if s['level'] == top['level']:
                     clrprint.clrprint(f"\t[Collapse]: Adding to [{s['name']}]", clr='yellow') 
@@ -520,6 +523,8 @@ def newMERGE_BACKUP(newD, stk):
     sDir = ''
     
     while True:
+          
+              
           if len(stk) <= 0:
              break
 
@@ -575,14 +580,14 @@ def newMERGE_BACKUP(newD, stk):
 
     
 def testTraversal(d='exampleDir3'):
-    theSTACK.append({'type':'directory', 'collapsed':False, 'level':0, 'name':d, 'dname':d, 'html':''})
+    theSTACK.append({'type':'directory', 'collapsed':False, 'level':0, 'name':d, 'dname':d, 'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', d).replace('${PATH}', d).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
     fsTraversal(d, 1)
     print('Last show stack...')
     showStack2()
-    newMERGE({'type':'directory', 'level':0, 'name':''}, theSTACK)
+    newMERGE(stk=theSTACK)
     #showStack2()
     fp = theSTACK.pop()
-    fp = theSTACK.pop()
+    
     
     clrprint.clrprint('[', fp, ']', clr='maroon')
     htmlFullPage = pTemp.replace('${SUBDIRECTORY}', fp['html']).replace('${INITIALDIRECTORY}', d)
@@ -895,7 +900,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "exampleDir6"
+initialDir = "exampleDir1"
 
 testTraversal(initialDir)
 clrprint.clrprint('Finished.', clr='yellow')
