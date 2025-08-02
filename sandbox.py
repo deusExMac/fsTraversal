@@ -409,7 +409,7 @@ def newMERGE(newD={'type':'directory', 'level':0, 'name':''}, stk=None):
     
     clrprint.clrprint(f"Seen: [{newD['name']}] Level[{newD['level']}]", clr='maroon')
     sDir = ''
-    #mode = False
+    
     while True:
           
             
@@ -421,8 +421,7 @@ def newMERGE(newD={'type':'directory', 'level':0, 'name':''}, stk=None):
              stk.append(top)
              return
             
-          #if newD['level'] == 0:
-          #   print('POPPED:', top)
+          
              
           
           if top['level'] - newD['level'] > 0:
@@ -469,7 +468,6 @@ def newMERGE(newD={'type':'directory', 'level':0, 'name':''}, stk=None):
                       clrprint.clrprint(f"\t[Collapse]: Replacing subdir to [{s['name']}]", clr='yellow')  
                       sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
                       top = {'type':'directory', 'collapsed':True, 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir}
-                      
                       sDir = top['html']
                       
                       
@@ -479,81 +477,21 @@ def newMERGE(newD={'type':'directory', 'level':0, 'name':''}, stk=None):
 
 
 
-# This is working of working newMERGE!
-def newMERGE_BACKUP(newD, stk):
-    
-    
-    clrprint.clrprint(f"Seen: {newD['name']}", clr='maroon')
-    sDir = ''
-    
-    while True:
-          
-              
-          if len(stk) <= 0:
-             break
-
-          top = stk.pop()
-          if newD['level'] >= top['level']:
-             stk.append(top)
-             return
-            
-          if newD['level'] == 0:
-             print('POPPED:', top)
-             
-          
-          if top['level'] - newD['level'] > 0:
-             if newD['level'] == 0:
-                clrprint.clrprint(f"triggering merging.....", clr='yellow')
-                
-             # This means that the new directory encounterred
-             # is at a higher level. Hence collect all at the
-             # same level and merge/concatenate them
-             sDir = top['html']
-             while True:
-
-                 if len(stk) <= 0:
-                     break
-                    
-                 s = stk.pop()
-                 if s['level'] == top['level']:
-                    if s['type']=='directory': 
-                       sDir = s['html'] + ' ' + sDir
-                    else:
-                       sDir = sDir + ' ' + s['html']
-                       
-                 elif top['level'] - s['level'] == 1:
-                      sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
-                      stk.append({'type':'directory', 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
-                      showStack2()
-                      break
-                      
-                           
-            
-             #break
-          
-    
-    #if newD['level'] <= 0:
-    #   print('++++++++++++++++++++\n', s, '\n++++++++++++++++++++++\n')
-       # This is just to get/return sDir when everything is done.
-    #   stk.append({'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir})
-             
-    return(sDir)
-
-
-
 
     
 def testTraversal(d='exampleDir3'):
+    
     theSTACK.append({'type':'directory', 'collapsed':False, 'level':0, 'name':d, 'dname':d, 'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', d).replace('${PATH}', d).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
     fsTraversal(d, 1)
+    newMERGE(stk=theSTACK)
+
     print('Last show stack...')
     showStack2()
-    newMERGE(stk=theSTACK)
-    #showStack2()
+
+
+    
     fp = theSTACK.pop()
-    
-    
-    clrprint.clrprint('[', fp, ']', clr='maroon')
+    #clrprint.clrprint('[', fp, ']', clr='maroon')
     htmlFullPage = pTemp.replace('${SUBDIRECTORY}', fp['html']).replace('${INITIALDIRECTORY}', d)
     # not working.
     htmlFullPage=htmlFullPage.replace('${SUBDIRECTORY}', '')
@@ -561,11 +499,15 @@ def testTraversal(d='exampleDir3'):
     with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
      sf.write(htmlFullPage) 
     
-    #showStack(theSTACK)
+    
 
 
 
     
+
+
+
+
         
         
 def fsTraversal(root, lvl, visitor=None):
@@ -864,7 +806,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "exampleDir7"
+initialDir = "/Users/manolistzagarakis/users/tzag/MyCode"
 
 testTraversal(initialDir)
 clrprint.clrprint('Finished.', clr='yellow')
