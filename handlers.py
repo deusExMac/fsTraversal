@@ -96,8 +96,10 @@ class Directory(Visitable):
     def accept(self, visitor):
         visitor.visit_directory(self.name, self.path, self.level, self.parent,  self.localDirCount, self.localFileCount, self.subdir)
 
-    def setHTML(self, visitor):
-        visitor.setHTML(self.name, self.path, self.level, self.parent,  self.localDirCount, self.localFileCount, self.subdir)
+    
+
+
+
         
 ###################################################
 #
@@ -190,48 +192,11 @@ class HTMLExporter(Visitor):
 
 
 
-    # TODO: Test this    
-    def mergeDir(newD, stk):
     
-        sDir = ''
-        while True:
-              if len(stk) <= 0:
-                 break
-
-              top = stk.pop()
-              if newD['level'] >= top['level']:
-                 stk.append(top)
-                 return
-            
-              if top['level'] - newD['level'] > 0:
-                 sDir = top['html']
-                 while True:
-
-                     if len(stk) <= 0:
-                        break
-                    
-                     s = stk.pop()      
-                     if s['level'] == top['level']:
-                        if s['type']=='directory': 
-                           sDir = s['html'] + ' ' + sDir
-                        else:
-                           sDir = sDir + ' ' + s['html']
-                       
-                    
-                     elif top['level'] - s['level'] == 1:
-                          sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
-                          stk.append({'type':'directory', 'level':s['level'], 'name':s['name'], 'html':sDir})
-                          break
-          
-             
-        if newD['level'] <= 0:
-           stk.append({'level':s['level'], 'name':s['name'], 'html':sDir})
-             
-        return(sDir)
 
 
 
-#############
+
 
 
 
@@ -268,136 +233,8 @@ class HTMLExporter(Visitor):
         else: 
            fileHtml = fileHtml.replace('${FILEEXTENSION}', 'ukn')
 
-        if len(self.stack) <= 0:   
-           self.stack.append({'level':level, 'html': fileHtml})
-        else:
-           curr = self.stack.pop()
-           if curr['level'] < level:
-              self.stack.append(curr)
-              self.stack.append({'level':level, 'html': fileHtml})
-           else:    
-               curr['html'] = curr['html'] + fileHtml
-               self.stack.append(curr)
         
-
-
-    # TODO: Seems to work but test this more...
-    def addDirectory(self, level, fldr):
-        if len(self.stack) <= 0:
-           self.stack.append( {'type':'directory', 'level':level, 'html':fldr} )  
-             
-        top = self.stack.pop()
-        if top['level'] == level:
-           # New directory is at the same level as existing one. So, concatenate it 
-           self.stack.append( {'type':'directory', 'level':level, 'html':top['html'] + ' ' + fldr } )
-        elif (top['level'] - level) == 1:
-              # New directory is at a higher level than current. This means we return from a deeper level
-              # i.e. top stack is the subdirectory of the encounterred directory
-              sentry = {'type':'directory', 'level':level, 'html':fldr.replace('${SUBDIRECTORY}', top['html'])}
-              while True:
-                   
-                  if len(self.stack) <= 0:
-                       break
-                  itm = self.stack.pop()
-                  if itm['level'] != level:
-                     self.stack.append(itm)
-                     break
-
-                  clrprint.clrprint('>>> Found same level. Concatenating...', clr='red') 
-                  sentry['html'] = itm['html'] +  sentry['html']
-
-              self.stack.append(sentry)
-
-        else:
-              self.stack.append(top)
-              self.stack.append({'level':level, 'html': fldr})
-
-        return      
-
-
-
-    # First (directory) Encountered First Added
-    def addDirectoryFEFA(self, level, fldr):
-       
-       if len(self.stack) <= 0:
-          clrprint.clrprint(f'Adding to stack L:{level} {fldr}', clr='blue') 
-          self.stack.append( {'type':'directory', 'level':level, 'html':fldr} )
-          return
-
-       top = self.stack.pop()     
         
-       if top['level'] == level:
-          # New directory is at the same level as existing one. So, concatenate it
-          clrprint.clrprint(f'Concatenating same level L:{level} {fldr}', clr='blue') 
-          self.stack.append( {'type':'directory', 'level':level, 'html':top['html'] + ' ' + fldr } )
-       elif (level - top['level']) == 1:
-              # New directory is at a lower level (greater level) than current. This means we are
-              # going deeper. Hence, add it to the stack
-              clrprint.clrprint(f'Adding to stack 2 items: current L:{level} {fldr}', clr='blue')
-              self.stack.append(top)
-              self.stack.append( {'type':'directory', 'level':level, 'html':fldr} )
-
-              '''
-              sentry = {'type':'directory', 'level':level, 'html':fldr.replace('${SUBDIRECTORY}', top['html'])}
-              while True:
-                   
-                  if len(self.stack) <= 0:
-                       break
-                  itm = self.stack.pop()
-                  if itm['level'] != level:
-                     self.stack.append(itm)
-                     break
-
-                  clrprint.clrprint('>>> Found same level. Concatenating...', clr='red') 
-                  sentry['html'] = itm['html'] +  sentry['html']
-
-              self.stack.append(sentry)
-              '''
-
-       else:
-              #self.stack.append(top)
-              #if level < top['level']:
-              #    self.stack.append(topDir)
-                  
-              clrprint.clrprint(f'Items in stack:{len(self.stack)} Current directory: {fldr}', clr='yellow')
-              clrprint.clrprint(f'Adding SUBDIR for encounterred current L:{level} {fldr}', clr='blue')
-              subd = top['html']
-              topDir = self.stack.pop()
-              topDir['html'] = topDir['html'].replace('${SUBDIRECTORY}', subd)
-              topDir['html'] = topDir['html'] + ' ' + fldr
-              self.stack.append(topDir) 
-              
-              '''
-              while True:
-                    if len(self.stack) <= 0:
-                       print('>>>>>> empty stack') 
-                       break
-                    
-                    itm = self.stack.pop()
-                    if itm['level'] == level:
-                       subd = itm['html'] + subd
-                    elif level - itm['level'] == 1:
-                         top['html'] = top['html'].replace('${SUBDIRECTORY}', subd)
-                         #print(itm)
-                         #self.stack.append(itm)
-                         break
-              ''' 
-              #clrprint.clrprint(f'Generated SUBDIRECTORIES L:{level} {itm["html"]}', clr='blue')
-              #clrprint.clrprint(f'Adding to stack L:{level} {fldr}', clr='blue')
-              
-
-              #self.stack.append(top)
-              #self.stack.append({'type':'directory', 'level':level, 'html':fldr}) 
-                    
-              #clrprint.clrprint(f'Appending to stack {fldr}', clr='blue') 
-              #self.stack.append(top)
-              #self.stack.append({'level':level, 'html': fldr})
- 
-       return
-
-
-              
-           
 
 
 
@@ -413,11 +250,9 @@ class HTMLExporter(Visitor):
            if self.directory_count >= self.criteria.get('maxDirs', -1):
               raise criteriaException(-10, 'maximum number of directories reached.')
 
-    
         self.directory_count += 1
        
-        #self.addDirectoryFEFA(level, self.dirTemplate.replace("${ID}", 'D-'+str(random.randint(0, 1000000))).replace("${DIRPATH}", path).replace("${DIRNAME}", name).replace("${PATH}", path).replace("${PARENTPATH}", parent).replace("${LEVEL}", str(level)).replace('${RLVLCOLOR}', random.choice(fontColorPalette)) )
-
+        
            
         
 
