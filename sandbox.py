@@ -181,7 +181,7 @@ def searchNameComplies(on, xP='', iP='', matchReplacement='', dbg=False):
 
 
 
-
+'''
 def makeHtmlLink(itemPath, displayAnchor, urlEncode):
     
     if urlEncode:
@@ -192,7 +192,7 @@ def makeHtmlLink(itemPath, displayAnchor, urlEncode):
        return '<a href="file://' + itemPath.encode('utf8').decode() + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>'
     else:
        return '<a href="' + itemPath.encode('utf8').decode() + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>' 
-    
+'''    
 
 
 #
@@ -814,10 +814,23 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "exampleDir3"
-
-testTraversal(initialDir)
+initialDir = "exampleDir1"
+hE.stack.append({'type':'directory', 'collapsed':False, 'level':0, 'name':initialDir, 'dname':initialDir, 'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', initialDir).replace('${PATH}', initialDir).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
+fsTraversal(initialDir, 1, visitor=hE)
+print('Stack length before final merge:', len(hE.stack))
+showStack2(hE.stack)
+#print('Final merge...')
+hE.newMERGE(stk=hE.stack)
+print('Stack length AFTER final merge:', len(hE.stack))
+showStack2(hE.stack)
+subD = hE.stack.pop()
+h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', '-1').replace('${LNFILES}', '-5')
+with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
+     sf.write(h)
+     
+#testTraversal(initialDir)
 clrprint.clrprint('Finished.', clr='yellow')
+
 sys.exit(-2)
 
 

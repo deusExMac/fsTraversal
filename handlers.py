@@ -175,7 +175,17 @@ def htmlLink(itemPath, displayAnchor, urlEncode):
 
 
 
+def makeHtmlLink(itemPath, displayAnchor, urlEncode):
+    
+    if urlEncode:
+      return '<a href="' + urllib.parse.quote(itemPath.encode('utf8') ) + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>' 
 
+    # TODO: Do we need encode/decode here???
+    if os.path.isabs(itemPath):
+       return '<a href="file://' + itemPath.encode('utf8').decode() + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>'
+    else:
+       return '<a href="' + itemPath.encode('utf8').decode() + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>' 
+  
 
 
 
@@ -202,7 +212,7 @@ class HTMLExporter(Visitor):
 
 
     # This is working!
-    def newMERGE(newD={'type':'directory', 'level':0, 'name':''}, stk=None):
+    def newMERGE(self, newD={'type':'directory', 'level':0, 'name':''}, stk=None):
     
     
           clrprint.clrprint(f"Seen: [{newD['name']}] Level[{newD['level']}]", clr='maroon')
@@ -308,7 +318,7 @@ class HTMLExporter(Visitor):
         ''' 
 
         nF={'type':'file',  'collapsed':False, 'level':level, 'name':path, 'dname':name, 'html':''}
-        nF['html'] = self.fileTemplate.replace('${FILELINK}', makeHtmlLink(filePath, encounteredFile, False)).replace('${FILENAME}', encounteredFile).replace('${PATH}', filePath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
+        nF['html'] = self.fileTemplate.replace('${FILELINK}', makeHtmlLink(path, name, False)).replace('${FILENAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level))
         filename, fileExtension = os.path.splitext(path)
         nF['html'] = nF['html'].replace('${FILEEXTENSION}', fileExtension[1:])
 
