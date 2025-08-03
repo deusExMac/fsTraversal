@@ -401,7 +401,7 @@ def showStack(stk=theSTACK):
 
 
 
-
+'''
 # This is working!
 def newMERGE(newD={'type':'directory', 'level':0, 'name':''}, stk=None):
     
@@ -471,86 +471,8 @@ def newMERGE(newD={'type':'directory', 'level':0, 'name':''}, stk=None):
                       
              
           return(sDir)
-    
+'''    
               
-
-
-
-
-    
-# This is working! BACKUP!
-def newMERGE_BACKUP(newD={'type':'directory', 'level':0, 'name':''}, stk=None):
-    
-    
-    clrprint.clrprint(f"Seen: [{newD['name']}] Level[{newD['level']}]", clr='maroon')
-    sDir = ''
-
-    
-    while True:
-          
-            
-          if len(stk) <= 0:
-             break
-
-          top = stk.pop()
-          if newD['level'] >= top['level']:
-             stk.append(top)
-             return
-            
-          
-             
-          
-          if top['level'] - newD['level'] > 0:
-             clrprint.clrprint(f"Entering collapse", clr='maroon') 
-             # The new directory that WILL be added is at a higher level than to current
-             # top of the list. i.e. we went one or more levels up.
-             # At this point top is the last directory/file found at the deepest level.
-             # Start collapsing now...
-
-                
-             # This means that the new directory encounterred
-             # is at a higher level. Hence collect all at the
-             # same level and merge/concatenate them
-             sDir = top['html']
-             while True:
-
-                 if len(stk) <= 0:
-                     break
-
-                 # get object below top (deepest encounterred)   
-                 s = stk.pop()
-                 clrprint.clrprint(f"[Collapse]: popped [{s['name']}][{s['level']}]->[{s['collapsed']}] [top:{top['name']}][{top['level']}]->[{top['collapsed']}] [newD:{newD['name']}] [{newD['level']}]", clr='maroon') 
-                 if s['level'] == newD['level']:
-                    clrprint.clrprint(f"\t[Collapse]: stopping... [{s['level']}]", clr='yellow') 
-                    top['html'] = sDir
-                    
-                    s['html'] = s['html'].replace('${SUBDIRECTORY}', top['html']) 
-                    stk.append(s) 
-                    stk.append(top)
-                        
-                    return
-                
-                
-                 if s['level'] == top['level']:
-                    clrprint.clrprint(f"\t[Collapse]: Adding to [{s['name']}]", clr='yellow') 
-                    if s['type']=='directory': 
-                       sDir = s['html'] + ' ' + sDir
-                    else:
-                       sDir = sDir + ' ' + s['html']
-                       
-                 elif top['level'] - s['level'] == 1:
-                      clrprint.clrprint(f"\t[Collapse]: Replacing subdir to [{s['name']}]", clr='yellow')  
-                      sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
-                      top = {'type':'directory', 'collapsed':True, 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir}
-                      sDir = top['html']
-                      
-                      
-             
-    return(sDir)
-
-
-
-
 
 
 
@@ -619,14 +541,16 @@ def fsTraversal(root, lvl, visitor=None):
         fMeta = fileInfo(filePath)
 
         # Next in file handler
+        '''
         nF={'type':'file',  'collapsed':False, 'level':lvl, 'name':filePath, 'dname':encounteredFile, 'html':''}
         nF['html'] = fTemp.replace('${FILELINK}', makeHtmlLink(filePath, encounteredFile, False)).replace('${FILENAME}', encounteredFile).replace('${PATH}', filePath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
         filename, fileExtension = os.path.splitext(encounteredFile)
         nF['html'] = nF['html'].replace('${FILEEXTENSION}', fileExtension[1:])
         theSTACK.append(nF)
+        '''
 
-        #fv = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
-        #fv.accept(visitor)
+        fv = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
+        fv.accept(visitor)
         
         
         
@@ -642,6 +566,7 @@ def fsTraversal(root, lvl, visitor=None):
 
 
         # Next in directory handler
+        '''
         nD = {'type':'directory', 'collapsed':False, 'level':lvl, 'name':directoryPath, 'dname':encounteredDirectory, 'lndir':-1, 'lnfiles':-1, 'html':''}
         newMERGE(nD, theSTACK)
 
@@ -650,6 +575,9 @@ def fsTraversal(root, lvl, visitor=None):
         theSTACK.append(nD)
         
         showStack2()
+        '''
+
+        
         #lnDirs += 1       
           
         
@@ -659,7 +587,7 @@ def fsTraversal(root, lvl, visitor=None):
         #subDirData = (0,0,0, "xxx")
         #if recursive:
 
-        '''
+        
         dH = handlers.Directory(encounteredDirectory,
                                directoryPath,
                                lvl,
@@ -668,7 +596,7 @@ def fsTraversal(root, lvl, visitor=None):
                                -2,
                                '')
         dH.accept(visitor)
-        '''
+        
         
             # go into subdirectory and traverse it
         subDirData = fsTraversal( directoryPath, lvl+1, visitor)  
