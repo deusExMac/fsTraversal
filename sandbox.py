@@ -886,7 +886,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "/Users/manolistzagarakis/home(synced)/econ/2025-2026"
+initialDir = "exampleDir3"
 
 testTraversal(initialDir)
 clrprint.clrprint('Finished.', clr='yellow')
