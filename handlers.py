@@ -317,6 +317,12 @@ class HTMLExporter(Visitor):
            fileHtml = fileHtml.replace('${FILEEXTENSION}', 'ukn')
         ''' 
 
+        if not nameMatches(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern', '') ):
+           return
+
+        
+        self.file_count += 1
+
         nF={'type':'file',  'collapsed':False, 'level':level, 'name':path, 'dname':name, 'html':''}
         nF['html'] = self.fileTemplate.replace('${FILELINK}', makeHtmlLink(path, name, False)).replace('${FILENAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level))
         filename, fileExtension = os.path.splitext(path)

@@ -814,22 +814,22 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "exampleDir1"
+initialDir = "exampleDir7"
 hE.stack.append({'type':'directory', 'collapsed':False, 'level':0, 'name':initialDir, 'dname':initialDir, 'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', initialDir).replace('${PATH}', initialDir).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
 fsTraversal(initialDir, 1, visitor=hE)
-print('Stack length before final merge:', len(hE.stack))
-showStack2(hE.stack)
+#print('Stack length before final merge:', len(hE.stack))
+#showStack2(hE.stack)
 #print('Final merge...')
 hE.newMERGE(stk=hE.stack)
-print('Stack length AFTER final merge:', len(hE.stack))
-showStack2(hE.stack)
+#print('Stack length AFTER final merge:', len(hE.stack))
+#showStack2(hE.stack)
 subD = hE.stack.pop()
 h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', '-1').replace('${LNFILES}', '-5')
 with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
      sf.write(h)
      
 #testTraversal(initialDir)
-clrprint.clrprint('Finished.', clr='yellow')
+clrprint.clrprint(f'Finished. File count:{hE.file_count} Dir count:{hE.directory_count}', clr='yellow')
 
 sys.exit(-2)
 
