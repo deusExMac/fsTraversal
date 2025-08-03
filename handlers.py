@@ -251,7 +251,8 @@ class HTMLExporter(Visitor):
               raise criteriaException(-10, 'maximum number of directories reached.')
 
         self.directory_count += 1
-       
+
+         
         
            
         
