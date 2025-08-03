@@ -252,7 +252,8 @@ class HTMLExporter(Visitor):
                     clrprint.clrprint(f"\t[Collapse]: stopping... [{s['level']}]", clr='yellow') 
                     top['html'] = sDir
                     
-                    s['html'] = s['html'].replace('${SUBDIRECTORY}', top['html']) 
+                    s['html'] = s['html'].replace('${SUBDIRECTORY}', top['html'])
+                    s['collapsed'] = True
                     stk.append(s) 
                     stk.append(top)
                         

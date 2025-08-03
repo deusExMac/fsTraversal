@@ -529,65 +529,20 @@ def fsTraversal(root, lvl, visitor=None):
     dirs.sort()
     files.sort()
 
-    
-
-    
     for encounteredFile in files:
-        
         sys.stdout.flush()
-        
         
         filePath = normalizedPathJoin(root, encounteredFile)          
         fMeta = fileInfo(filePath)
-
-        # Next in file handler
-        '''
-        nF={'type':'file',  'collapsed':False, 'level':lvl, 'name':filePath, 'dname':encounteredFile, 'html':''}
-        nF['html'] = fTemp.replace('${FILELINK}', makeHtmlLink(filePath, encounteredFile, False)).replace('${FILENAME}', encounteredFile).replace('${PATH}', filePath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
-        filename, fileExtension = os.path.splitext(encounteredFile)
-        nF['html'] = nF['html'].replace('${FILEEXTENSION}', fileExtension[1:])
-        theSTACK.append(nF)
-        '''
-
         fv = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
         fv.accept(visitor)
         
-        
-        
-
 
         
     for encounteredDirectory in dirs:
         sys.stdout.flush()
         
-        
-        directoryPath = normalizedPathJoin(root, encounteredDirectory)
-        #clrprint.clrprint('Processing:', directoryPath, f' total of {len(theSTACK)}', clr='yellow')
-
-
-        # Next in directory handler
-        '''
-        nD = {'type':'directory', 'collapsed':False, 'level':lvl, 'name':directoryPath, 'dname':encounteredDirectory, 'lndir':-1, 'lnfiles':-1, 'html':''}
-        newMERGE(nD, theSTACK)
-
-        dId = "d" + str(lvl) + "-" + str( random.randint(0, 1000000) )      
-        nD['html'] = dTemp.replace('${ID}', dId).replace('${DIRNAME}', encounteredDirectory).replace('${PATH}', directoryPath).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(lvl))
-        theSTACK.append(nD)
-        
-        showStack2()
-        '''
-
-        
-        #lnDirs += 1       
-          
-        
-        # The semantics in order: 
-        # total number of directories, total number of files, local number of dirs, local number of files,
-        # formatted display of subdirectory 
-        #subDirData = (0,0,0, "xxx")
-        #if recursive:
-
-        
+        directoryPath = normalizedPathJoin(root, encounteredDirectory)           
         dH = handlers.Directory(encounteredDirectory,
                                directoryPath,
                                lvl,
@@ -598,7 +553,7 @@ def fsTraversal(root, lvl, visitor=None):
         dH.accept(visitor)
         
         
-            # go into subdirectory and traverse it
+        # go into subdirectory and traverse it
         subDirData = fsTraversal( directoryPath, lvl+1, visitor)  
         if subDirData[0] < 0:
                if (subDirData[0] != -1):
@@ -612,176 +567,7 @@ def fsTraversal(root, lvl, visitor=None):
 ####################### FOR TESTING ONLY (END) #########################
     
 
-#
-# TODO: 1) Do we need epilog and fepilog??? 2) Check PSEUDOs - check DIRLINK etc
-#       3) Change name to indicate formated output 
-#tmpH = ''
 
-def ABSTRACTtraverse(root=".//", lvl=1, recursive = True, maxLevel=-1,
-                      encodeUrl=False,                      
-                      vrb=False,
-                      objVisitor=None):
-    
-
-  
-   
-   try: 
-    if maxLevel > 0:
-       if lvl > maxLevel:
-          #objVisitor.tmpHtml = ''
-          return(0, 0, 0, "")
-
-
-    # Gather directories and files in directory identified by
-    # path root.
-    #
-    # In case of error, quit returning special status
-    try:
-      clrprint.clrprint(f'{lvl*"\t"}Inside {root}', clr='maroon')
-      sys.stdout.flush()
-      
-      path, dirs, files = next( os.walk(root) )    
-    except Exception as wEx:
-      print('Exception during walk:', str(wEx) )
-      if ON_TRAVERSE_ERROR_QUIT:
-         return(-2, 0, 0, "")
-      else:
-         return(0, 0, 0, "") 
-
-
-    # sort directory and files
-    dirs.sort()
-    files.sort()
-
-    
-    
-    lnDirs = 0 # local number of directories i.e. number of directories in directory NOT including its subdirs
-    lnFiles = 0 # local number of files i.e. number of files in directory NOT including files in its subdirs
-    #objVisitor.tmpHtml = ''
-    #tmpH = ''
-    
-    #objVisitor.reset() 
-    #formatedContents = "" # Formated directory and files
-
-    # At each level, a different color for directory names 
-    #rClr = random.choice(fontColorPalette)
-
-    # Process all directories in current directory.
-    # If recursive is True, traverse into each directory
-    # Does a depth first search (DFS) approach
-    tmpH = ''
-    for encounteredDirectory in dirs:
-        sys.stdout.flush()
-        
-        
-        directoryPath = normalizedPathJoin(root, encounteredDirectory) 
-        #dirList.append(directoryPath)
-
-        
-        lnDirs += 1       
-        # TODO: fix objVisitor.htmlPage which is wrong...
-        #print(objVisitor.htmlPage)
-        
-        
-        
-        # The semantics in order: 
-        # total number of directories, total number of files, local number of dirs, local number of files,
-        # formatted display of subdirectory 
-        subDirData = (0,0,0, "xxx")
-        if recursive:
-
-            v = handlers.Directory(encounteredDirectory,
-                               directoryPath,
-                               lvl,
-                               root,
-                               -1,
-                               -2,
-                               '')
-            v.accept(objVisitor)
-        
-            # go into subdirectory and traverse it
-            subDirData = ABSTRACTtraverse( directoryPath, lvl+1, recursive, maxLevel,
-                                              encodeUrl,
-                                              vrb, objVisitor)  
-
-            # Upate total number of directories and files that will
-            # be propagated upwards.
-            # subDirData[0] is the status message
-            #if subDirData[0] >= 0:
-            #   nDirs += subDirData[1]
-            #   nFiles += subDirData[2]
-            #else:
-            if subDirData[0] < 0:
-               if (subDirData[0] != -1):
-                   return(subDirData[0], lnDirs, lnFiles, '')
-
-        '''
-        v = handlers.Directory(encounteredDirectory,
-                               directoryPath,
-                               lvl,
-                               root,
-                               subDirData[1],
-                               subDirData[2],
-                               subDirData[3])
-        v.accept(objVisitor)
-        '''
-        
-        
-        
-        '''
-        # Prepare the entry for one single directory encountered
-        dId = "d" + str(lvl) + "-" + str( random.randint(0, 1000000) )
-        formatedContents = formatedContents + prolog.replace("${ID}", dId).replace("${DIRLINK}", makeHtmlLink(directoryPath, encounteredDirectory, encodeUrl) ).replace('${DIRNAME}', encounteredDirectory).replace('${LEVEL}', str(lvl)).replace('${DIRPATH}', directoryPath).replace('${PARENTPATH}', root.replace('\\', ' / ')).replace('${SUBDIRECTORY}', subDirData[4])
-        formatedContents = formatedContents.replace('${LNDIRS}', str(subDirData[2])).replace('${NDIRS}', str(subDirData[0]) if subDirData[0] >=0 else '0' )
-        formatedContents = formatedContents.replace('${LNFILES}', str(subDirData[3])).replace('${NFILES}', str(subDirData[1]) )
-        formatedContents = formatedContents.replace('${RLVLCOLOR}',  rClr)
-        #formatedContents = formatedContents + epilog
-        #for k in range(10):
-        dirList.append({'id':dId, 'name':encounteredDirectory})
-        '''
-        
-        
-    
-    
-    #objVisitor.tmpHtml = tmpH
-    
-    # Process all files in current directory
-    for encounteredFile in files:
-        sys.stdout.flush()
-        
-        
-        filePath = normalizedPathJoin(root, encounteredFile)          
- 
-        #clrprint.clrprint(filePath, clr="yellow")
-        lnFiles += 1
-
-        
-        fMeta = fileInfo(filePath)
-        v = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
-        v.accept(objVisitor)
-        
-        '''
-        fileList.append(filePath)
-
-        formatedContents = formatedContents + formatFile(root, filePath, encounteredFile, fprolog, lvl, encodeUrl)
-        '''
-
-    
-    # Return data to upper directory
-    #
-    # The tuple returned has the following data
-    # nDirs: total directories up to this point, nFiles: total files up to this point
-    # lnDirs:  number of directories in this directory only, lnFiles: number of files
-    # in this directory only, formatedContents: complete formated content up to this
-    # point
-    return 0, lnDirs, lnFiles, ''
-
-   except KeyboardInterrupt:
-       print('Keyboard interrupt. Terminating')
-       #sys.exit(-3)
-       return(0, 0, 0, '')
-   except handlers.criteriaException as ce:
-       raise handlers.criteriaException(ce.errorCode, str(ce)) 
 
 
 
@@ -814,7 +600,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "exampleDir7"
+initialDir = "exampleDir6"
 hE.stack.append({'type':'directory', 'collapsed':False, 'level':0, 'name':initialDir, 'dname':initialDir, 'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', initialDir).replace('${PATH}', initialDir).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
 fsTraversal(initialDir, 1, visitor=hE)
 #print('Stack length before final merge:', len(hE.stack))
@@ -829,7 +615,7 @@ with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
      sf.write(h)
      
 #testTraversal(initialDir)
-clrprint.clrprint(f'Finished. File count:{hE.file_count} Dir count:{hE.directory_count}', clr='yellow')
+clrprint.clrprint(f'\nFinished. File count:{hE.file_count} Directory count:{hE.directory_count}', clr='yellow')
 
 sys.exit(-2)
 
