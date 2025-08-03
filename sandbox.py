@@ -380,132 +380,8 @@ def showStack2(stk=theSTACK):
          for i in lst[::-1]:
              stk.append(i)
 
+  
 
-
-def showStack(stk=theSTACK):
-         lst = []
-         pos=1
-         clrprint.clrprint('Total of', len(stk), 'items in stack.', clr='yellow')
-         while  len(stk) > 0:
-                sv = stk.pop()
-                lst.append(sv)
-                print('______' + str(pos) + '______\n', end='')
-                print(sv)
-                print('_________')
-                pos +=1
-
-         for i in lst[::-1]:
-             stk.append(i)
-
-
-
-
-
-'''
-# This is working!
-def newMERGE(newD={'type':'directory', 'level':0, 'name':''}, stk=None):
-    
-    
-          clrprint.clrprint(f"Seen: [{newD['name']}] Level[{newD['level']}]", clr='maroon')
-          sDir = ''
-
-    
-    #while True:
-          
-            
-          if len(stk) <= 0:
-             return
-
-          top = stk.pop()
-          if newD['level'] >= top['level']:
-             stk.append(top)
-             return
-            
-          
-             
-          
-          if top['level'] - newD['level'] > 0:
-             clrprint.clrprint(f"Entering collapse", clr='maroon') 
-             # The new directory that WILL be added is at a higher level than to current
-             # top of the list. i.e. we went one or more levels up.
-             # At this point top is the last directory/file found at the deepest level.
-             # Start collapsing now...
-
-                
-             # This means that the new directory encounterred
-             # is at a higher level. Hence collect all at the
-             # same level and merge/concatenate them
-             sDir = top['html']
-             while True:
-
-                 if len(stk) <= 0:
-                     break
-
-                 # get object below top (deepest encounterred)   
-                 s = stk.pop()
-                 clrprint.clrprint(f"[Collapse]: popped [{s['name']}][{s['level']}]->[{s['collapsed']}] [top:{top['name']}][{top['level']}]->[{top['collapsed']}] [newD:{newD['name']}] [{newD['level']}]", clr='maroon') 
-                 if s['level'] == newD['level']:
-                    clrprint.clrprint(f"\t[Collapse]: stopping... [{s['level']}]", clr='yellow') 
-                    top['html'] = sDir
-                    
-                    s['html'] = s['html'].replace('${SUBDIRECTORY}', top['html']) 
-                    stk.append(s) 
-                    stk.append(top)
-                        
-                    return
-                
-                
-                 if s['level'] == top['level']:
-                    clrprint.clrprint(f"\t[Collapse]: Adding to [{s['name']}]", clr='yellow') 
-                    if s['type']=='directory': 
-                       sDir = s['html'] + ' ' + sDir
-                    else:
-                       sDir = sDir + ' ' + s['html']
-                       
-                 elif top['level'] - s['level'] == 1:
-                      clrprint.clrprint(f"\t[Collapse]: Replacing subdir to [{s['name']}]", clr='yellow')  
-                      sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
-                      top = {'type':'directory', 'collapsed':True, 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir}
-                      sDir = top['html']
-                      
-                      
-             
-          return(sDir)
-'''    
-              
-
-
-
-
-
-
-    
-def testTraversal(d='exampleDir3'):
-    
-    theSTACK.append({'type':'directory', 'collapsed':False, 'level':0, 'name':d, 'dname':d, 'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', d).replace('${PATH}', d).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
-    fsTraversal(d, 1)
-    # Final merge
-    newMERGE(stk=theSTACK)
-
-    print('Last show stack...')
-    showStack2()
-
-
-    
-    fp = theSTACK.pop()
-    #clrprint.clrprint('[', fp, ']', clr='maroon')
-    htmlFullPage = pTemp.replace('${SUBDIRECTORY}', fp['html']).replace('${INITIALDIRECTORY}', d)
-    # not working.
-    htmlFullPage=htmlFullPage.replace('${SUBDIRECTORY}', '')
-    
-    with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
-     sf.write(htmlFullPage) 
-    
-    
-
-
-
-    
 
 
 
@@ -600,7 +476,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 
-initialDir = "exampleDir6"
+initialDir = "exampleDir8"
 hE.stack.append({'type':'directory', 'collapsed':False, 'level':0, 'name':initialDir, 'dname':initialDir, 'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', initialDir).replace('${PATH}', initialDir).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
 fsTraversal(initialDir, 1, visitor=hE)
 #print('Stack length before final merge:', len(hE.stack))
