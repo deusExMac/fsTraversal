@@ -465,7 +465,7 @@ defDT = handlers.DirectoryTraverser({'dirinclusionPattern':"",
 
 
 hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
-                                  'fileexclusionPattern':"git|Rhistory|DS_Store",
+                                  'fileexclusionPattern':"git|Rhistory|DS_Store|txt",
                                   'dirinclusionPattern': '',
                                   'direxclusionPattern':'stfolder',
                                   'minFileSize':-1,
@@ -483,6 +483,8 @@ fsTraversal(initialDir, 1, visitor=hE)
 #showStack2(hE.stack)
 #print('Final merge...')
 hE.newMERGE(stk=hE.stack)
+
+
 #print('Stack length AFTER final merge:', len(hE.stack))
 #showStack2(hE.stack)
 subD = hE.stack.pop()

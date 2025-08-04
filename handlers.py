@@ -319,6 +319,7 @@ class HTMLExporter(Visitor):
         ''' 
 
         if not nameMatches(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern', '') ):
+           clrprint.clrprint(f'Ignoring FILE [{name}] due to name criteria', clr='red')   
            return
 
         
@@ -354,6 +355,10 @@ class HTMLExporter(Visitor):
               raise criteriaException(-10, 'maximum number of directories reached.')
         '''       
 
+        if not nameMatches(name, self.criteria.get('direxclusionPattern', ''), self.criteria.get('dirinclusionPattern', '')):
+           clrprint.clrprint(f'Ignoring DIRECTORY [{name}] due to name criteria', clr='red') 
+           return
+        
         self.directory_count += 1
 
         # Next in directory handler
