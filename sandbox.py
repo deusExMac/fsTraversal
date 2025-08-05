@@ -432,7 +432,7 @@ def fsTraversal(root, lvl, visitor=None):
         ldc += 1
         
         # go into subdirectory and traverse it
-        subDirData = fsTraversal( directoryPath, lvl+1, visitor)  
+        subDirData = fsTraversal(directoryPath, lvl+1, visitor)  
         if subDirData[0] < 0:
                if (subDirData[0] != -1):
                    return(subDirData[0], -1, -1, '')
@@ -479,11 +479,15 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
 
 
 initialDir = "exampleDir8"
-hE.stack.append({'type':'directory', 'collapsed':False, 'level':0, 'name':initialDir, 'dname':initialDir, 'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', initialDir).replace('${PATH}', initialDir).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
+hE.stack.append({'type':'directory',
+                 'collapsed':False,
+                 'level':0,
+                 'name':initialDir,
+                 'dname':initialDir,
+                 'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', initialDir).replace('${PATH}', initialDir).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
+
 fsTraversal(initialDir, 1, visitor=hE)
-#print('Stack length before final merge:', len(hE.stack))
-#showStack2(hE.stack)
-#print('Final merge...')
+#clrprint.clrprint('Final merge...', clr='maroon')
 hE.newMERGE(stk=hE.stack)
 
 
