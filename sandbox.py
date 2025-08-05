@@ -405,6 +405,7 @@ def fsTraversal(root, lvl, visitor=None):
     dirs.sort()
     files.sort()
 
+    lfc = 0
     for encounteredFile in files:
         sys.stdout.flush()
         
@@ -412,9 +413,10 @@ def fsTraversal(root, lvl, visitor=None):
         fMeta = fileInfo(filePath)
         fv = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
         fv.accept(visitor)
+        lfc += 1
         
 
-        
+    ldc = 0    
     for encounteredDirectory in dirs:
         sys.stdout.flush()
         
@@ -427,7 +429,7 @@ def fsTraversal(root, lvl, visitor=None):
                                -2,
                                '')
         dH.accept(visitor)
-        
+        ldc += 1
         
         # go into subdirectory and traverse it
         subDirData = fsTraversal( directoryPath, lvl+1, visitor)  
@@ -436,7 +438,7 @@ def fsTraversal(root, lvl, visitor=None):
                    return(subDirData[0], -1, -1, '')
      
 
-    return 0, -1, -1, ''
+    return 0, ldc, lfc, ''
 
 
 
