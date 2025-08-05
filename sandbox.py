@@ -328,7 +328,7 @@ def timeit(f):
     
     def timed(*args, **kw):
         
-        if (f.__name__ == 'traverseDirectory' and args[1] > 1 ):
+        if (f.__name__ == 'fsTraversal' and args[1] > 1 ):
             return( f(*args, **kw) )
         
         ts = time.time()
@@ -387,7 +387,7 @@ def showStack2(stk=theSTACK):
 
 
         
-        
+@timeit        
 def fsTraversal(root, lvl, visitor=None):
     
     try:
@@ -453,17 +453,6 @@ def fsTraversal(root, lvl, visitor=None):
 
 dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
 
-'''
-defDT = handlers.DirectoryTraverser({'dirinclusionPattern':"",
-                                  'direxclusionPattern':r"git|Rhistory|DS_Store|stfolder",
-                                  'minFileSize':-1,
-                                  'maxFileSize':-1,
-                                  'maxDirs':-1,
-                                  'maxFiles':-1})
-
-'''
-
-
 
 
 hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
@@ -486,7 +475,13 @@ hE.stack.append({'type':'directory',
                  'dname':initialDir,
                  'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', initialDir).replace('${PATH}', initialDir).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
 
-fsTraversal(initialDir, 1, visitor=hE)
+try:
+   fsTraversal(initialDir, 1, visitor=hE)
+except handlers.criteriaException as ce:
+      clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
+else:
+      clrprint.clrprint('Terminated.', clr='yellow')
+      
 #clrprint.clrprint('Final merge...', clr='maroon')
 hE.newMERGE(stk=hE.stack)
 
@@ -526,9 +521,9 @@ else:
 
 import io
 
-clrprint.clrprint('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%', clr='yellow')
-hE.displayStack()
-clrprint.clrprint('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%', clr='yellow')
+#clrprint.clrprint('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%', clr='yellow')
+#hE.displayStack()
+#clrprint.clrprint('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%', clr='yellow')
 
 #rrr = hE.stack.pop()
 '''

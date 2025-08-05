@@ -161,6 +161,17 @@ class DirectoryTraverser(Visitor):
 
 
 
+
+
+
+#####################################################################
+#
+#     HTML Exporter
+#
+#####################################################################
+
+
+
 def htmlLink(itemPath, displayAnchor, urlEncode):
     
     if urlEncode:
@@ -189,11 +200,7 @@ def makeHtmlLink(itemPath, displayAnchor, urlEncode):
 
 
 
-#####################################################################
-#
-#     HTML Exporter
-#
-#####################################################################
+
 
 # 4i. Another Concrete visitor class
 # TODO: Not yet working; Incomplete
@@ -330,7 +337,7 @@ class HTMLExporter(Visitor):
         filename, fileExtension = os.path.splitext(path)
         nF['html'] = nF['html'].replace('${FILEEXTENSION}', fileExtension[1:])
 
-        
+        # Add to stack
         self.stack.append(nF)
         return
 
@@ -361,7 +368,7 @@ class HTMLExporter(Visitor):
         
         self.directory_count += 1
 
-        # Next in directory handler
+        
         nD = {'type':'directory', 'collapsed':False, 'level':level, 'name':path, 'dname':name, 'lndir':-1, 'lnfiles':-1, 'html':''}
         self.newMERGE(nD, self.stack)
 
@@ -375,65 +382,8 @@ class HTMLExporter(Visitor):
            
         
 
-
-
-    def displayStack(self):
-         lst = []
-         pos=1
-         print('Total of', len(self.stack), 'items in stack.')
-         while  len(self.stack) > 0:
-                sv = self.stack.pop()
-                lst.append(sv)
-                print('______' + str(pos) + '______\n', end='')
-                print(sv)
-                print('_________')
-                pos +=1
-
-         for i in lst[::-1]:
-             self.stack.append(i)
-
-             
-
-    def unwindStack(self, level=1):
-         htmlC = ''
-         cnt = 0
-         while  len(self.stack) > 0:
-              sv = self.stack.pop()
-              #print(sv)
-              if sv['level'] == level:
-                 cnt += 1
-                 clrprint.clrprint(f'[{cnt}]', clr='red', end='')
-                 print('---\n', sv, '---\n') 
-                 htmlC = sv['html'] + htmlC
-              
-         return(htmlC)     
-
-
-        
-    def showStack(self):
-        while  len(self.stack) > 0:
-              sv = self.stack.pop()
-              print(sv)
-
-   
-            
-
     
 
-
-
-# Not used.....
-# 5. Traverse the directory structure
-def traverse_directory(root_path, visitor):
-    for item in os.listdir(root_path):
-        item_path = os.path.join(root_path, item)
-        if os.path.isfile(item_path):
-            file_obj = File(item_path)
-            file_obj.accept(visitor)
-        elif os.path.isdir(item_path):
-            dir_obj = Directory(item_path)
-            dir_obj.accept(visitor)
-            traverse_directory(item_path, visitor) # Recursive call for subdirectories
 
 
 
