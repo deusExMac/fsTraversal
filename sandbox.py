@@ -461,7 +461,7 @@ hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
                                   'direxclusionPattern':'stfolder',
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
-                                  'maxDirs':-1,
+                                  'maxDirs':5,
                                   'maxFiles':-1})
 
 
@@ -482,7 +482,7 @@ except handlers.criteriaException as ce:
 else:
       clrprint.clrprint('Terminated.', clr='yellow')
       
-#clrprint.clrprint('Final merge...', clr='maroon')
+# Final merge
 hE.newMERGE(stk=hE.stack)
 
 
