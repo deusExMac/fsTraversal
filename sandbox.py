@@ -35,7 +35,7 @@ ON_TRAVERSE_ERROR_QUIT = False
 
 
                                               
-# TODO: Not yet working when order changes. Fix this...
+# TODO: Replace related function in utilities with this... 
 #        ==> OK fixe. Tests needed
 def readHTMLTemplateFile(fname, dm='<!---directorytemplate--->\n', fm='<!---filetemplate--->\n', pm='<!---pagetemplate--->\n'):
     
@@ -102,11 +102,7 @@ def timeit(f):
 
 
 
-####################### FOR TESTING ONLY (START) #########################
-
-
-
-
+# GENERAL PURPOSE FUNCTION....
         
 @timeit        
 def fsTraversal(root, lvl, visitor=None):
@@ -164,6 +160,47 @@ def fsTraversal(root, lvl, visitor=None):
      
 
     return 0, ldc, lfc, ''
+
+
+
+
+
+
+
+
+# TODO: incomplete...TOTALLY
+def htmlExporter(root, visitor):
+
+    dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
+    
+    # Add to stack
+    hE.stack.append({'type':'directory',
+                     'collapsed':False,
+                     'level':0,
+                     'name':initialDir,
+                     'dname':initialDir,
+                     'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', initialDir).replace('${PATH}', initialDir).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
+
+    try:
+      fsTraversal(root, 1, visitor=visitor)
+    except handlers.criteriaException as ce:
+      clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
+    else:
+      clrprint.clrprint('Terminated.', clr='yellow')
+      
+    # Final merge
+    visitor.newMERGE(stk=hE.stack)
+    subD = hE.stack.pop()
+    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', '-1').replace('${LNFILES}', '-5')
+    with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
+         sf.write(h)
+
+    return(0)
+
+
+
+
+
 
 
 
