@@ -11,6 +11,9 @@ from collections import deque
 
 import urllib
 
+from utilities import searchNameComplies, printPath
+
+
 
 # Colors to choose from if color cycling is enabled (-c)
 fontColorPalette = ['#4287f5', '#801408', '#08259c', '#4560d1', '#0a690a', '#9c5f1e', '#9c1e87', '#1313f2', '#f21313', '#34ba4a', '#19084a', '#27889c', '#317534', '#e8740e', '#000000',
@@ -220,6 +223,7 @@ def makeHtmlLink(itemPath, displayAnchor, urlEncode):
 
 # Another concrete visitor class
 class HTMLExporter(Visitor):
+    
     def __init__(self, dirT, fileT, pageT, criteria):
         
         self.file_count = 0
@@ -353,11 +357,59 @@ class HTMLExporter(Visitor):
         self.stack.append(nD)
         return 
          
-        
-           
-        
 
-    
+
+
+
+
+#####################################################################
+#
+#     Searching - First version.
+#
+#####################################################################
+
+           
+class SearchVisitor(Visitor):
+      
+      def __init__(self, qry, criteria):
+        
+        self.file_count = 0
+        self.directory_count = 0
+
+        self.query = qry
+        self.criteria = criteria
+        
+        self.matches = []
+
+
+
+        
+      def visit_file(self, name, path, level, parent, finfo={}):
+            
+            matchedFileName = searchNameComplies(name, self.criteria.get('fileinclusionPattern', ''), self.criteria.get('fileinclusionPattern', ''), r'/\1/', False)
+            if matchedFileName == '':
+               return
+
+            self.file_count += 1
+            clrprint.clrprint('[F] ', clr='green', end='')
+            self.matches.append(path)
+            printPath(parent, matchedFileName, '/', 'green')
+
+            
+
+
+            
+
+      def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
+            
+            matchedDirName = searchNameComplies(name, self.criteria.get('direxclusionPattern', ''), self.criteria.get('dirinclusionPattern', ''), r'/\1/', False)
+            if matchedDirName == '':
+               return
+
+            self.directory_count += 1
+            clrprint.clrprint('[D] ', clr='red', end='')
+            self.matches.append(path)
+            printPath(parent, matchedDirName, '/', 'red')
 
 
 

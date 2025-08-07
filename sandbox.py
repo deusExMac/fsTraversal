@@ -150,7 +150,7 @@ def fsTraversal(root, lvl, visitor=None):
         
         # go into subdirectory and traverse it
         subDirData = fsTraversal(directoryPath, lvl+1, visitor)
-        clrprint.clrprint(f'>>> [{encounteredDirectory}]: #directories:{subDirData[1]} #files:{subDirData[2]}', clr='yellow')
+        #clrprint.clrprint(f'>>> [{encounteredDirectory}]: #directories:{subDirData[1]} #files:{subDirData[2]}', clr='yellow')
         dH.setLocalCounts(subDirData[1], subDirData[2])
         
         
@@ -229,21 +229,29 @@ def searchDirectories(root, criteria):
 
 
 
-
+initialDir = "exampleDir1"
 dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
 
 
-traversalCriteria = {'fileinclusionPattern':"",
+traversalCriteria = {'fileinclusionPattern':"(a)",
                                   'fileexclusionPattern':"git|Rhistory|DS_Store|txt",
-                                  'dirinclusionPattern': '',
+                                  'dirinclusionPattern': '(a)',
                                   'direxclusionPattern':'stfolder',
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
-                                  'maxDirs':123,
-                                  'maxFiles':55}
+                                  'maxDirs':-1,
+                                  'maxFiles':-1}
 
 
-htmlExporter('exampleDir2', 'html/template1.html', traversalCriteria)
+#htmlExporter('exampleDir2', 'html/template1.html', traversalCriteria)
+sE = handlers.SearchVisitor('(a)', traversalCriteria)
+try:
+   fsTraversal(initialDir, 1, visitor=sE)
+except handlers.criteriaException as ce:
+      clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
+else:
+      clrprint.clrprint('Terminated.', clr='yellow')
+      
 sys.exit(-2)
 
 
