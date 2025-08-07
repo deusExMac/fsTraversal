@@ -19,7 +19,7 @@ from filecmp import dircmp
 from prettytable import PrettyTable
 
 
-from utilities import fontColorPalette, normalizedPathJoin, nameComplies, searchNameComplies, fileCreationDate, fileInfo
+from utilities import fontColorPalette, normalizedPathJoin, nameComplies, searchNameComplies, fileCreationDate, fileInfo, strToBytes
 import handlers
 
 
@@ -108,8 +108,8 @@ def timeit(f):
 def fsTraversal(root, lvl, visitor=None):
     
     try:
-      clrprint.clrprint(f'{lvl*"\t"}Inside {root}', clr='maroon')
-      sys.stdout.flush()
+      #clrprint.clrprint(f'{lvl*"\t"}Inside {root}', clr='maroon')
+      #sys.stdout.flush()
       path, dirs, files = next( os.walk(root) )    
     except Exception as wEx:
       print('Exception during walk:', str(wEx) )
@@ -214,8 +214,20 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 
 
 # TODO: Complete me...
-def searchDirectories(root, criteria):
-    pass
+def searchDirectories(root, query='.*', criteria={}):
+    
+    criteria['fileinclusionPattern'] = '(' + query + ')'
+    criteria['dirinclusionPattern'] = '(' + query + ')'
+    sE = handlers.SearchVisitor('(a)', criteria)
+    try:
+      fsTraversal(initialDir, 1, visitor=sE)
+    except handlers.criteriaException as ce:
+      clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
+    else:
+      clrprint.clrprint('Terminated.', clr='yellow')
+
+    clrprint.clrprint(f'\nFound total of {sE.directory_count} directories and {sE.file_count} files.', clr='yellow')
+    return
 
 
 
@@ -226,37 +238,33 @@ def searchDirectories(root, criteria):
 
 
 
+mode = 'search'
+initialDir = "exampleDir"
 
+traversalCriteria = {'fileinclusionPattern':"",
+                     'fileexclusionPattern':"git|Rhistory|DS_Store|txt",
+                     'dirinclusionPattern': '',
+                     'direxclusionPattern':'stfolder',
+                     'minFileSize':strToBytes('20k'),
+                     'maxFileSize':-1,
+                     'maxDirs':-1,
+                     'maxFiles':-1}
 
+if mode == 'export':
+   htmlExporter(initialDir, 'html/template1.html', traversalCriteria)
+elif mode == 'search':
+     while (True):
+         q = input('Give query (regular expression)>')
+         if q == '':
+            continue
 
-initialDir = "exampleDir1"
-dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
+         if q.lower()=='eof':
+            print('terminating.') 
+            break 
 
+         searchDirectories(initialDir, q,  traversalCriteria)
 
-traversalCriteria = {'fileinclusionPattern':"(a)",
-                                  'fileexclusionPattern':"git|Rhistory|DS_Store|txt",
-                                  'dirinclusionPattern': '(a)',
-                                  'direxclusionPattern':'stfolder',
-                                  'minFileSize':-1,
-                                  'maxFileSize':-1,
-                                  'maxDirs':-1,
-                                  'maxFiles':-1}
-
-
-#htmlExporter('exampleDir2', 'html/template1.html', traversalCriteria)
-sE = handlers.SearchVisitor('(a)', traversalCriteria)
-try:
-   fsTraversal(initialDir, 1, visitor=sE)
-except handlers.criteriaException as ce:
-      clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
-else:
-      clrprint.clrprint('Terminated.', clr='yellow')
-      
-sys.exit(-2)
-
-
-
-
+sys.exit(-3)
 
 
 
@@ -265,41 +273,16 @@ sys.exit(-2)
 
 
 
-hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, traversalCriteria)
-initialDir = "exampleDir1"
-
-clrprint.clrprint(f"Starting taversal with following critetia:\n{traversalCriteria}\n\n", clr='yellow')
-
-# Add to stack
-hE.stack.append({'type':'directory',
-                 'collapsed':False,
-                 'level':0,
-                 'name':initialDir,
-                 'dname':initialDir,
-                 'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', initialDir).replace('${PATH}', initialDir).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
-# Actual traversal
-try:
-   fsTraversal(initialDir, 1, visitor=hE)
-except handlers.criteriaException as ce:
-      clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
-else:
-      clrprint.clrprint('Terminated.', clr='yellow')
-      
-# Final merge
-hE.newMERGE(stk=hE.stack)
 
 
-#print('Stack length AFTER final merge:', len(hE.stack))
-#showStack2(hE.stack)
-subD = hE.stack.pop()
-h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', '-1').replace('${LNFILES}', '-5')
-with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
-     sf.write(h)
-     
-#testTraversal(initialDir)
-clrprint.clrprint(f'\nFinished. File count:{hE.file_count} Directory count:{hE.directory_count}', clr='yellow')
 
-sys.exit(-2)
+
+
+
+
+
+
+
 
 
 

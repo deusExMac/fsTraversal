@@ -11,7 +11,7 @@ from collections import deque
 
 import urllib
 
-from utilities import searchNameComplies, printPath
+from utilities import searchNameComplies, printPath, fileInfo, strToBytes
 
 
 
@@ -372,6 +372,9 @@ class HTMLExporter(Visitor):
 class SearchVisitor(Visitor):
       
       def __init__(self, qry, criteria):
+
+        # TODO: Do we need this?
+        #self.scanned_cound = 0
         
         self.file_count = 0
         self.directory_count = 0
@@ -386,11 +389,18 @@ class SearchVisitor(Visitor):
         
       def visit_file(self, name, path, level, parent, finfo={}):
             
-            matchedFileName = searchNameComplies(name, self.criteria.get('fileinclusionPattern', ''), self.criteria.get('fileinclusionPattern', ''), r'/\1/', False)
+            matchedFileName = searchNameComplies(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern', ''), r'/\1/', False)
             if matchedFileName == '':
                return
 
+            fileMeta = fileInfo(path)
+               
+            if self.criteria.get('minFileSize', -1) >= 0:
+               if int(fileMeta['size']) < self.criteria.get('minFileSize', -1): 
+                   return
+
             self.file_count += 1
+
             clrprint.clrprint('[F] ', clr='green', end='')
             self.matches.append(path)
             printPath(parent, matchedFileName, '/', 'green')
@@ -401,6 +411,10 @@ class SearchVisitor(Visitor):
             
 
       def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
+
+            if self.criteria.get('maxDirs', -1) > 0:
+               if self.directory_count >= self.criteria.get('maxDirs', -1):
+                  raise criteriaException(-10, 'Maximum number of DIRECTORIES reached.')
             
             matchedDirName = searchNameComplies(name, self.criteria.get('direxclusionPattern', ''), self.criteria.get('dirinclusionPattern', ''), r'/\1/', False)
             if matchedDirName == '':

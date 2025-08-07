@@ -250,6 +250,39 @@ def fileInfo( filePath ):
 
 
 
+def strToBytes( amount ):
+    if amount.lower().endswith('k'):
+        try:
+          sz = int( amount[:-1] )*1024
+        except Exception as convEx:
+          return(-3)
+        
+    elif amount.lower().endswith('m'):
+       try:
+          sz = int( amount[:-1] )*1024*1024
+       except Exception as convEx:
+          return(-3)
+
+    elif amount.lower().endswith('g'):
+       try:
+          sz = int( amount[:-1] )*1024*1024*1024
+       except Exception as convEx:
+          return(-3)
+    elif amount.lower().endswith('t'):
+       try:
+          sz = int( amount[:-1] )*1024*1024*1024*1024
+       except Exception as convEx:
+          return(-3)
+    else:
+         try:
+          sz = int(amount)
+         except Exception as convEx:
+            return(-3) 
+        
+    return(sz)
+
+
+
 
 
 # Replaces pseudovariables for file entries
