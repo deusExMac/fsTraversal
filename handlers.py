@@ -311,7 +311,10 @@ class HTMLExporter(Visitor):
            clrprint.clrprint(f'Ignoring FILE [{name}] due to name criteria', clr='red')   
            return
 
-        
+        if self.criteria.get('maxFiles', -1) > 0:
+           if self.file_count >= self.criteria.get('maxFiles', -1):
+              raise criteriaException(-9, 'Maximum number of FILES reached.')
+            
         self.file_count += 1
 
         nF={'type':'file',  'collapsed':False, 'level':level, 'name':path, 'dname':name, 'html':''}
@@ -335,7 +338,7 @@ class HTMLExporter(Visitor):
 
         if self.criteria.get('maxDirs', -1) > 0:
            if self.directory_count >= self.criteria.get('maxDirs', -1):
-              raise criteriaException(-10, 'maximum number of directories reached.')
+              raise criteriaException(-10, 'Maximum number of DIRECTORIES reached.')
             
         self.directory_count += 1
 

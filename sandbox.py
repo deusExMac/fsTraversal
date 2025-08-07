@@ -172,7 +172,12 @@ def fsTraversal(root, lvl, visitor=None):
 def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 
     dTemp, fTemp, pTemp = readHTMLTemplateFile(templateFile)
+
+    # Create visitor
     hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, criteria)
+
+
+
     
     # Add starting directory to stack
     hE.stack.append({'type':'directory',
@@ -192,11 +197,14 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
     # Final merge
     hE.newMERGE(stk=hE.stack)
     subD = hE.stack.pop()
+
+
+    # Saving to file
     h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', root).replace('${LNDIRS}', '-1').replace('${LNFILES}', '-5')
     with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
          sf.write(h)
 
-    clrprint.clrprint(f'\nFinished. File count:{hE.file_count} Directory count:{hE.directory_count}', clr='yellow')
+    clrprint.clrprint(f'\nFinished. Total file count:{hE.file_count} Total directory count:{hE.directory_count}', clr='yellow')
     return(0)
 
 
@@ -231,11 +239,11 @@ traversalCriteria = {'fileinclusionPattern':"",
                                   'direxclusionPattern':'stfolder',
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
-                                  'maxDirs':2,
-                                  'maxFiles':-1}
+                                  'maxDirs':123,
+                                  'maxFiles':55}
 
 
-htmlExporter('exampleDir1', 'html/template1.html', traversalCriteria)
+htmlExporter('exampleDir2', 'html/template1.html', traversalCriteria)
 sys.exit(-2)
 
 
