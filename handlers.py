@@ -43,6 +43,11 @@ def nameMatches( on, xP='', iP='', lvl=-1, dbg=False ):
 
 
 
+
+
+# Exception raised when *some* criteria do not hold such as maxDirs or maxFiles.
+# Used to terminate traversal immediately without unfolding
+# the executions.
 class criteriaException(Exception):
       def __init__(self, code=-1, message=''):
           super().__init__(message)
@@ -53,9 +58,13 @@ class criteriaException(Exception):
 
 # 1. Define the Visitable interface
 class Visitable(ABC):
+    
     @abstractmethod
     def accept(self, visitor):
         pass
+
+
+        
 
 # 2. Define the Visitor interface
 class Visitor(ABC):
@@ -70,7 +79,14 @@ class Visitor(ABC):
 
 
 
-# 3. Concrete element classes (Files and Directories)
+###################################################################
+#
+#  Classes for handling elements
+#
+###################################################################
+
+
+# Concrete element classes (Files and Directories)
 class File(Visitable):
     def __init__(self, name, path, level=0, parent="", finfo={}):
         self.name = name
@@ -96,7 +112,11 @@ class Directory(Visitable):
     def accept(self, visitor):
         visitor.visit_directory(self.name, self.path, self.level, self.parent,  self.localDirCount, self.localFileCount, self.subdir)
 
-    
+
+    # TODO: is this correct?
+    def setLocalCounts(self, ldc, lfc):
+        self.localDirCount = ldc
+        self.localFileCount = lfc
 
 
 
@@ -112,7 +132,16 @@ class Directory(Visitable):
 ###################################################
 
 
-# 4. Concrete visitor class
+
+
+#####################################################################
+#
+#     Simple traverser. Does not make something important.
+#
+#####################################################################
+
+
+# A concrete visitor class
 class DirectoryTraverser(Visitor):
     def __init__(self, criteria={}):
         self.criteria = criteria
@@ -172,19 +201,6 @@ class DirectoryTraverser(Visitor):
 
 
 
-def htmlLink(itemPath, displayAnchor, urlEncode):
-    
-    if urlEncode:
-      # TODO: Does this work?  
-      return '<a href="' + urllib.parse.quote(itemPath.encode('utf8')) + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>' 
-
-    # TODO: Do we need encode/decode here???
-    if os.path.isabs(itemPath):
-       return '<a href="file://' + itemPath.encode('utf8').decode() + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>'
-    else:
-       return '<a href="' + itemPath.encode('utf8').decode() + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>' 
-
-
 
 def makeHtmlLink(itemPath, displayAnchor, urlEncode):
     
@@ -202,8 +218,7 @@ def makeHtmlLink(itemPath, displayAnchor, urlEncode):
 
 
 
-# 4i. Another Concrete visitor class
-# TODO: Not yet working; Incomplete
+# Another concrete visitor class
 class HTMLExporter(Visitor):
     def __init__(self, dirT, fileT, pageT, criteria):
         
@@ -281,7 +296,7 @@ class HTMLExporter(Visitor):
                       sDir = top['html']
                       
                       
-             
+          # TODO: Do we need this?   
           return(sDir)
     
 
@@ -289,41 +304,8 @@ class HTMLExporter(Visitor):
 
 
 
-    # TODO: This is not working correctly.
     def visit_file(self, name, path, level, parent, finfo={}, urlEncode=False):
 
-        '''
-        clrprint.clrprint(name, clr='maroon')
-        if not nameMatches(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern', '') ):
-           return
-
-        if self.criteria.get('maxFiles', -1) > 0:
-           if self.file_count >= self.criteria.get('maxFiles', -1):
-              raise criteriaException(-11, 'maximum number of files reached.') 
-            
-        if  self.criteria.get('minFileSize', '') != '':
-            if int(finfo.get('size', -2)) < self.criteria.get('minFileSize', -1):
-               return
-
-        if  self.criteria.get('maxFileSize', -1) >= 0:
-            if int(finfo.get('size', -2)) > self.criteria.get('maxFileSize', -1):
-               return    
-
-        
-        clrprint.clrprint(f"Processing file: {path} level {level}") 
-        self.file_count += 1
-
-        
-        fileHtml =  self.fileTemplate.replace('${FILELINK}', htmlLink(path, name, urlEncode)).replace('${FILENAME}', name).replace('${FILEPATH}', path.replace('\\', '/')).replace('${LEVEL}', str(level)).replace('${PARENTPATH}', parent.replace('\\', ' / '))
-        if finfo:
-           fileHtml = fileHtml.replace('${FILESIZE}', finfo['size']).replace('${FILELASTMODIFIED}', finfo['lastmodified'])
-
-        filename, fileExtension = os.path.splitext(path)
-        if os.path.exists('html/' + fileExtension[1:] + '.png'):
-           fileHtml = fileHtml.replace('${FILEEXTENSION}', fileExtension[1:])
-        else: 
-           fileHtml = fileHtml.replace('${FILEEXTENSION}', 'ukn')
-        ''' 
 
         if not nameMatches(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern', '') ):
            clrprint.clrprint(f'Ignoring FILE [{name}] due to name criteria', clr='red')   
@@ -342,26 +324,10 @@ class HTMLExporter(Visitor):
         return
 
 
-           
-
-        
-        
-
-
-
 
 
     def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
-        '''
-        if not nameMatches(name, self.criteria.get('direxclusionPattern', ''), self.criteria.get('dirinclusionPattern', '')):
-           return
-
-
-        if self.criteria.get('maxDirs', -1) > 0:
-           if self.directory_count >= self.criteria.get('maxDirs', -1):
-              raise criteriaException(-10, 'maximum number of directories reached.')
-        '''       
-
+               
         if not nameMatches(name, self.criteria.get('direxclusionPattern', ''), self.criteria.get('dirinclusionPattern', '')):
            clrprint.clrprint(f'Ignoring DIRECTORY [{name}] due to name criteria', clr='red') 
            return
@@ -373,14 +339,15 @@ class HTMLExporter(Visitor):
             
         self.directory_count += 1
 
-        
+        # Add to stack
         nD = {'type':'directory', 'collapsed':False, 'level':level, 'name':path, 'dname':name, 'lndir':-1, 'lnfiles':-1, 'html':''}
+
+        # See if stack can be collapsed
         self.newMERGE(nD, self.stack)
 
         dId = "d" + str(level) + "-" + str( random.randint(0, 1000000) )      
         nD['html'] = self.dirTemplate.replace('${ID}', dId).replace('${DIRNAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level))
         self.stack.append(nD)
-
         return 
          
         

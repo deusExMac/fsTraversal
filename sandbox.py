@@ -181,18 +181,7 @@ def searchNameComplies(on, xP='', iP='', matchReplacement='', dbg=False):
 
 
 
-'''
-def makeHtmlLink(itemPath, displayAnchor, urlEncode):
-    
-    if urlEncode:
-      return '<a href="' + urllib.parse.quote(itemPath.encode('utf8') ) + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>' 
 
-    # TODO: Do we need encode/decode here???
-    if os.path.isabs(itemPath):
-       return '<a href="file://' + itemPath.encode('utf8').decode() + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>'
-    else:
-       return '<a href="' + itemPath.encode('utf8').decode() + '" target="_blank" rel="noopener noreferrer">' + displayAnchor + '</a>' 
-'''    
 
 
 #
@@ -363,26 +352,6 @@ import handlers
 
 ####################### FOR TESTING ONLY (START) #########################
 
-from collections import deque
-
-theSTACK = deque()
-
-def showStack2(stk=theSTACK):
-         lst = []
-         pos=1
-         clrprint.clrprint('Total of', len(stk), 'items in stack.', clr='yellow')
-         while  len(stk) > 0:
-                sv = stk.pop()
-                lst.append(sv)
-                clrprint.clrprint(f"{pos}) [{sv['name']}] [{sv['level']}][{sv.get('collapsed', '???')}]", clr='yellow')
-                pos +=1
-
-         for i in lst[::-1]:
-             stk.append(i)
-
-  
-
-
 
 
 
@@ -432,7 +401,11 @@ def fsTraversal(root, lvl, visitor=None):
         ldc += 1
         
         # go into subdirectory and traverse it
-        subDirData = fsTraversal(directoryPath, lvl+1, visitor)  
+        subDirData = fsTraversal(directoryPath, lvl+1, visitor)
+        clrprint.clrprint(f'>>> [{encounteredDirectory}]: #directories:{subDirData[1]} #files:{subDirData[2]}', clr='yellow')
+        dH.setLocalCounts(subDirData[1], subDirData[2])
+        
+        
         if subDirData[0] < 0:
                if (subDirData[0] != -1):
                    return(subDirData[0], -1, -1, '')
@@ -454,31 +427,32 @@ def fsTraversal(root, lvl, visitor=None):
 dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
 
 
-
-hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, {'fileinclusionPattern':"",
+traversalCriteria = {'fileinclusionPattern':"",
                                   'fileexclusionPattern':"git|Rhistory|DS_Store|txt",
                                   'dirinclusionPattern': '',
                                   'direxclusionPattern':'stfolder',
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
-                                  'maxDirs':5,
-                                  'maxFiles':-1})
+                                  'maxDirs':-1,
+                                  'maxFiles':-1}
 
+hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, traversalCriteria)
+initialDir = "/Users/manolistzagarakis/home(synced)/econ/3-Proedria-2024-2025/TODAY"
 
+clrprint.clrprint(f"Starting taversal with following critetia:\n{traversalCriteria}\n\n", clr='yellow')
 
-
-initialDir = "exampleDir8"
+# Add to stack
 hE.stack.append({'type':'directory',
                  'collapsed':False,
                  'level':0,
                  'name':initialDir,
                  'dname':initialDir,
                  'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', initialDir).replace('${PATH}', initialDir).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
-
+# Actual traversal
 try:
    fsTraversal(initialDir, 1, visitor=hE)
 except handlers.criteriaException as ce:
-      clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
+      clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
 else:
       clrprint.clrprint('Terminated.', clr='yellow')
       
@@ -506,43 +480,6 @@ sys.exit(-2)
 
 
 
-try:
-    
-  rootData = ABSTRACTtraverse(root=initialDir, maxLevel=3, objVisitor=hE)
-except handlers.criteriaException as ce:
-    clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='yellow')
-    #sys.exit(-7)
-else:    
-    print(f'Terminated with {rootData[0]}. Root directory: [LD:{rootData[1]}] [LF:{rootData[2]}]')
-    print('######################################################')
-    print(f'Total directories:', hE.directory_count)
-    print(f'Total files:', hE.file_count)
-    #sys.exit(-2)
 
-import io
-
-#clrprint.clrprint('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%', clr='yellow')
-#hE.displayStack()
-#clrprint.clrprint('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%', clr='yellow')
-
-#rrr = hE.stack.pop()
-'''
-htmlContent = pTemp.replace('${SUBDIRECTORY}', rootData[3]).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', str(rootData[1])).replace('${LNFILES}', str(rootData[2]))
-htmlContent = htmlContent.replace('${NDIRS}', str(hE.directory_count)).replace('${NFILES}', str(hE.file_count))
-
-print('Saving....')
-with open('sandBox.html', 'w', encoding='utf8') as f:
-               f.write(htmlContent)
-
-'''
-
-print('Saving stack...')
-print('Total of [', len(hE.stack), '] items in stack.', sep='')
-h = hE.unwindStack()
-h = pTemp.replace('${SUBDIRECTORY}', h).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', '-1').replace('${LNFILES}', '-5')
-#htmlContent = htmlContent.replace('${NDIRS}', str(hE.directory_count)).replace('${NFILES}', str(hE.file_count))
-
-with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
-     sf.write(h) 
      
 
