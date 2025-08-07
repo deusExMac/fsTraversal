@@ -19,266 +19,18 @@ from filecmp import dircmp
 from prettytable import PrettyTable
 
 
+from utilities import fontColorPalette, normalizedPathJoin, nameComplies, searchNameComplies, fileCreationDate, fileInfo
+import handlers
+
+
+
+
+
 # Global flag
 ON_TRAVERSE_ERROR_QUIT = False
 
 
 
-
-# Colors to choose from if color cycling is enabled (-c)
-fontColorPalette = ['#4287f5', '#801408', '#08259c', '#4560d1', '#0a690a', '#9c5f1e', '#9c1e87', '#1313f2', '#f21313', '#34ba4a', '#19084a', '#27889c', '#317534', '#e8740e', '#000000',
-                    '#1e5f85', '#2f2561', '#5c0c25', '#324530', '#f07e0c', '#e04e14', '#8f8824', '#478072', '#05998d',  '#1890a8', '#033e6b', '#0a2940', '#281a75', '#453043', '#b50e40',
-                    '#fcad03', '#03a1fc', '#24b332', '#851767', '#156e82', '#8c0a0a', '#b51d39', '#232791', '#6e8c0a', '#cc7a16', '#cc4016', '#051c80', '#9e981e', '#409e1e', '#09979c', '#9c0975']
-
-
-
-
-#colorThemes = [vibrant_colors, cool_tech_colors, warm_retro_colors, font_colors_nature_calm, vintage_warm, cool_blues_purples]
-
-#fontColorPalette = random.choice(colorThemes)
-
-
-
-# Prints path formated so that 
-# substrings enclosed by delim in the directory or file name
-# is displayed with different color.
-#
-# Used to display matching directory or file paths when
-# doing a search.
-#
-# TODO: do an aligned version of printPath???
-
-def printPath(parent, resourceName, delim, color='red'):
-    # TODO: fix slash/backslash issue
-    print( os.path.normpath(parent + '\\'), sep='', end='')
-    parts = resourceName.split(delim)
-    for idx, p in enumerate(parts):
-        if idx%2 == 1:
-           clrprint.clrprint(p, clr=color, end='')
-        else:
-           print( p, end='')
-    print('')     
-
-
-
-
-# Joins and creates a path string to file
-# with fixed slashes/backslashes
-# TODO: Should make use or .normpath(), relpath(), normcase(), abspath()???? etc.
-#       See: https://docs.python.org/3/library/os.path.html#os.path.normcase
-# 
-def normalizedPathJoin(base, pth):
-    
-    if os.path.isabs(pth): 
-       return(os.path.normpath(pth) )
-
-    return( os.path.normpath(os.path.join(base, pth)) )
-
-
-
-
-
-
-
-#
-# Shortens only the filesname part of a path
-#
-# Check this again.
-# NOTE: This  does actually rename the files IF doRename is set to False. doRename = True will
-#       actually rename the file
-# Example: turns /Users/abcdefghijklmnopqrstuvw/anotherDirectory/someFile.jpg to  /Users/abcdefghijklmnopqrstuvw/anotherDirectory/som...jpg
-# if max_length is set to 3
-# From: https://techoverflow.net/2023/10/28/trimming-down-long-directory-and-file-names-using-python/
-def shortenPath(path, max_length=6, ellipsis='...', doRename=False):
-    if max_length < 0:
-       return(path)
-             
-    if os.path.isdir(path):
-        base_name = os.path.basename(path)
-        if len(base_name) > max_length:
-            new_name = base_name[:max_length] + ellipsis
-            new_path = os.path.join(os.path.dirname(path), new_name)
-            if not os.path.exists(new_path):
-                if doRename:
-                    os.rename(path, new_path)
-                    print(f"Renamed directory: {path} -> {new_name}")
-                return new_path
-    else:
-        base_name, ext = os.path.splitext(os.path.basename(path))
-        if len(base_name) > max_length:
-            new_name = base_name[:max_length] + ellipsis + ext
-            new_path = os.path.join(os.path.dirname(path), new_name)
-            if not os.path.exists(new_path):
-                if doRename:
-                    os.rename(path, new_path)
-                    print(f"Renamed file: {path} -> {new_name}")
-                return new_path
-    return path
-
-
-
-def getRelativePath(p, root):
-    commonPrefix = os.path.commonprefix([p, root])
-    if commonPrefix == '':
-       return ''
-      
-    return( os.path.relpath(p, commonPrefix) ) 
-
-
-
-
-
-# Checks if obect name on complies to exclusion and inclusion pattern.
-# nameComplies returns True, if name does NOT match exclusion regex pattern (xP)
-# AND matches inclusion regex pattern (iP).
-# An empty imclusion regex pattern means no inclusion pattern i.e. all
-# object names are good.
-#
-# TODO: Has not been tested.
-def nameComplies( on, xP='', iP='', dbg=False ):
-    #print(xP, iP)
-    if xP!= "" and re.search(xP, on) is not None:
-       if dbg:
-              print( lvl*"-", "EXCLUDING:[", on, "] lvl:", lvl )               
-       return(False) 
-
-    if re.search(iP, on) is None:
-       if dbg:
-          print( lvl*"-", "NOT MATCHING INCLUSION:[", on, "] lvl:", lvl )
-       return(False)
-
-    return(True)
-
-
-
-
-# This is a special one, like nameComplies, but only
-# for use in the searchDirectory function.
-# This function not only checks for compliance - it
-# also replaces the matches with a special string to
-# enable formated output later on.
-#
-# Returns empty string if on does not comply and
-# on with matches replaced if it complies
-def searchNameComplies(on, xP='', iP='', matchReplacement='', dbg=False):
-    
-    if xP!= "" and re.search(xP, on) is not None:
-       if dbg:
-          print( lvl*"-", "EXCLUDING:[", on, "] lvl:", lvl )               
-       return('')
-
-    # Note: to avoid "global flags not at the start of the expression..." errors
-    # provide case insensitive search as follows e.g.: (?i:d)
-    # See https://stackoverflow.com/questions/75895460/the-error-was-re-error-global-flags-not-at-the-start-of-the-expression-at-posi
-    result = re.subn(iP, matchReplacement, on)
-    if result[1] > 0:
-       return(result[0])
-
-    # This means no match 
-    return('')
-
-
-
-
-
-
-
-
-#
-# Taken from here:
-#   https://stackoverflow.com/questions/237079/how-do-i-get-file-creation-and-modification-date-times
-#
-# For an explanation see:
-#   http://stackoverflow.com/a/39501288/1709587
-#
-def fileCreationDate(filePath):
-  try:  
-    epochTime = -1
-    if platform.system() == 'windows':
-        epochTime = os.path.getctime(filePath)
-    else:
-        stat = os.stat(filePath)
-        try:
-            epochTime = stat.st_birthtime
-        except AttributeError:
-            # We're probably on Linux. No easy way to get creation dates here,
-            # so we'll settle for when its content was last modified.
-            epochTime = stat.st_mtime
-
-    return( datetime.datetime.fromtimestamp(epochTime).strftime("%d/%m/%Y, %H:%M:%S") )    
-
-  except Exception as fcEx:
-      print('Exception getting creation date:', str(fcEx))
-      return('')  
-  
- 
-
-
-# File metadata.
-# All fields are returned as strings...
-# TODO: should this be changed???
-def fileInfo( filePath ):
-    fInf = {}
-    try:
-      fInf['size']  = str(os.path.getsize(filePath))
-    except Exception as fszEx:
-          fInf['size'] = "-1"
-
-    try:
-       lmd = datetime.datetime.fromtimestamp(os.path.getmtime(filePath)) 
-       fInf['creationdate'] = lmd.strftime("%d/%m/%Y, %H:%M:%S")
-    except Exception as dtmEx:
-        fInf['creationdate'] = ''
-
-    try:
-       fInf['lastmodified'] = fileCreationDate(filePath)
-    except Exception as fcdEx:
-        fInf['lastmodified'] = ''
-
-    return(fInf)
-
-
-
-
-
-# Replaces pseudovariables for file entries
-# when displaying fs contents in html
-def formatFile(fparent, fpath, fname, prolog, level, encUrl=False):
-
-    
-    formatedContents =  prolog.replace('${FILELINK}', makeHtmlLink(fpath, fname, encUrl)).replace('${FILENAME}', fname).replace('${FILEPATH}', fpath.replace('\\', '/')).replace('${LEVEL}', str(level)).replace('${PARENTPATH}', fparent.replace('\\', ' / '))
-    fMeta = fileInfo(fpath)
-    if fMeta:
-       formatedContents = formatedContents.replace('${FILESIZE}', fMeta['size']).replace('${FILELASTMODIFIED}', fMeta['lastmodified'])
-
-    
-    filename, fileExtension = os.path.splitext(fpath)
-    #print('Checking if file exists:', 'html/' + fileExtension + '.png')
-    if os.path.exists('html/' + fileExtension[1:] + '.png'):
-       formatedContents = formatedContents.replace('${FILEEXTENSION}', fileExtension[1:])
-    else: 
-       formatedContents = formatedContents.replace('${FILEEXTENSION}', 'ukn')    
-       
-        
-    #print('fpath:[',  fileExtension[1:],']', sep='' )
-    return( formatedContents )
-
-
-
-
-
-# Opens a file using the default application.
-def openFile(filePath):
-
-    if sys.platform.lower() == 'win32':
-       os.startfile(filePath)
-    else:
-        opener = "open" if sys.platform.lower() == "darwin" else "xdg-open"
-        subprocess.call([opener, filePath])
-
-
-
-#text = re.search(r'Start\n.*?End', content, re.DOTALL).group()
 
 
 
@@ -307,7 +59,7 @@ def readHTMLTemplateFile(fname, dm='<!---directorytemplate--->\n', fm='<!---file
     except:
        pTemp = '' 
 
-    return(dTemp.strip(), fTemp.strip(), pTemp.strip() )
+    return(dTemp.strip(), fTemp.strip(), pTemp.strip())
     
 
 
@@ -343,7 +95,7 @@ def timeit(f):
 #####################################################
 
 
-import handlers
+
 
 
 
@@ -437,7 +189,7 @@ traversalCriteria = {'fileinclusionPattern':"",
                                   'maxFiles':-1}
 
 hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, traversalCriteria)
-initialDir = "/Users/manolistzagarakis/home(synced)/econ/3-Proedria-2024-2025/TODAY"
+initialDir = "exampleDir1"
 
 clrprint.clrprint(f"Starting taversal with following critetia:\n{traversalCriteria}\n\n", clr='yellow')
 
