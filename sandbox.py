@@ -168,10 +168,10 @@ def fsTraversal(root, lvl, visitor=None):
 
 
 
-# TODO: incomplete...TOTALLY
-def htmlExporter(root, visitor):
+# TODO: incomplete and not running...but TOTALLY
+def htmlExporter(root='./', templateFile='html/template1.html', visitor=None):
 
-    dTemp, fTemp, pTemp = readHTMLTemplateFile('html/template1.html')
+    dTemp, fTemp, pTemp = readHTMLTemplateFile(templateFile)
     
     # Add to stack
     hE.stack.append({'type':'directory',
@@ -199,6 +199,10 @@ def htmlExporter(root, visitor):
 
 
 
+
+# TODO: Complete me...
+def searchDirectories(root, criteria):
+    pass
 
 
 
