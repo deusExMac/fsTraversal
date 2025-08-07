@@ -169,33 +169,38 @@ def fsTraversal(root, lvl, visitor=None):
 
 
 # TODO: incomplete and not running...but TOTALLY
-def htmlExporter(root='./', templateFile='html/template1.html', visitor=None):
+def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 
     dTemp, fTemp, pTemp = readHTMLTemplateFile(templateFile)
+    hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, criteria)
     
-    # Add to stack
+    # Add starting directory to stack
     hE.stack.append({'type':'directory',
                      'collapsed':False,
                      'level':0,
-                     'name':initialDir,
-                     'dname':initialDir,
-                     'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', initialDir).replace('${PATH}', initialDir).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
+                     'name':root,
+                     'dname':root,
+                     'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', root).replace('${PATH}', root).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
 
     try:
-      fsTraversal(root, 1, visitor=visitor)
+      fsTraversal(root, 1, visitor=hE)
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
     else:
       clrprint.clrprint('Terminated.', clr='yellow')
       
     # Final merge
-    visitor.newMERGE(stk=hE.stack)
+    hE.newMERGE(stk=hE.stack)
     subD = hE.stack.pop()
-    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', initialDir).replace('${LNDIRS}', '-1').replace('${LNFILES}', '-5')
+    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', root).replace('${LNDIRS}', '-1').replace('${LNFILES}', '-5')
     with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
          sf.write(h)
 
+    clrprint.clrprint(f'\nFinished. File count:{hE.file_count} Directory count:{hE.directory_count}', clr='yellow')
     return(0)
+
+
+
 
 
 
@@ -226,8 +231,23 @@ traversalCriteria = {'fileinclusionPattern':"",
                                   'direxclusionPattern':'stfolder',
                                   'minFileSize':-1,
                                   'maxFileSize':-1,
-                                  'maxDirs':-1,
+                                  'maxDirs':2,
                                   'maxFiles':-1}
+
+
+htmlExporter('exampleDir1', 'html/template1.html', traversalCriteria)
+sys.exit(-2)
+
+
+
+
+
+
+
+
+
+
+
 
 hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, traversalCriteria)
 initialDir = "exampleDir1"
