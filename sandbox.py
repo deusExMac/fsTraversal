@@ -77,7 +77,7 @@ def timeit(f):
         result = f(*args, **kw)
         te = time.time()
 
-        print('\t[TIMING] func:%r dir:[%r] took: %2.4f sec' % \
+        print('[TIMING] func:%r dir:[%r] took: %2.4f sec' % \
                  (f.__name__, args[0], te-ts) )
         return result
         
@@ -105,7 +105,7 @@ def timeit(f):
 
 # GENERAL PURPOSE FUNCTION....
         
-@timeit        
+      
 def fsTraversal(root, lvl, visitor=None):
     
     try:
@@ -215,19 +215,23 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 
 
 # TODO: Complete me...
-def searchDirectories(root, query='.*', criteria={}):
+# NOTE: to avoid error messages when using case insensitive regex, use the following way:
+#       (?i:<matching pattern>)
+@timeit  
+def searchObject(root, query='.*', criteria={}):
     
     criteria['fileinclusionPattern'] = '(' + query + ')'
     criteria['dirinclusionPattern'] = '(' + query + ')'
     sE = handlers.SearchVisitor('(a)', criteria)
+
+    clrprint.clrprint('Search results:', clr='maroon')
     try:
       fsTraversal(initialDir, 1, visitor=sE)
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
-    else:
-      clrprint.clrprint('Terminated.', clr='yellow')
+    
 
-    clrprint.clrprint(f'\nFound total of {sE.directory_count} directories and {sE.file_count} files.', clr='yellow')
+    clrprint.clrprint(f'\nTotal of {sE.directory_count} directories and {sE.file_count} files found.\n', clr='maroon')
     return
 
 
@@ -267,7 +271,7 @@ elif mode == 'search':
             print('terminating.') 
             break 
 
-         searchDirectories(initialDir, q,  traversalCriteria)
+         searchObject(initialDir, q,  traversalCriteria)
 
 sys.exit(-3)
 

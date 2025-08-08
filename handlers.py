@@ -405,7 +405,7 @@ class SearchVisitor(Visitor):
 
             self.file_count += 1
 
-            clrprint.clrprint('[F] ', clr='green', end='')
+            clrprint.clrprint('\t[F] ', clr='green', end='')
             self.matches.append(path)
             printPath(parent, matchedFileName, '/', 'green')
 
@@ -425,7 +425,7 @@ class SearchVisitor(Visitor):
                return
 
             self.directory_count += 1
-            clrprint.clrprint('[D] ', clr='red', end='')
+            clrprint.clrprint('\t[D] ', clr='red', end='')
             self.matches.append(path)
             printPath(parent, matchedDirName, '/', 'red')
 
