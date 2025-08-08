@@ -46,17 +46,18 @@ fontColorPalette = ['#4287f5', '#801408', '#08259c', '#4560d1', '#0a690a', '#9c5
 # Used to display matching directory or file paths when
 # doing a search.
 #
-# TODO: do an aligned version of printPath???
+# TODO: Is this working?????? do an aligned version of printPath???
 
 def printPath(parent, resourceName, delim, color='red'):
     # TODO: fix slash/backslash issue
     print( os.path.normpath(parent + '\\'), sep='', end='')
     parts = resourceName.split(delim)
+    
     for idx, p in enumerate(parts):
         if idx%2 == 1:
            clrprint.clrprint(p, clr=color, end='')
         else:
-           print( p, end='')
+           print(p, end='')
     print('')     
 
 

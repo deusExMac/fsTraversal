@@ -218,7 +218,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 # NOTE: to avoid error messages when using case insensitive regex, use the following way:
 #       (?i:<matching pattern>)
 @timeit  
-def searchObject(root, query='.*', criteria={}):
+def search(root, query='.*', criteria={}):
     
     criteria['fileinclusionPattern'] = '(' + query + ')'
     criteria['dirinclusionPattern'] = '(' + query + ')'
@@ -271,7 +271,7 @@ elif mode == 'search':
             print('terminating.') 
             break 
 
-         searchObject(initialDir, q,  traversalCriteria)
+         search(initialDir, q,  traversalCriteria)
 
 sys.exit(-3)
 
