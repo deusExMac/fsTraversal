@@ -13,6 +13,7 @@ import urllib.parse
 import datetime
 
 
+
 import clrprint
 import itertools
 from filecmp import dircmp
@@ -248,7 +249,11 @@ traversalCriteria = {'fileinclusionPattern':"",
                      'minFileSize':strToBytes('20k'),
                      'maxFileSize':-1,
                      'maxDirs':-1,
-                     'maxFiles':-1}
+                     'maxFiles':-1,
+                     'creationDateOp':'=',
+                     'creationDate':datetime.datetime.strptime('15/06/2025 14:30:00', '%d/%m/%Y %H:%M:%S'),
+                     'lastModifiedDateOp':'=',
+                     'lastModifiedDate':''}
 
 if mode == 'export':
    htmlExporter(initialDir, 'html/template1.html', traversalCriteria)

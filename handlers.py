@@ -399,6 +399,10 @@ class SearchVisitor(Visitor):
                if int(fileMeta['size']) < self.criteria.get('minFileSize', -1): 
                    return
 
+            if self.criteria.get('maxFileSize', -1) >= 0:
+               if int(fileMeta['size']) > self.criteria.get('maxFileSize', -1): 
+                   return
+
             self.file_count += 1
 
             clrprint.clrprint('[F] ', clr='green', end='')

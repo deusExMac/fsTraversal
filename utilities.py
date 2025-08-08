@@ -216,7 +216,7 @@ def fileCreationDate(filePath):
             # so we'll settle for when its content was last modified.
             epochTime = stat.st_mtime
 
-    return( datetime.datetime.fromtimestamp(epochTime).strftime("%d/%m/%Y, %H:%M:%S") )    
+    return(datetime.datetime.fromtimestamp(epochTime))    
 
   except Exception as fcEx:
       print('Exception getting creation date:', str(fcEx))
@@ -235,16 +235,17 @@ def fileInfo( filePath ):
     except Exception as fszEx:
           fInf['size'] = "-1"
 
-    try:
+    try: 
        lmd = datetime.datetime.fromtimestamp(os.path.getmtime(filePath)) 
-       fInf['creationdate'] = lmd.strftime("%d/%m/%Y, %H:%M:%S")
+       fInf['lastmodified'] = lmd #.strftime("%d/%m/%Y, %H:%M:%S")
     except Exception as dtmEx:
-        fInf['creationdate'] = ''
+        fInf['lastmodified'] = ''
 
     try:
-       fInf['lastmodified'] = fileCreationDate(filePath)
+       # TODO: is this correct? 
+       fInf['creationdate'] = fileCreationDate(filePath)
     except Exception as fcdEx:
-        fInf['lastmodified'] = ''
+        fInf['creationdate'] = ''
 
     return(fInf)
 
