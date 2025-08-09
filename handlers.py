@@ -139,56 +139,9 @@ class Directory(Visitable):
 
 #####################################################################
 #
-#     Simple traverser. Does not make something important.
+#     Simple visitors. 
 #
 #####################################################################
-
-
-# A concrete visitor class
-class DirectoryTraverser(Visitor):
-    def __init__(self, criteria={}):
-        self.criteria = criteria
-        self.file_count = 0
-        self.directory_count = 0
-        
-
-    def visit_file(self, name, path, level, parent, finfo={}):
-        
-        if not nameMatches(name, self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex'), level ):
-           return                
-
-
-        if self.criteria.get('maxFiles', -1) > 0:
-           if self.file_count >= self.criteria.get('maxFiles', -1):
-              raise criteriaException(-11, 'maximum number of files reached.') 
-            
-        if  self.criteria.get('minFileSize', '') != '':
-            if int(finfo.get('size', -2)) < self.criteria.get('minFileSize', -1):
-               return
-
-        if  self.criteria.get('maxFileSize', -1) >= 0:
-            if int(finfo.get('size', -2)) > self.criteria.get('maxFileSize', -1):
-               return    
-        
-        clrprint.clrprint(f'{level*"\t"}[F-{self.file_count+1}] ', clr='green', end='')
-        print(f"{name} in {parent} {finfo['size']}")
-        self.file_count += 1
-
-
-
-    def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
-        if not nameMatches(name, self.criteria.get('exclusionRegex', ''), self.criteria.get('inclusionRegex'), level):
-           return
-
-        if self.criteria.get('maxDirs', -1) > 0:
-           if self.directory_count >= self.criteria.get('maxDirs', -1):
-              raise criteriaException(-10, 'maximum number of directories reached.') 
-              #return
-
-        # counts are shown 1-based, not 0-based    
-        clrprint.clrprint(f'{level*"\t"}[D-{self.directory_count+1}] ', clr='red', end='')
-        print(f"{path} [level:{level}] [LD:{ldc}] [LF:{lfc}]")
-        self.directory_count += 1
 
 
 
@@ -357,6 +310,26 @@ class HTMLExporter(Visitor):
         self.stack.append(nD)
         return 
          
+
+
+
+
+# Next class for testing purposes only
+# For testing purposes only to implement local file/directory count
+
+
+class testhtmlEporter(HTMLExporter):
+
+      def __init__(self, dirT, fileT, pageT, criteria):
+          super().__init__(dirT, fileT, pageT, criteria)
+
+
+      def visit_file(self, name, path, level, parent, finfo={}, urlEncode=False):
+          pass
+        
+      def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
+          pass
+
 
 
 

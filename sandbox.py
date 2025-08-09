@@ -103,7 +103,9 @@ def timeit(f):
 
 
 
-# GENERAL PURPOSE FUNCTION....
+# Ths core part of the file system traversal. This
+# traverses all objects.
+# Behaviors 
         
       
 def fsTraversal(root, lvl, visitor=None):
@@ -243,7 +245,7 @@ def search(root, query='.*', criteria={}):
 
 
 
-mode = 'search'
+mode = 'export'
 initialDir = "exampleDir"
 
 traversalCriteria = {'fileinclusionPattern':"",
