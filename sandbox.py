@@ -238,7 +238,7 @@ def search(root, query='.*', criteria={}):
 
 
 
-####################### FOR TESTING ONLY (END) #########################
+####################### MAIN starts here#########################
     
 
 
