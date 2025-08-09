@@ -313,7 +313,11 @@ class HTMLExporter(Visitor):
          
 
 
-
+#####################################################################
+#
+#     Testing - First version.
+#
+#####################################################################
 
 # Next class for testing purposes only
 # For testing purposes only to implement local file/directory count
@@ -336,14 +340,12 @@ class testhtmlEporter(HTMLExporter):
 
               stkbfr.append(itm)
 
+          # put items back with the same order 
           for i in stkbfr[::-1]:
               self.stack.append(i)
                   
           
           
-        
-      #def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
-      #    pass
 
 
 
