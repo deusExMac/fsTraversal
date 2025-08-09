@@ -117,9 +117,10 @@ class Directory(Visitable):
 
 
     # TODO: is this correct?
-    def setLocalCounts(self, ldc, lfc):
+    def setLocalCounts(self, ldc, lfc, visitor):
         self.localDirCount = ldc
         self.localFileCount = lfc
+        visitor.updateCounts(self.path, ldc, lfc, -4, -4)
 
 
 
@@ -324,11 +325,25 @@ class testhtmlEporter(HTMLExporter):
           super().__init__(dirT, fileT, pageT, criteria)
 
 
-      def visit_file(self, name, path, level, parent, finfo={}, urlEncode=False):
-          pass
+      def updateCounts(self, path, ldc, lfc, tdc, tfc):
+          stkbfr = []
+          while True:
+              itm = self.stack.pop()
+              if itm['name'] == path:
+                  itm['html'] = itm['html'].replace('${LNDIRS}', str(ldc)).replace('${LNFILES}', str(lfc))
+                  self.stack.append(itm)
+                  break
+
+              stkbfr.append(itm)
+
+          for i in stkbfr[::-1]:
+              self.stack.append(i)
+                  
+          
+          
         
-      def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
-          pass
+      #def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
+      #    pass
 
 
 

@@ -154,7 +154,7 @@ def fsTraversal(root, lvl, visitor=None):
         # go into subdirectory and traverse it
         subDirData = fsTraversal(directoryPath, lvl+1, visitor)
         #clrprint.clrprint(f'>>> [{encounteredDirectory}]: #directories:{subDirData[1]} #files:{subDirData[2]}', clr='yellow')
-        dH.setLocalCounts(subDirData[1], subDirData[2])
+        dH.setLocalCounts(subDirData[1], subDirData[2], visitor)
         
         
         if subDirData[0] < 0:
@@ -177,8 +177,8 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
     dTemp, fTemp, pTemp = readHTMLTemplateFile(templateFile)
 
     # Create visitor
-    hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, criteria)
-
+    #hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, criteria)
+    hE = handlers.testhtmlEporter(dTemp, fTemp, pTemp, criteria)
 
 
     
@@ -252,7 +252,7 @@ traversalCriteria = {'fileinclusionPattern':"",
                      'fileexclusionPattern':"git|Rhistory|DS_Store|txt",
                      'dirinclusionPattern': '',
                      'direxclusionPattern':'stfolder',
-                     'minFileSize':strToBytes('20k'),
+                     'minFileSize':-1,
                      'maxFileSize':-1,
                      'maxDirs':-1,
                      'maxFiles':-1,
