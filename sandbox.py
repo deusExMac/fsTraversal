@@ -181,6 +181,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
     hE = handlers.testhtmlEporter(dTemp, fTemp, pTemp, criteria)
 
 
+
     
     # Add starting directory to stack
     hE.stack.append({'type':'directory',
