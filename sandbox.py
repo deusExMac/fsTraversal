@@ -105,7 +105,7 @@ def timeit(f):
 
 # Ths core part of the file system traversal. This
 # traverses all objects.
-# Behaviors 
+# How encountered files/directories should be handled are in the visitor classes  
         
       
 def fsTraversal(root, lvl, visitor=None):
@@ -117,9 +117,9 @@ def fsTraversal(root, lvl, visitor=None):
     except Exception as wEx:
       print('Exception during walk:', str(wEx) )
       if ON_TRAVERSE_ERROR_QUIT:
-         return(-2, 0, 0, "")
+         return(-2, 0, 0, 0, "")
       else:
-         return(0, 0, 0, "")
+         return(0, 0, 0, 0, "")
 
         
     dirs.sort()
@@ -136,7 +136,8 @@ def fsTraversal(root, lvl, visitor=None):
         lfc += 1
         
 
-    ldc = 0    
+    ldc = 0
+    tdc = len(dirs) # total number of directories 
     for encounteredDirectory in dirs:
         sys.stdout.flush()
         
@@ -154,15 +155,15 @@ def fsTraversal(root, lvl, visitor=None):
         # go into subdirectory and traverse it
         subDirData = fsTraversal(directoryPath, lvl+1, visitor)
         #clrprint.clrprint(f'>>> [{encounteredDirectory}]: #directories:{subDirData[1]} #files:{subDirData[2]}', clr='yellow')
-        dH.setLocalCounts(subDirData[1], subDirData[2], visitor)
-        
+        dH.setLocalCounts(subDirData[1], subDirData[2], subDirData[3], visitor)
+        tdc += subDirData[1]
         
         if subDirData[0] < 0:
                if (subDirData[0] != -1):
-                   return(subDirData[0], -1, -1, '')
+                   return(subDirData[0], -1, -1, -1, '')
      
 
-    return 0, ldc, lfc, ''
+    return 0, ldc, lfc, tdc, ''
 
 
 
@@ -247,7 +248,7 @@ def search(root, query='.*', criteria={}):
 
 
 mode = 'export'
-initialDir = "exampleDir"
+initialDir = "exampleDir6"
 
 traversalCriteria = {'fileinclusionPattern':"",
                      'fileexclusionPattern':"git|Rhistory|DS_Store|txt",
