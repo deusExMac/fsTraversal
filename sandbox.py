@@ -110,11 +110,13 @@ def timeit(f):
       
 def fsTraversal(root, lvl, visitor=None):
 
+   # Maximum number of levels to delve into.
    # This is checked here; makes things easier
-    mxLvl = visitor.getCriterium('maxLevel', -1)
+    mxLvl = visitor.getCriterium('maxLevels', -1)
     if mxLvl > 0:
        if lvl > mxLvl:
           return(0, 0, 0, 0, 0)
+
         
     try:
       path, dirs, files = next( os.walk(root) )    
@@ -256,7 +258,7 @@ def search(root, query='.*', criteria={}):
 mode = 'export'
 initialDir = "exampleDir"
 
-traversalCriteria = { 'maxLevel':-1,
+traversalCriteria = { 'maxLevels':-1,
                       'fileinclusionPattern':"",
                       'fileexclusionPattern':"git|Rhistory|DS_Store|txt",
                       'dirinclusionPattern': '',
