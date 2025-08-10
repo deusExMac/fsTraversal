@@ -102,10 +102,14 @@ class File(Visitable):
         self.level = level
         self.parent = parent
         self.fileMeta = finfo
+        self.ignored = False
 
     def accept(self, visitor):
-        visitor.visit_file(self.name, self.path, self.level, self.parent, self.fileMeta)
+        status=visitor.visit_file(self.name, self.path, self.level, self.parent, self.fileMeta)
+        if status < 0:
+           self.ignored = True 
         
+
 
 class Directory(Visitable):
     def __init__(self, name, path, level, parent, ldc, lfc, subdir):
@@ -116,13 +120,19 @@ class Directory(Visitable):
         self.localDirCount = ldc
         self.localFileCount = lfc
         self.subdir = subdir
+        self.ignored = False
 
     def accept(self, visitor):
-        visitor.visit_directory(self.name, self.path, self.level, self.parent,  self.localDirCount, self.localFileCount, self.subdir)
-
+        status=visitor.visit_directory(self.name, self.path, self.level, self.parent,  self.localDirCount, self.localFileCount, self.subdir)
+        if status < 0:
+           self.ignored = True 
 
     # TODO: is this correct?
     def setLocalCounts(self, ldc, lfc, tdc, tfc, visitor):
+
+        if self.ignored:
+           return
+        
         self.localDirCount = ldc
         self.localFileCount = lfc
         visitor.updateCounts(self.path, ldc, lfc, tdc, tfc)
@@ -277,7 +287,7 @@ class HTMLExporter(Visitor):
 
         if not nameMatches(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern', '') ):
            clrprint.clrprint(f'Ignoring FILE [{name}] due to name criteria', clr='red')   
-           return
+           return(-200)
 
         if self.criteria.get('maxFiles', -1) > 0:
            if self.file_count >= self.criteria.get('maxFiles', -1):
@@ -292,7 +302,7 @@ class HTMLExporter(Visitor):
 
         # Add to stack
         self.stack.append(nF)
-        return
+        return(0)
 
 
 
@@ -301,7 +311,7 @@ class HTMLExporter(Visitor):
                
         if not nameMatches(name, self.criteria.get('direxclusionPattern', ''), self.criteria.get('dirinclusionPattern', '')):
            clrprint.clrprint(f'Ignoring DIRECTORY [{name}] due to name criteria', clr='red') 
-           return
+           return(-201)
 
 
         if self.criteria.get('maxDirs', -1) > 0:
@@ -319,7 +329,7 @@ class HTMLExporter(Visitor):
         dId = "d" + str(level) + "-" + str( random.randint(0, 1000000) )      
         nD['html'] = self.dirTemplate.replace('${ID}', dId).replace('${DIRNAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level))
         self.stack.append(nD)
-        return 
+        return(0)
          
 
 
@@ -343,16 +353,19 @@ class testhtmlEporter(HTMLExporter):
           
             
           stkbfr = []
+          nPops = 0
           while True:
-              if len(self.stack) <=0:
+              #if len(self.stack) <=0:
                  # If this point was reached, then the path was
                  # not found in stack. This can happen when the
                  # directory was filtered out and not added at
                  # all into the stack.
-                 break
+              #   break
                 
               itm = self.stack.pop()
+              nPops += 1
               if itm['name'] == path:
+                  clrprint.clrprint(f'Found path [{path}]  in stack after {nPops} pops...')
                   itm['html'] = itm['html'].replace('${LNDIRS}', str(ldc)).replace('${LNFILES}', str(lfc)).replace('${NDIRS}', str(tdc)).replace('${NFILES}', str(tfc))
                   self.stack.append(itm)
                   break
