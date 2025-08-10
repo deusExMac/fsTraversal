@@ -330,8 +330,26 @@ class HTMLExporter(Visitor):
         nD['html'] = self.dirTemplate.replace('${ID}', dId).replace('${DIRNAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level))
         self.stack.append(nD)
         return(0)
-         
 
+
+    def updateCounts(self, path, ldc, lfc, tdc, tfc):
+          stkbfr = []
+          nPops = 0
+          while True:  
+              itm = self.stack.pop()
+              nPops += 1
+              if itm['name'] == path:
+                  clrprint.clrprint(f'Found path [{path}]  in stack after {nPops} pops...')
+                  itm['html'] = itm['html'].replace('${LNDIRS}', str(ldc)).replace('${LNFILES}', str(lfc)).replace('${NDIRS}', str(tdc)).replace('${NFILES}', str(tfc))
+                  self.stack.append(itm)
+                  break
+
+              stkbfr.append(itm)
+
+          # put items back with the same order 
+          for i in stkbfr[::-1]:
+              self.stack.append(i)
+              
 
 #####################################################################
 #
@@ -349,33 +367,7 @@ class testhtmlEporter(HTMLExporter):
           super().__init__(dirT, fileT, pageT, criteria)
 
 
-      def updateCounts(self, path, ldc, lfc, tdc, tfc):
-          
-            
-          stkbfr = []
-          nPops = 0
-          while True:
-              #if len(self.stack) <=0:
-                 # If this point was reached, then the path was
-                 # not found in stack. This can happen when the
-                 # directory was filtered out and not added at
-                 # all into the stack.
-              #   break
-                
-              itm = self.stack.pop()
-              nPops += 1
-              if itm['name'] == path:
-                  clrprint.clrprint(f'Found path [{path}]  in stack after {nPops} pops...')
-                  itm['html'] = itm['html'].replace('${LNDIRS}', str(ldc)).replace('${LNFILES}', str(lfc)).replace('${NDIRS}', str(tdc)).replace('${NFILES}', str(tfc))
-                  self.stack.append(itm)
-                  break
-
-              stkbfr.append(itm)
-
-          # put items back with the same order 
-          for i in stkbfr[::-1]:
-              self.stack.append(i)
-                  
+      
           
           
 

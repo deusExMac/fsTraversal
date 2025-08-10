@@ -186,8 +186,8 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
     dTemp, fTemp, pTemp = readHTMLTemplateFile(templateFile)
 
     # Create visitor
-    #hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, criteria)
-    hE = handlers.testhtmlEporter(dTemp, fTemp, pTemp, criteria)
+    hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, criteria)
+    #hE = handlers.testhtmlEporter(dTemp, fTemp, pTemp, criteria)
 
 
 
