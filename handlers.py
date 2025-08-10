@@ -340,8 +340,17 @@ class testhtmlEporter(HTMLExporter):
 
 
       def updateCounts(self, path, ldc, lfc, tdc, tfc):
+          
+            
           stkbfr = []
           while True:
+              if len(self.stack) <=0:
+                 # If this point was reached, then the path was
+                 # not found in stack. This can happen when the
+                 # directory was filtered out and not added at
+                 # all into the stack.
+                 break
+                
               itm = self.stack.pop()
               if itm['name'] == path:
                   itm['html'] = itm['html'].replace('${LNDIRS}', str(ldc)).replace('${LNFILES}', str(lfc)).replace('${NDIRS}', str(tdc)).replace('${NFILES}', str(tfc))
@@ -388,6 +397,10 @@ class SearchVisitor(Visitor):
 
 
       def getCriterium(self, cname='', default=-1):
+
+          if self.criteria is None:
+             return(default)
+            
           return(self.criteria.get(cname, default))
 
         

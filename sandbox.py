@@ -256,9 +256,9 @@ def search(root, query='.*', criteria={}):
 
 
 mode = 'export'
-initialDir = "exampleDir"
+initialDir = "/Users/manolistzagarakis/home(synced)/econ"
 
-traversalCriteria = { 'maxLevels':-1,
+traversalCriteria = { 'maxLevels':2,
                       'fileinclusionPattern':"",
                       'fileexclusionPattern':"git|Rhistory|DS_Store|txt",
                       'dirinclusionPattern': '',
