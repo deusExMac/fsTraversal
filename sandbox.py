@@ -109,10 +109,14 @@ def timeit(f):
         
       
 def fsTraversal(root, lvl, visitor=None):
-    
+
+   # This is checked here; makes things easier
+    mxLvl = visitor.getCriterium('maxLevel', -1)
+    if mxLvl > 0:
+       if lvl > mxLvl:
+          return(0, 0, 0, 0, 0)
+        
     try:
-      #clrprint.clrprint(f'{lvl*"\t"}Inside {root}', clr='maroon')
-      #sys.stdout.flush()
       path, dirs, files = next( os.walk(root) )    
     except Exception as wEx:
       print('Exception during walk:', str(wEx) )
@@ -173,9 +177,10 @@ def fsTraversal(root, lvl, visitor=None):
 
 
 
-# TODO: incomplete and not running...but TOTALLY
+# TODO: More tests needed
 def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 
+    clrprint.clrprint(f'\nStarting export with following arguments:[{criteria}]\n')
     dTemp, fTemp, pTemp = readHTMLTemplateFile(templateFile)
 
     # Create visitor
@@ -251,18 +256,19 @@ def search(root, query='.*', criteria={}):
 mode = 'export'
 initialDir = "exampleDir"
 
-traversalCriteria = {'fileinclusionPattern':"",
-                     'fileexclusionPattern':"git|Rhistory|DS_Store|txt",
-                     'dirinclusionPattern': '',
-                     'direxclusionPattern':'stfolder',
-                     'minFileSize':-1,
-                     'maxFileSize':-1,
-                     'maxDirs':-1,
-                     'maxFiles':-1,
-                     'creationDateOp':'=',
-                     'creationDate':datetime.datetime.strptime('15/06/2025 14:30:00', '%d/%m/%Y %H:%M:%S'),
-                     'lastModifiedDateOp':'=',
-                     'lastModifiedDate':''}
+traversalCriteria = { 'maxLevel':-1,
+                      'fileinclusionPattern':"",
+                      'fileexclusionPattern':"git|Rhistory|DS_Store|txt",
+                      'dirinclusionPattern': '',
+                      'direxclusionPattern':'stfolder',
+                      'minFileSize':-1,
+                      'maxFileSize':-1,
+                      'maxDirs':-1,
+                      'maxFiles':-1,
+                      'creationDateOp':'=',
+                      'creationDate':datetime.datetime.strptime('15/06/2025 14:30:00', '%d/%m/%Y %H:%M:%S'),
+                      'lastModifiedDateOp':'=',
+                      'lastModifiedDate':''}
 
 if mode == 'export':
    htmlExporter(initialDir, 'html/template1.html', traversalCriteria)

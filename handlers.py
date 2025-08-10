@@ -61,7 +61,7 @@ class criteriaException(Exception):
 
 # 1. Define the Visitable interface
 class Visitable(ABC):
-    
+
     @abstractmethod
     def accept(self, visitor):
         pass
@@ -71,6 +71,11 @@ class Visitable(ABC):
 
 # 2. Define the Visitor interface
 class Visitor(ABC):
+
+    @abstractmethod
+    def getCriterium(self, cname=''):
+        pass
+    
     @abstractmethod
     def visit_file(self, name, path, level, parent, finfo={}):
         pass
@@ -190,6 +195,11 @@ class HTMLExporter(Visitor):
         
         self.stack = deque()
 
+
+    
+    def getCriterium(self, cname='', default=-1):
+        return(self.criteria.get(cname, default))
+    
 
     # This is working!
     def newMERGE(self, newD={'type':'directory', 'level':0, 'name':''}, stk=None):
@@ -375,6 +385,10 @@ class SearchVisitor(Visitor):
         self.matches = []
 
 
+
+
+      def getCriterium(self, cname='', default=-1):
+          return(self.criteria.get(cname, default))
 
         
       def visit_file(self, name, path, level, parent, finfo={}):
