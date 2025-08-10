@@ -117,15 +117,16 @@ def fsTraversal(root, lvl, visitor=None):
     except Exception as wEx:
       print('Exception during walk:', str(wEx) )
       if ON_TRAVERSE_ERROR_QUIT:
-         return(-2, 0, 0, 0, "")
+         return(-2, 0, 0, 0, 0)
       else:
-         return(0, 0, 0, 0, "")
+         return(0, 0, 0, 0, 0)
 
         
     dirs.sort()
     files.sort()
 
     lfc = 0
+    tfc = len(files) # total number of files
     for encounteredFile in files:
         sys.stdout.flush()
         
@@ -135,7 +136,7 @@ def fsTraversal(root, lvl, visitor=None):
         fv.accept(visitor)
         lfc += 1
         
-
+    
     ldc = 0
     tdc = len(dirs) # total number of directories 
     for encounteredDirectory in dirs:
@@ -155,15 +156,15 @@ def fsTraversal(root, lvl, visitor=None):
         # go into subdirectory and traverse it
         subDirData = fsTraversal(directoryPath, lvl+1, visitor)
         #clrprint.clrprint(f'>>> [{encounteredDirectory}]: #directories:{subDirData[1]} #files:{subDirData[2]}', clr='yellow')
-        dH.setLocalCounts(subDirData[1], subDirData[2], subDirData[3], visitor)
-        tdc += subDirData[1]
-        
+        dH.setLocalCounts(subDirData[1], subDirData[2], subDirData[3], subDirData[4], visitor)
+        tdc += subDirData[3]
+        tfc += subDirData[4]
         if subDirData[0] < 0:
                if (subDirData[0] != -1):
-                   return(subDirData[0], -1, -1, -1, '')
+                   return(subDirData[0], ldc, lfc, tdc, tfc)
      
 
-    return 0, ldc, lfc, tdc, ''
+    return 0, ldc, lfc, tdc, tfc
 
 
 
@@ -193,7 +194,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
                      'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', root).replace('${PATH}', root).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
 
     try:
-      fsTraversal(root, 1, visitor=hE)
+      res=fsTraversal(root, 1, visitor=hE)
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
     else:
@@ -205,7 +206,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 
 
     # Saving to file
-    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', root).replace('${LNDIRS}', '-1').replace('${LNFILES}', '-5')
+    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', root).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4]))
     with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
          sf.write(h)
 
@@ -248,7 +249,7 @@ def search(root, query='.*', criteria={}):
 
 
 mode = 'export'
-initialDir = "exampleDir6"
+initialDir = "exampleDir"
 
 traversalCriteria = {'fileinclusionPattern':"",
                      'fileexclusionPattern':"git|Rhistory|DS_Store|txt",

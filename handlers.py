@@ -117,10 +117,10 @@ class Directory(Visitable):
 
 
     # TODO: is this correct?
-    def setLocalCounts(self, ldc, lfc, tdc, visitor):
+    def setLocalCounts(self, ldc, lfc, tdc, tfc, visitor):
         self.localDirCount = ldc
         self.localFileCount = lfc
-        visitor.updateCounts(self.path, ldc, lfc, tdc, -4)
+        visitor.updateCounts(self.path, ldc, lfc, tdc, tfc)
 
 
 
@@ -334,7 +334,7 @@ class testhtmlEporter(HTMLExporter):
           while True:
               itm = self.stack.pop()
               if itm['name'] == path:
-                  itm['html'] = itm['html'].replace('${LNDIRS}', str(ldc)).replace('${LNFILES}', str(lfc)).replace('${NDIRS}', str(tdc))
+                  itm['html'] = itm['html'].replace('${LNDIRS}', str(ldc)).replace('${LNFILES}', str(lfc)).replace('${NDIRS}', str(tdc)).replace('${NFILES}', str(tfc))
                   self.stack.append(itm)
                   break
 
