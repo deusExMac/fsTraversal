@@ -88,6 +88,7 @@ class Visitor(ABC):
         pass
 
     #TODO: Is this correct?
+    # Will get overwritten in derived classes if so needed
     def updateCounts(self, path, ldc, lfc, tdc, tfc):
         return
 
