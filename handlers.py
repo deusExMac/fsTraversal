@@ -72,8 +72,11 @@ class Visitable(ABC):
 # 2. Define the Visitor interface
 class Visitor(ABC):
 
+    def __init__(self):
+        self.nIgnored = 0
+        
     @abstractmethod
-    def getCriterium(self, cname=''):
+    def getCriterium(self, cname='', default=-1):
         pass
     
     @abstractmethod
@@ -84,7 +87,14 @@ class Visitor(ABC):
     def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
         pass
 
+    #TODO: Is this correct?
+    def updateCounts(self, path, ldc, lfc, tdc, tfc):
+        return
 
+    
+    # TODO: is this correct?
+    def ignored(self):
+        self.nIgnored += 1
 
 
 ###################################################################
@@ -194,6 +204,8 @@ def makeHtmlLink(itemPath, displayAnchor, urlEncode):
 class HTMLExporter(Visitor):
     
     def __init__(self, dirT, fileT, pageT, criteria):
+
+        super().__init__()
         
         self.file_count = 0
         self.directory_count = 0
@@ -286,7 +298,8 @@ class HTMLExporter(Visitor):
 
 
         if not nameMatches(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern', '') ):
-           clrprint.clrprint(f'Ignoring FILE [{name}] due to name criteria', clr='red')   
+           clrprint.clrprint(f'Ignoring FILE [{name}] due to name criteria', clr='red')
+           self.ignored()
            return(-200)
 
         if self.criteria.get('maxFiles', -1) > 0:
@@ -310,7 +323,8 @@ class HTMLExporter(Visitor):
     def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
                
         if not nameMatches(name, self.criteria.get('direxclusionPattern', ''), self.criteria.get('dirinclusionPattern', '')):
-           clrprint.clrprint(f'Ignoring DIRECTORY [{name}] due to name criteria', clr='red') 
+           clrprint.clrprint(f'Ignoring DIRECTORY [{name}] due to name criteria', clr='red')
+           self.ignored()
            return(-201)
 
 
@@ -389,6 +403,8 @@ class SearchVisitor(Visitor):
 
         # TODO: Do we need this?
         #self.scanned_cound = 0
+
+        super().__init__()
         
         self.file_count = 0
         self.directory_count = 0
@@ -413,23 +429,27 @@ class SearchVisitor(Visitor):
             
             matchedFileName = searchNameComplies(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern', ''), r'/\1/', False)
             if matchedFileName == '':
-               return
+               self.ignored() 
+               return(-200)
 
             fileMeta = fileInfo(path)
                
             if self.criteria.get('minFileSize', -1) >= 0:
-               if int(fileMeta['size']) < self.criteria.get('minFileSize', -1): 
-                   return
+               if int(fileMeta['size']) < self.criteria.get('minFileSize', -1):
+                   self.ignored() 
+                   return(-201)
 
             if self.criteria.get('maxFileSize', -1) >= 0:
-               if int(fileMeta['size']) > self.criteria.get('maxFileSize', -1): 
-                   return
+               if int(fileMeta['size']) > self.criteria.get('maxFileSize', -1):
+                   self.ignored() 
+                   return(-202)
 
             self.file_count += 1
 
             clrprint.clrprint('\t[F] ', clr='green', end='')
             self.matches.append(path)
             printPath(parent, matchedFileName, '/', 'green')
+            return(0)
 
             
 
@@ -444,12 +464,14 @@ class SearchVisitor(Visitor):
             
             matchedDirName = searchNameComplies(name, self.criteria.get('direxclusionPattern', ''), self.criteria.get('dirinclusionPattern', ''), r'/\1/', False)
             if matchedDirName == '':
-               return
+               self.ignored()  
+               return(-204)
 
             self.directory_count += 1
             clrprint.clrprint('\t[D] ', clr='red', end='')
             self.matches.append(path)
             printPath(parent, matchedDirName, '/', 'red')
+            return(0)
 
 
 

@@ -217,7 +217,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
     with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
          sf.write(h)
 
-    clrprint.clrprint(f'\nFinished. Total file count:{hE.file_count} Total directory count:{hE.directory_count}', clr='yellow')
+    clrprint.clrprint(f'\nFinished. Total file count:{hE.file_count} Total directory count:{hE.directory_count}. Ignored:{hE.nIgnored}', clr='yellow')
     return(0)
 
 
@@ -234,16 +234,16 @@ def search(root, query='.*', criteria={}):
     
     criteria['fileinclusionPattern'] = '(' + query + ')'
     criteria['dirinclusionPattern'] = '(' + query + ')'
-    sE = handlers.SearchVisitor('(a)', criteria)
+    sV = handlers.SearchVisitor('(a)', criteria)
 
     clrprint.clrprint('Search results:', clr='maroon')
     try:
-      fsTraversal(initialDir, 1, visitor=sE)
+      fsTraversal(initialDir, 1, visitor=sV)
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
     
 
-    clrprint.clrprint(f'\nTotal of {sE.directory_count} directories and {sE.file_count} files found.\n', clr='maroon')
+    clrprint.clrprint(f'\nTotal of {sV.directory_count} directories and {sV.file_count} files found. Ignored:{sV.nIgnored}\n', clr='maroon')
     return
 
 
@@ -260,7 +260,7 @@ initialDir = "/Users/manolistzagarakis/home(synced)/econ"
 
 traversalCriteria = { 'maxLevels':2,
                       'fileinclusionPattern':"",
-                      'fileexclusionPattern':"git|Rhistory|DS_Store|txt",
+                      'fileexclusionPattern':"git|Rhistory|DS_Store",
                       'dirinclusionPattern': '',
                       'direxclusionPattern':'stfolder',
                       'minFileSize':-1,
