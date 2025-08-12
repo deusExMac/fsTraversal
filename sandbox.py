@@ -217,6 +217,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
          sf.write(h)
 
     clrprint.clrprint(f'\nFinished. Total file count:{hE.file_count} Total directory count:{hE.directory_count}. Ignored:{hE.nIgnored}', clr='yellow')
+
     return(0)
 
 
