@@ -182,7 +182,6 @@ def fsTraversal(root, lvl, visitor=None):
 # TODO: More tests needed
 def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 
-    clrprint.clrprint(f'\nStarting export with following arguments:[{criteria}]\n')
     dTemp, fTemp, pTemp = readHTMLTemplateFile(templateFile)
 
     # Create visitor
@@ -271,6 +270,19 @@ traversalCriteria = { 'maxLevels':2,
                       'creationDate':datetime.datetime.strptime('15/06/2025 14:30:00', '%d/%m/%Y %H:%M:%S'),
                       'lastModifiedDateOp':'=',
                       'lastModifiedDate':''}
+
+
+clrs = ['red', 'blue', 'green', 'yellow', 'purple', 'black']
+
+clrprint.clrprint(f"\nStarting [{mode}] mode with following paramters:")
+clrprint.clrprint(f"{traversalCriteria}\n", clr='yellow')
+for i in range(5):
+    clrprint.clrprint(f'[{5-i}]', clr=random.choice(clrs), end='')
+    time.sleep(1)
+
+print(' Started')
+time.sleep(0.3)
+
 
 if mode == 'export':
    htmlExporter(initialDir, 'html/template1.html', traversalCriteria)
