@@ -1,23 +1,12 @@
 import os
-import os.path
-from os.path import join, commonprefix, relpath
 import sys
-import platform
-import subprocess
 import time
 
 import re
 import random
-
-import urllib.parse
 import datetime
-
-
-
 import clrprint
-import itertools
-from filecmp import dircmp
-from prettytable import PrettyTable
+
 
 
 from utilities import fontColorPalette, normalizedPathJoin, nameComplies, searchNameComplies, fileCreationDate, fileInfo, strToBytes
@@ -37,7 +26,7 @@ ON_TRAVERSE_ERROR_QUIT = False
 
                                               
 # TODO: Replace related function in utilities with this... 
-#        ==> OK fixe. Tests needed
+#        ==> OK fixed. Tests needed
 def readHTMLTemplateFile(fname, dm='<!---directorytemplate--->\n', fm='<!---filetemplate--->\n', pm='<!---pagetemplate--->\n'):
     
     with open(fname, 'r', encoding='utf8') as content_file:
@@ -57,7 +46,8 @@ def readHTMLTemplateFile(fname, dm='<!---directorytemplate--->\n', fm='<!---file
 
     try:   
        pTemp = re.search('(?<=' + pm + r')(.*$)', content, re.DOTALL | re.MULTILINE).group()
-    except:
+    except Exception as trEx:
+       print(f'Read error: {str(trEx)}') 
        pTemp = '' 
 
     return(dTemp.strip(), fTemp.strip(), pTemp.strip())
@@ -106,10 +96,28 @@ def timeit(f):
 # Ths core part of the file system traversal. This
 # traverses all objects.
 # How encountered files/directories should be handled are in the visitor classes  
-        
+
+     
       
 def fsTraversal(root, lvl, visitor=None):
+    # TODO: check this
+    global timeStarted
 
+    maxTime = visitor.getCriterium('maxTime', -1)
+    if maxTime > 0:
+       if timeStarted is None:
+          timeStarted = time.perf_counter()
+       else:
+          # Elapsed in seconds. 
+          elapsed = time.perf_counter() - timeStarted
+          print(f'>>>elapsed:{elapsed:.4f}')
+          if elapsed >= maxTime: 
+             raise handlers.criteriaException(-10, f'Maximum time constraint of {maxTime}s reached (elapsed:{elapsed:.4f}s).')
+
+
+
+
+      
    # Maximum number of levels to delve into.
    # This is checked here; makes things easier
     mxLvl = visitor.getCriterium('maxLevels', -1)
@@ -180,6 +188,7 @@ def fsTraversal(root, lvl, visitor=None):
 
 
 # TODO: More tests needed
+@timeit
 def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 
     dTemp, fTemp, pTemp = readHTMLTemplateFile(templateFile)
@@ -200,19 +209,24 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
                      'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', root).replace('${PATH}', root).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
 
     try:
+      terminationCode = -1
       res=fsTraversal(root, 1, visitor=hE)
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
+      terminationCode = ce.errorCode
+      res = (-100, -1, -1, -1, -1) # TODO: check and fix this.
     else:
+      terminationCode = 0  
       clrprint.clrprint('Terminated.', clr='yellow')
       
     # Final merge
+    clrprint.clrprint('\n\n#################################\n##    FINAL MERGE\n#################################\n', clr='yellow')
     hE.newMERGE(stk=hE.stack)
     subD = hE.stack.pop()
 
-
+    
     # Saving to file
-    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', root).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4]))
+    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', root).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(terminationCode))
     with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
          sf.write(h)
 
@@ -256,9 +270,11 @@ def search(root, query='.*', criteria={}):
 
 
 mode = 'export'
-initialDir = "/Users/manolistzagarakis/home(synced)/econ"
+initialDir = "exampleDir"
 
-traversalCriteria = { 'maxLevels':2,
+# maxTime is in seconds
+traversalCriteria = { 'maxLevels':-1,
+                      'maxTime': -1,
                       'fileinclusionPattern':"",
                       'fileexclusionPattern':"git|Rhistory|DS_Store",
                       'dirinclusionPattern': '',
@@ -274,8 +290,9 @@ traversalCriteria = { 'maxLevels':2,
 
 
 clrs = ['red', 'blue', 'green', 'yellow', 'purple', 'black']
+timeStarted = None
 
-clrprint.clrprint(f"\nStarting [{mode}] mode with following paramters:")
+clrprint.clrprint(f"\nStarting [{mode}] mode from root [{initialDir}] with following paramters:")
 clrprint.clrprint(f"{traversalCriteria}\n", clr='yellow')
 for i in range(5):
     clrprint.clrprint(f'[{5-i}]', clr=random.choice(clrs), end='')
