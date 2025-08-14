@@ -290,6 +290,7 @@ traversalCriteria = { 'maxLevels':-1,
 
 
 clrs = ['red', 'blue', 'green', 'yellow', 'purple', 'black']
+# Reset time
 timeStarted = None
 
 clrprint.clrprint(f"\nStarting [{mode}] mode from root [{initialDir}] with following paramters:")
@@ -299,7 +300,7 @@ for i in range(5):
     time.sleep(1)
 
 print(' Started')
-time.sleep(0.3)
+time.sleep(0.3) # small delay to allow starting messages to appear (even when executed from within IDLE)
 
 
 if mode == 'export':
