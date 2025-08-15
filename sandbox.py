@@ -139,8 +139,8 @@ def fsTraversal(root, lvl, visitor=None):
     dirs.sort()
     files.sort()
 
-    lfc = 0
-    tfc = 0 #len(files) # total number of files
+    lfc = 0 # local file count
+    tfc = 0 # total file count until here
     for encounteredFile in files:
         sys.stdout.flush()
         
@@ -154,8 +154,8 @@ def fsTraversal(root, lvl, visitor=None):
            tfc += 1 
            
            
-    ldc = 0
-    tdc = 0 #len(dirs) # total number of directories 
+    ldc = 0 # local directory count
+    tdc = 0 # total directory count until here 
     for encounteredDirectory in dirs:
         sys.stdout.flush()
         
@@ -182,7 +182,7 @@ def fsTraversal(root, lvl, visitor=None):
                if (subDirData[0] != -1): # TODO: need this check?
                    return(subDirData[0], ldc, lfc, tdc, tfc)
      
-    print(f'[{root}] returnong {ldc} {lfc} {tdc} {tfc}')
+    
     return 0, ldc, lfc, tdc, tfc
 
 
