@@ -140,7 +140,7 @@ def fsTraversal(root, lvl, visitor=None):
     files.sort()
 
     lfc = 0
-    tfc = len(files) # total number of files
+    tfc = 0 #len(files) # total number of files
     for encounteredFile in files:
         sys.stdout.flush()
         
@@ -148,12 +148,14 @@ def fsTraversal(root, lvl, visitor=None):
         fMeta = fileInfo(filePath)
         fv = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
         fv.accept(visitor)
-        # TODO: increase local file count only if not ignored
-        lfc += 1
-        
-    
+        # TODO: Check this
+        if not fv.ignored: 
+           lfc += 1
+           tfc += 1 
+           
+           
     ldc = 0
-    tdc = len(dirs) # total number of directories 
+    tdc = 0 #len(dirs) # total number of directories 
     for encounteredDirectory in dirs:
         sys.stdout.flush()
         
@@ -165,8 +167,10 @@ def fsTraversal(root, lvl, visitor=None):
                                -1,
                                -1)
         dH.accept(visitor)
-        # TODO: increase local directory count only if not ignored
-        ldc += 1
+        # TODO: Check this
+        if not dH.ignored:
+           ldc += 1
+           tdc += 1 
         
         # go into subdirectory and traverse it
         subDirData = fsTraversal(directoryPath, lvl+1, visitor)
@@ -178,7 +182,7 @@ def fsTraversal(root, lvl, visitor=None):
                if (subDirData[0] != -1): # TODO: need this check?
                    return(subDirData[0], ldc, lfc, tdc, tfc)
      
-
+    print(f'[{root}] returnong {ldc} {lfc} {tdc} {tfc}')
     return 0, ldc, lfc, tdc, tfc
 
 
@@ -286,12 +290,12 @@ def search(root, query='.*', criteria={}):
 
 
 mode = 'export'
-initialDir = "exampleDir8"
+initialDir = "exampleDir"
 
 # maxTime is in seconds
 traversalCriteria = { 'maxLevels':-1,
                       'maxTime': -1,
-                      'fileinclusionPattern':"",
+                      'fileinclusionPattern':"E",
                       'fileexclusionPattern':"git|Rhistory|DS_Store",
                       'dirinclusionPattern': '',
                       'direxclusionPattern':'stfolder',
