@@ -310,7 +310,7 @@ traversalCriteria = { 'maxLevels':-1,
 
 
 
-# Reset time
+# Reset timer
 timeStarted = None
 
 clrprint.clrprint(f"\nStarting [{mode}] mode from root [{initialDir}] with following paramters:")
