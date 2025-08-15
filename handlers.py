@@ -9,7 +9,6 @@ import random
 # for stacks
 from collections import deque
 
-import urllib
 
 from utilities import searchNameComplies, printPath, fileInfo, strToBytes
 
@@ -25,10 +24,11 @@ fontColorPalette = ['#4287f5', '#801408', '#08259c', '#4560d1', '#0a690a', '#9c5
 # Checks if obect name on complies to exclusion and inclusion pattern.
 # nameComplies returns True, if name does NOT match exclusion regex pattern (xP)
 # AND matches inclusion regex pattern (iP).
-# An empty imclusion regex pattern means no inclusion pattern i.e. all
+# An empty inclusion regex pattern means no inclusion pattern i.e. all
 # object names are good.
 #
-# TODO: Has not been tested.
+# TODO: Has not been tested. Also, must be placed in utilities.py
+
 def nameMatches( on, xP='', iP='', lvl=-1, dbg=False ):
     #print('Exclusion pattern:', xP)
     #print('inclusion pattern:', iP)
@@ -49,13 +49,16 @@ def nameMatches( on, xP='', iP='', lvl=-1, dbg=False ):
 
 
 # Exception raised when *some* criteria do not hold such as maxDirs or maxFiles.
-# Used to terminate traversal immediately without unfolding
-# the executions.
+# Used to terminate traversal immediately without requiring to unfold
+# the entire execution stack. Makes things faster.
 class criteriaException(Exception):
+
       def __init__(self, code=-1, message=''):
           super().__init__(message)
           self.errorCode = code
           
+
+
 
 
 
@@ -84,7 +87,7 @@ class Visitor(ABC):
         pass
 
     @abstractmethod
-    def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
+    def visit_directory(self, name, path, level, parent, ldc, lfc):
         pass
 
     #TODO: Is this correct?
@@ -96,6 +99,7 @@ class Visitor(ABC):
     # TODO: is this correct?
     def ignored(self):
         self.nIgnored += 1
+
 
 
 ###################################################################
@@ -123,18 +127,17 @@ class File(Visitable):
 
 
 class Directory(Visitable):
-    def __init__(self, name, path, level, parent, ldc, lfc, subdir):
+    def __init__(self, name, path, level, parent, ldc, lfc):
         self.name = name
         self.path = path
         self.level = level
         self.parent = parent
         self.localDirCount = ldc
         self.localFileCount = lfc
-        self.subdir = subdir
         self.ignored = False
 
     def accept(self, visitor):
-        status=visitor.visit_directory(self.name, self.path, self.level, self.parent,  self.localDirCount, self.localFileCount, self.subdir)
+        status=visitor.visit_directory(self.name, self.path, self.level, self.parent,  self.localDirCount, self.localFileCount)
         if status < 0:
            self.ignored = True 
 
@@ -151,7 +154,7 @@ class Directory(Visitable):
 
 
         
-###################################################
+#####################################################################
 #
 #
 #
@@ -159,7 +162,7 @@ class Directory(Visitable):
 #
 #
 #
-###################################################
+#####################################################################
 
 
 
@@ -321,7 +324,7 @@ class HTMLExporter(Visitor):
 
 
 
-    def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
+    def visit_directory(self, name, path, level, parent, ldc, lfc):
                
         if not nameMatches(name, self.criteria.get('direxclusionPattern', ''), self.criteria.get('dirinclusionPattern', '')):
            clrprint.clrprint(f'Ignoring DIRECTORY [{name}] due to name criteria', clr='red')
@@ -457,7 +460,7 @@ class SearchVisitor(Visitor):
 
             
 
-      def visit_directory(self, name, path, level, parent, ldc, lfc, subdir):
+      def visit_directory(self, name, path, level, parent, ldc, lfc):
 
             if self.criteria.get('maxDirs', -1) > 0:
                if self.directory_count >= self.criteria.get('maxDirs', -1):

@@ -148,6 +148,7 @@ def fsTraversal(root, lvl, visitor=None):
         fMeta = fileInfo(filePath)
         fv = handlers.File(encounteredFile, filePath, lvl, root, fMeta)
         fv.accept(visitor)
+        # TODO: increase local file count only if not ignored
         lfc += 1
         
     
@@ -162,9 +163,9 @@ def fsTraversal(root, lvl, visitor=None):
                                lvl,
                                root,
                                -1,
-                               -2,
-                               '')
+                               -1)
         dH.accept(visitor)
+        # TODO: increase local directory count only if not ignored
         ldc += 1
         
         # go into subdirectory and traverse it
@@ -174,7 +175,7 @@ def fsTraversal(root, lvl, visitor=None):
         tdc += subDirData[3]
         tfc += subDirData[4]
         if subDirData[0] < 0:
-               if (subDirData[0] != -1):
+               if (subDirData[0] != -1): # TODO: need this check?
                    return(subDirData[0], ldc, lfc, tdc, tfc)
      
 
@@ -201,6 +202,10 @@ def fsTraversal(root, lvl, visitor=None):
 # TODO: More tests needed
 @timeit
 def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
+
+    if not os.path.isdir(root):
+       clrprint.clrprint(f'[Error] Not such directory [{root}]', clr="red")
+       return(-3)
 
     dTemp, fTemp, pTemp = readHTMLTemplateFile(templateFile)
 
@@ -281,7 +286,7 @@ def search(root, query='.*', criteria={}):
 
 
 mode = 'export'
-initialDir = "exampleDir"
+initialDir = "exampleDir8"
 
 # maxTime is in seconds
 traversalCriteria = { 'maxLevels':-1,
