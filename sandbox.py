@@ -184,8 +184,19 @@ def fsTraversal(root, lvl, visitor=None):
 
 
 
+###########################################################################
+#
+#
+#
+# Actual implementations of above general directory structure 
+# traveersal to support specific cases.
+#
+#
+###########################################################################
 
 
+
+# Exporting
 
 # TODO: More tests needed
 @timeit
@@ -238,7 +249,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 
 
 
-
+# Searching
 
 # TODO: Complete me...
 # NOTE: to avoid error messages when using case insensitive regex, use the following way:
@@ -289,18 +300,20 @@ traversalCriteria = { 'maxLevels':-1,
                       'lastModifiedDate':''}
 
 
-clrs = ['red', 'blue', 'green', 'yellow', 'purple', 'black']
+
 # Reset time
 timeStarted = None
 
 clrprint.clrprint(f"\nStarting [{mode}] mode from root [{initialDir}] with following paramters:")
 clrprint.clrprint(f"{traversalCriteria}\n", clr='yellow')
 for i in range(5):
-    clrprint.clrprint(f'[{5-i}]', clr=random.choice(clrs), end='')
+    clrprint.clrprint(f'[{5-i}]', clr=random.choice(['red', 'blue', 'green', 'yellow', 'purple', 'black']), end='')
     time.sleep(1)
 
 print(' Started')
 time.sleep(0.3) # small delay to allow starting messages to appear (even when executed from within IDLE)
+
+
 
 
 if mode == 'export':
