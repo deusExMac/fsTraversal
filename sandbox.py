@@ -295,7 +295,7 @@ initialDir = "exampleDir"
 # maxTime is in seconds
 traversalCriteria = { 'maxLevels':-1,
                       'maxTime': -1,
-                      'fileinclusionPattern':"E",
+                      'fileinclusionPattern':"",
                       'fileexclusionPattern':"git|Rhistory|DS_Store",
                       'dirinclusionPattern': '',
                       'direxclusionPattern':'stfolder',

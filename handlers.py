@@ -344,9 +344,11 @@ class HTMLExporter(Visitor):
         # See if stack can be collapsed
         self.newMERGE(nD, self.stack)
 
+        # Add to stack
         dId = "d" + str(level) + "-" + str( random.randint(0, 1000000) )      
         nD['html'] = self.dirTemplate.replace('${ID}', dId).replace('${DIRNAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level))
         self.stack.append(nD)
+        
         return(0)
 
 
