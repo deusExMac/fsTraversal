@@ -228,10 +228,11 @@ class HTMLExporter(Visitor):
     
 
     # This is working!
+    # TODO: Refactor and optimize this!
     def newMERGE(self, newD={'type':'directory', 'level':0, 'name':''}, stk=None):
     
     
-          clrprint.clrprint(f"Seen: [{newD['name']}] Level[{newD['level']}]", clr='maroon')
+          #clrprint.clrprint(f"Seen: [{newD['name']}] Level[{newD['level']}]", clr='maroon')
           sDir = ''
           
             
@@ -245,7 +246,8 @@ class HTMLExporter(Visitor):
                      
           
           if top['level'] - newD['level'] > 0:
-             clrprint.clrprint(f"Entering collapse", clr='maroon') 
+             #clrprint.clrprint(f"Entering collapse", clr='maroon')
+              
              # The new directory that WILL be added is at a higher level than to current
              # top of the list. i.e. we went one or more levels up.
              # At this point top is the last directory/file found at the deepest level.
@@ -263,9 +265,9 @@ class HTMLExporter(Visitor):
 
                  # get object below top (deepest encounterred)   
                  s = stk.pop()
-                 clrprint.clrprint(f"[Collapse]: popped [{s['name']}][{s['level']}]->[{s['collapsed']}] [top:{top['name']}][{top['level']}]->[{top['collapsed']}] [newD:{newD['name']}] [{newD['level']}]", clr='maroon') 
+                 #clrprint.clrprint(f"[Collapse]: popped [{s['name']}][{s['level']}]->[{s['collapsed']}] [top:{top['name']}][{top['level']}]->[{top['collapsed']}] [newD:{newD['name']}] [{newD['level']}]", clr='maroon') 
                  if s['level'] == newD['level']:
-                    clrprint.clrprint(f"\t[Collapse]: stopping... [{s['level']}]", clr='yellow') 
+                    #clrprint.clrprint(f"\t[Collapse]: stopping... [{s['level']}]", clr='yellow') 
                     top['html'] = sDir
                     
                     s['html'] = s['html'].replace('${SUBDIRECTORY}', top['html'])
@@ -277,14 +279,14 @@ class HTMLExporter(Visitor):
                 
                 
                  if s['level'] == top['level']:
-                    clrprint.clrprint(f"\t[Collapse]: Adding to [{s['name']}]", clr='yellow') 
+                    #clrprint.clrprint(f"\t[Collapse]: Adding to [{s['name']}]", clr='yellow') 
                     if s['type']=='directory': 
                        sDir = s['html'] + ' ' + sDir
                     else:
                        sDir = sDir + ' ' + s['html']
                        
                  elif top['level'] - s['level'] == 1:
-                      clrprint.clrprint(f"\t[Collapse]: Replacing subdir to [{s['name']}]", clr='yellow')  
+                      #clrprint.clrprint(f"\t[Collapse]: Replacing subdir to [{s['name']}]", clr='yellow')  
                       sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
                       top = {'type':'directory', 'collapsed':True, 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir}
                       sDir = top['html']
@@ -352,6 +354,9 @@ class HTMLExporter(Visitor):
         return(0)
 
 
+
+
+
     def updateCounts(self, path, ldc, lfc, tdc, tfc):
           stkbfr = []
           nPops = 0
@@ -359,7 +364,7 @@ class HTMLExporter(Visitor):
               itm = self.stack.pop()
               nPops += 1
               if itm['name'] == path:
-                  clrprint.clrprint(f'Found path [{path}]  in stack after {nPops} pops...')
+                  #clrprint.clrprint(f'Found path [{path}]  in stack after {nPops} pops...')
                   itm['html'] = itm['html'].replace('${LNDIRS}', str(ldc)).replace('${LNFILES}', str(lfc)).replace('${NDIRS}', str(tdc)).replace('${NFILES}', str(tfc))
                   self.stack.append(itm)
                   break

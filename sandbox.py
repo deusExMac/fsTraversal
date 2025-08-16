@@ -110,7 +110,8 @@ def fsTraversal(root, lvl, visitor=None):
        else:
           # Elapsed in seconds. 
           elapsed = time.perf_counter() - timeStarted
-          print(f'>>>elapsed:{elapsed:.4f}')
+          if (int(elapsed)%10 == 0):
+              print(f'>>>elapsed:{elapsed:.4f}')
           if elapsed >= maxTime: 
              raise handlers.criteriaException(-10, f'Maximum time constraint of {maxTime}s reached (elapsed:{elapsed:.4f}s).')
 
@@ -232,7 +233,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
       terminationCode = -1
       res=fsTraversal(root, 1, visitor=hE)
     except handlers.criteriaException as ce:
-      clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
+      clrprint.clrprint('Terminated due to criteriaException. Message:', str(ce), clr='red')
       terminationCode = ce.errorCode
       res = (-100, -1, -1, -1, -1) # TODO: check and fix this.
     else:
@@ -290,15 +291,15 @@ def search(root, query='.*', criteria={}):
 
 
 mode = 'export'
-initialDir = "exampleDir"
+initialDir = "/Users/manolistzagarakis/home(synced)/econ"
 
 # maxTime is in seconds
 traversalCriteria = { 'maxLevels':-1,
                       'maxTime': -1,
                       'fileinclusionPattern':"",
-                      'fileexclusionPattern':"git|Rhistory|DS_Store",
+                      'fileexclusionPattern':"Rhistory|DS_Store",
                       'dirinclusionPattern': '',
-                      'direxclusionPattern':'stfolder',
+                      'direxclusionPattern':'stfolder|git',
                       'minFileSize':-1,
                       'maxFileSize':-1,
                       'maxDirs':-1,
