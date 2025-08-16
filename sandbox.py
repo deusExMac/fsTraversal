@@ -286,7 +286,7 @@ def search(root, query='.*', criteria={}):
 ####################### MAIN starts here#########################
     
 
-
+# TODO: main guard here!
 
 mode = 'export'
 initialDir = "exampleDir1"

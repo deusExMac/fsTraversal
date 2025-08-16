@@ -29,3 +29,8 @@ class TestCriteria(unittest.TestCase):
                       'lastModifiedDateOp':'=',
                       'lastModifiedDate':''}
           self.assertEqual(htmlExporter('exampleDir', 'html/template1.html', tCriteria), (-100, -1, -1, -1, -1))
+
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
