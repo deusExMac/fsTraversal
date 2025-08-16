@@ -103,6 +103,7 @@ def fsTraversal(root, lvl, visitor=None):
     # TODO: check this
     global timeStarted
 
+    
     maxTime = visitor.getCriterium('maxTime', -1)
     if maxTime > 0:
        if timeStarted is None:
@@ -173,16 +174,14 @@ def fsTraversal(root, lvl, visitor=None):
            ldc += 1
            tdc += 1 
         
-        # go into subdirectory and traverse it
-        subDirData = fsTraversal(directoryPath, lvl+1, visitor)
-        #clrprint.clrprint(f'>>> [{encounteredDirectory}]: #directories:{subDirData[1]} #files:{subDirData[2]}', clr='yellow')
-        print(f'{encounteredDirectory} ingored:', dH.ignored)
-        dH.setLocalCounts(subDirData[1], subDirData[2], subDirData[3], subDirData[4], visitor)
-        tdc += subDirData[3]
-        tfc += subDirData[4]
-        if subDirData[0] < 0:
-               if (subDirData[0] != -1): # TODO: need this check?
-                   return(subDirData[0], ldc, lfc, tdc, tfc)
+           # Since not ignored, go into subdirectory and traverse it
+           subDirData = fsTraversal(directoryPath, lvl+1, visitor)
+           dH.setLocalCounts(subDirData[1], subDirData[2], subDirData[3], subDirData[4], visitor)
+           tdc += subDirData[3]
+           tfc += subDirData[4]
+           if subDirData[0] < 0:
+                  if (subDirData[0] != -1): # TODO: need this check?
+                      return(subDirData[0], ldc, lfc, tdc, tfc)
      
     
     return 0, ldc, lfc, tdc, tfc
@@ -292,7 +291,7 @@ def search(root, query='.*', criteria={}):
 
 
 mode = 'export'
-initialDir = "/Users/manolistzagarakis/home(synced)/econ"
+initialDir = "exampleDir1"
 
 # maxTime is in seconds
 traversalCriteria = { 'maxLevels':-1,
@@ -300,13 +299,13 @@ traversalCriteria = { 'maxLevels':-1,
                       'fileinclusionPattern':"",
                       'fileexclusionPattern':"Rhistory|DS_Store",
                       'dirinclusionPattern': '',
-                      'direxclusionPattern':'stfolder|\.git',
+                      'direxclusionPattern':'stfolder|git|Y',
                       'minFileSize':-1,
                       'maxFileSize':-1,
                       'maxDirs':-1,
                       'maxFiles':-1,
                       'creationDateOp':'=',
-                      'creationDate':datetime.datetime.strptime('15/06/2025 14:30:00', '%d/%m/%Y %H:%M:%S'),
+                      'creationDate':None, #datetime.datetime.strptime('15/06/2025 14:30:00', '%d/%m/%Y %H:%M:%S'),
                       'lastModifiedDateOp':'=',
                       'lastModifiedDate':''}
 

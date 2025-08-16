@@ -315,7 +315,7 @@ class HTMLExporter(Visitor):
 
         if self.criteria.get('creationDate', None) != None:
            if finfo['creationdate'] <= self.criteria.get('creationDate', -1):
-              clrprint.clrprint(f'Ignoring FILE [{name}] due to CREATION DATE criteria file created: {finfo["creationdate"].strftime("%d/%m/%Y")}', clr='red') 
+              #clrprint.clrprint(f'Ignoring FILE [{name}] due to CREATION DATE criteria file created: {finfo["creationdate"].strftime("%d/%m/%Y")}', clr='red') 
               self.ignored()
               return(-201)
             
