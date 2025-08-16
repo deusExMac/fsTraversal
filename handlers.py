@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 import os
 import re
 import clrprint
+import datetime
 
 import random
 
@@ -303,14 +304,21 @@ class HTMLExporter(Visitor):
     def visit_file(self, name, path, level, parent, finfo={}, urlEncode=False):
 
 
-        if not nameMatches(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern', '') ):
-           clrprint.clrprint(f'Ignoring FILE [{name}] due to name criteria', clr='red')
-           self.ignored()
-           return(-200)
-
         if self.criteria.get('maxFiles', -1) > 0:
            if self.file_count >= self.criteria.get('maxFiles', -1):
               raise criteriaException(-9, 'Maximum number of FILES reached.')
+
+        if not nameMatches(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern', '') ):
+           clrprint.clrprint(f'Ignoring FILE [{name}] due to NAME criteria', clr='red')
+           self.ignored()
+           return(-200)
+
+        if self.criteria.get('creationDate', None) != None:
+           if finfo['creationdate'] <= self.criteria.get('creationDate', -1):
+              clrprint.clrprint(f'Ignoring FILE [{name}] due to CREATION DATE criteria file created: {finfo["creationdate"].strftime("%d/%m/%Y")}', clr='red') 
+              self.ignored()
+              return(-201)
+            
             
         self.file_count += 1
 
@@ -360,6 +368,7 @@ class HTMLExporter(Visitor):
     def updateCounts(self, path, ldc, lfc, tdc, tfc):
           stkbfr = []
           nPops = 0
+          clrprint.clrprint(f'Searching {path} in stack. Size:{len(self.stack)}')
           while True:  
               itm = self.stack.pop()
               nPops += 1

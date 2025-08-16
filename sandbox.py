@@ -110,8 +110,8 @@ def fsTraversal(root, lvl, visitor=None):
        else:
           # Elapsed in seconds. 
           elapsed = time.perf_counter() - timeStarted
-          if (int(elapsed)%10 == 0):
-              print(f'>>>elapsed:{elapsed:.4f}')
+          #if (int(elapsed)%10 == 0):
+          #    print(f'>>>elapsed:{elapsed:.4f}')
           if elapsed >= maxTime: 
              raise handlers.criteriaException(-10, f'Maximum time constraint of {maxTime}s reached (elapsed:{elapsed:.4f}s).')
 
@@ -176,6 +176,7 @@ def fsTraversal(root, lvl, visitor=None):
         # go into subdirectory and traverse it
         subDirData = fsTraversal(directoryPath, lvl+1, visitor)
         #clrprint.clrprint(f'>>> [{encounteredDirectory}]: #directories:{subDirData[1]} #files:{subDirData[2]}', clr='yellow')
+        print(f'{encounteredDirectory} ingored:', dH.ignored)
         dH.setLocalCounts(subDirData[1], subDirData[2], subDirData[3], subDirData[4], visitor)
         tdc += subDirData[3]
         tfc += subDirData[4]
@@ -299,7 +300,7 @@ traversalCriteria = { 'maxLevels':-1,
                       'fileinclusionPattern':"",
                       'fileexclusionPattern':"Rhistory|DS_Store",
                       'dirinclusionPattern': '',
-                      'direxclusionPattern':'stfolder|git',
+                      'direxclusionPattern':'stfolder|\.git',
                       'minFileSize':-1,
                       'maxFileSize':-1,
                       'maxDirs':-1,
