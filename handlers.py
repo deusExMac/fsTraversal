@@ -455,23 +455,29 @@ class SearchVisitor(Visitor):
             
           return(self.criteria.get(cname, default))
 
+
+
         
       def visit_file(self, name, path, level, parent, finfo={}):
             
+            if self.criteria.get('maxFiles', -1) > 0:
+               if self.file_count >= self.criteria.get('maxFiles', -1):
+                  raise criteriaException(-9, 'Maximum number of FILES reached.')
+
             matchedFileName = searchNameComplies(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern', ''), r'/\1/', False)
             if matchedFileName == '':
                self.ignored() 
                return(-200)
 
-            fileMeta = fileInfo(path)
+            #fileMeta = fileInfo(path)
                
             if self.criteria.get('minFileSize', -1) >= 0:
-               if int(fileMeta['size']) < self.criteria.get('minFileSize', -1):
+               if int(finfo['size']) < self.criteria.get('minFileSize', -1):
                    self.ignored() 
                    return(-201)
 
             if self.criteria.get('maxFileSize', -1) >= 0:
-               if int(fileMeta['size']) > self.criteria.get('maxFileSize', -1):
+               if int(finfo['size']) > self.criteria.get('maxFileSize', -1):
                    self.ignored() 
                    return(-202)
 
