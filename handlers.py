@@ -313,12 +313,23 @@ class HTMLExporter(Visitor):
            self.ignored()
            return(-200)
 
+
+        if self.criteria.get('minFileSize', -1) >= 0:
+           if int(finfo['size']) < self.criteria.get('minFileSize', -1):
+              self.ignored() 
+              return(-201)
+
+        if self.criteria.get('maxFileSize', -1) >= 0:
+           if int(finfo['size']) > self.criteria.get('maxFileSize', -1):
+              self.ignored() 
+              return(-202)    
+
+
         if self.criteria.get('creationDate', None) != None:
            if finfo['creationdate'] <= self.criteria.get('creationDate', -1):
               #clrprint.clrprint(f'Ignoring FILE [{name}] due to CREATION DATE criteria file created: {finfo["creationdate"].strftime("%d/%m/%Y")}', clr='red') 
               self.ignored()
-              return(-201)
-            
+              return(-203)
             
         self.file_count += 1
 
@@ -368,7 +379,7 @@ class HTMLExporter(Visitor):
     def updateCounts(self, path, ldc, lfc, tdc, tfc):
           stkbfr = []
           nPops = 0
-          clrprint.clrprint(f'Searching {path} in stack. Size:{len(self.stack)}')
+          #clrprint.clrprint(f'Searching {path} in stack. Size:{len(self.stack)}')
           while True:  
               itm = self.stack.pop()
               nPops += 1

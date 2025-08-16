@@ -218,8 +218,6 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
     hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, criteria)
     #hE = handlers.testhtmlEporter(dTemp, fTemp, pTemp, criteria)
 
-
-
     
     # Add starting directory to stack
     hE.stack.append({'type':'directory',
@@ -253,7 +251,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 
     clrprint.clrprint(f'\nFinished. Total file count:{hE.file_count} Total directory count:{hE.directory_count}. Ignored:{hE.nIgnored}', clr='yellow')
 
-    return(0)
+    return(res)
 
 
 
@@ -299,7 +297,7 @@ traversalCriteria = { 'maxLevels':-1,
                       'fileinclusionPattern':"",
                       'fileexclusionPattern':"Rhistory|DS_Store",
                       'dirinclusionPattern': '',
-                      'direxclusionPattern':'stfolder|git|Y',
+                      'direxclusionPattern':'stfolder|git',
                       'minFileSize':-1,
                       'maxFileSize':-1,
                       'maxDirs':-1,
