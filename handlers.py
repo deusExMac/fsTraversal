@@ -268,10 +268,7 @@ class HTMLExporter(Visitor):
                  s = stk.pop()
                  #clrprint.clrprint(f"[Collapse]: popped [{s['name']}][{s['level']}]->[{s['collapsed']}] [top:{top['name']}][{top['level']}]->[{top['collapsed']}] [newD:{newD['name']}] [{newD['level']}]", clr='maroon') 
                  if s['level'] == newD['level']:
-                    #clrprint.clrprint(f"\t[Collapse]: stopping... [{s['level']}]", clr='yellow')
-                    clrprint.clrprint(f"\t[Collapse]: Replacing subdir to [{s['name']}] with {top['html']}", clr='yellow')  
                     top['html'] = sDir
-                    clrprint.clrprint(f"\t[Collapse]: Replacing subdir to [{s['name']}] with {top['html']}", clr='yellow') 
                     s['html'] = s['html'].replace('${SUBDIRECTORY}', top['html'])
                     s['collapsed'] = True
                     stk.append(s) 
@@ -286,8 +283,7 @@ class HTMLExporter(Visitor):
                     else:
                        sDir = sDir + ' ' + s['html']
                        
-                 elif top['level'] - s['level'] == 1:
-                      clrprint.clrprint(f"\t[Collapse]: Replacing subdir to [{s['name']}]", clr='yellow')  
+                 elif top['level'] - s['level'] == 1:  
                       sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
                       top = {'type':'directory', 'collapsed':True, 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir}
                       sDir = top['html']
