@@ -230,6 +230,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
     try:
       terminationCode = -1
       res=fsTraversal(root, 1, visitor=hE)
+      #print(res)
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criteriaException. Message:', str(ce), clr='red')
       terminationCode = ce.errorCode
@@ -240,10 +241,10 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
       
     # Final merge
     clrprint.clrprint('\n\n#################################\n##    FINAL MERGE\n#################################\n', clr='yellow')
-    hE.newMERGE(stk=hE.stack)
+    hE.newMERGE(stk=hE.stack, final=True)
+  
     subD = hE.stack.pop()
 
-    
     # Saving to file
     h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', root).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(terminationCode))
     with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
@@ -290,7 +291,7 @@ def search(root, query='.*', criteria={}):
 
 def main():
    mode = 'export'
-   initialDir = "testDirectories/exampleDir3"
+   initialDir = "testDirectories/exampleDir0"
 
    # maxTime is in seconds
    traversalCriteria = { 'maxLevels':-1,

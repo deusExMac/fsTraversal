@@ -228,11 +228,31 @@ class HTMLExporter(Visitor):
         return(self.criteria.get(cname, default))
     
 
+    def emptyFile(self):
+        return(self.fileTemplate.replace('${FILELINK}', '').replace('${FILESIZE}', '').replace('${FILELASTMODIFIED}', ''))
+
+    def emptyDirectory(self):
+        return(self.dirTemplate.replace('${DIRNAME}', '').replace('${LEVEL}', '').replace('${FILELASTMODIFIED}', ''))
+
+
     # This is working!
     # TODO: Refactor and optimize this!
-    def newMERGE(self, newD={'type':'directory', 'level':0, 'name':''}, stk=None):
+    def newMERGE(self, newD={'type':'directory', 'level':0, 'name':''}, stk=None, final=False):
     
-    
+          # During final merge operation, there should always be 2 items in stack (in the following order):
+          # 2) the traversed and formatted contents of the initial root directory (a SUBDIRECTORY value)
+          # 1) the initial directory where the SUBDIRECTORY is replaced by 2)
+          # If there is only one in the stack, this means that the initial directory was empty. Hence, add one
+          # empty item into the stack. 
+          if final:
+             if len(stk) == 1:
+                top = stk.pop()
+                top['html'] = top['html'].replace('${SUBDIRECTORY}', '___')
+                stk.append(top)
+                stk.append({'type':'file', 'level':1, 'name':'<empty>','html':self.emptyFile()})
+                return
+
+                
           #clrprint.clrprint(f"Seen: [{newD['name']}] Level[{newD['level']}]", clr='maroon')
           sDir = ''
           
