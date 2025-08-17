@@ -240,9 +240,9 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
     hE.newMERGE(stk=hE.stack, final=True)
 
     
-    #
+    ################################################################################
     # Save to file
-    #
+    ################################################################################
 
     # if no directories and no files are in the initial folder,
     # generate an empty result for the SUBDIRECTORY template variable.  
@@ -298,7 +298,7 @@ def search(root, query='.*', criteria={}):
 
 def main():
    mode = 'export'
-   initialDir = "testDirectories/exampleDir3"
+   initialDir = "testDirectories/exampleDir1"
 
    # maxTime is in seconds
    traversalCriteria = { 'maxLevels':-1,
@@ -317,9 +317,8 @@ def main():
                       'lastModifiedDate':''}
 
 
-
-   # Reset timer
-   timeStarted = None
+   
+   
 
    clrprint.clrprint(f"\nStarting [{mode}] mode from root [{initialDir}] with following paramters:")
    clrprint.clrprint(f"{traversalCriteria}\n", clr='yellow')
@@ -350,7 +349,10 @@ def main():
    sys.exit(-3)
 
 
-
+# Reset timer
+# TODO: check if this is correct
+timeStarted = None
+   
 if __name__ == "__main__":
    main() 
 
