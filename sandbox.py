@@ -228,9 +228,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
                      'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', root).replace('${PATH}', root).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
 
     try:
-      
       res=fsTraversal(root, 1, visitor=hE)
-      #print(res)
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criteriaException. Message:', str(ce), clr='red')
       res = (ce.errorCode, -1, -1, hE.directory_count, hE.file_count) # TODO: check and fix this.
