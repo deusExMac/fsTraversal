@@ -288,11 +288,12 @@ def search(root, query='.*', criteria={}):
 
 # TODO: main guard here!
 
-mode = 'export'
-initialDir = "exampleDir1"
+def main():
+   mode = 'export'
+   initialDir = "exampleDir1"
 
-# maxTime is in seconds
-traversalCriteria = { 'maxLevels':-1,
+   # maxTime is in seconds
+   traversalCriteria = { 'maxLevels':-1,
                       'maxTime': -1,
                       'fileinclusionPattern':"",
                       'fileexclusionPattern':"Rhistory|DS_Store",
@@ -309,40 +310,41 @@ traversalCriteria = { 'maxLevels':-1,
 
 
 
-# Reset timer
-timeStarted = None
+   # Reset timer
+   timeStarted = None
 
-clrprint.clrprint(f"\nStarting [{mode}] mode from root [{initialDir}] with following paramters:")
-clrprint.clrprint(f"{traversalCriteria}\n", clr='yellow')
-for i in range(5):
-    clrprint.clrprint(f'[{5-i}]', clr=random.choice(['red', 'blue', 'green', 'yellow', 'purple', 'black']), end='')
-    time.sleep(1)
+   clrprint.clrprint(f"\nStarting [{mode}] mode from root [{initialDir}] with following paramters:")
+   clrprint.clrprint(f"{traversalCriteria}\n", clr='yellow')
+   for i in range(5):
+       clrprint.clrprint(f'[{5-i}]', clr=random.choice(['red', 'blue', 'green', 'yellow', 'purple', 'black']), end='')
+       time.sleep(1)
 
-print(' Started')
-time.sleep(0.3) # small delay to allow starting messages to appear (even when executed from within IDLE)
-
-
-
-
-if mode == 'export':
-   htmlExporter(initialDir, 'html/template1.html', traversalCriteria)
-elif mode == 'search':
-     while (True):
-         q = input('Give query (regular expression)>')
-         if q == '':
-            continue
-
-         if q.lower()=='eof':
-            print('terminating.') 
-            break 
-
-         search(initialDir, q,  traversalCriteria)
-
-sys.exit(-3)
+   print(' Started')
+   time.sleep(0.3) # small delay to allow starting messages to appear (even when executed from within IDLE)
 
 
 
 
+   if mode == 'export':
+      htmlExporter(initialDir, 'html/template1.html', traversalCriteria)
+   elif mode == 'search':
+        while (True):
+            q = input('Give query (regular expression)>')
+            if q == '':
+               continue
+
+            if q.lower()=='eof':
+               print('terminating.') 
+               break 
+
+            search(initialDir, q,  traversalCriteria)
+
+   sys.exit(-3)
+
+
+
+if __name__ == "__main__":
+   main() 
 
 
 
