@@ -233,7 +233,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criteriaException. Message:', str(ce), clr='red')
       terminationCode = ce.errorCode
-      res = (-100, -1, -1, -1, -1) # TODO: check and fix this.
+      res = (-100, -1, -1, hE.directory_count, hE.file_count) # TODO: check and fix this.
     else:
       terminationCode = 0  
       clrprint.clrprint('Terminated.', clr='yellow')
@@ -290,7 +290,7 @@ def search(root, query='.*', criteria={}):
 
 def main():
    mode = 'export'
-   initialDir = "exampleDir1"
+   initialDir = "testDirectories/exampleDir"
 
    # maxTime is in seconds
    traversalCriteria = { 'maxLevels':-1,
