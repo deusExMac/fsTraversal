@@ -238,15 +238,19 @@ class HTMLExporter(Visitor):
     # This is working!
     # TODO: Refactor and optimize this!
     def newMERGE(self, newD={'type':'directory', 'level':0, 'name':''}, stk=None, final=False):
-    
+
+          # TODO: is the next needed?
+          #
           # During final merge operation, there should always be 2 items in stack (in the following order):
           # 2) the traversed and formatted contents of the initial root directory (a SUBDIRECTORY value)
           # 1) the initial directory where the SUBDIRECTORY is replaced by 2)
           # If there is only one in the stack, this means that the initial directory was empty. Hence, add one
           # empty item into the stack. 
           if final:
+             print(f'----->{len(stk)}') 
              if len(stk) == 1:
                 top = stk.pop()
+                print(f'>>>>>> [{top["html"]}]')
                 top['html'] = top['html'].replace('${SUBDIRECTORY}', '___')
                 stk.append(top)
                 stk.append({'type':'file', 'level':1, 'name':'<empty>','html':self.emptyFile()})

@@ -291,7 +291,7 @@ def search(root, query='.*', criteria={}):
 
 def main():
    mode = 'export'
-   initialDir = "testDirectories/exampleDir0"
+   initialDir = "testDirectories/exampleDir3"
 
    # maxTime is in seconds
    traversalCriteria = { 'maxLevels':-1,
