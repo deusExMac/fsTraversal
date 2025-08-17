@@ -228,29 +228,38 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
                      'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', root).replace('${PATH}', root).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
 
     try:
-      terminationCode = -1
+      
       res=fsTraversal(root, 1, visitor=hE)
       #print(res)
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criteriaException. Message:', str(ce), clr='red')
-      terminationCode = ce.errorCode
-      res = (-100, -1, -1, hE.directory_count, hE.file_count) # TODO: check and fix this.
+      res = (ce.errorCode, -1, -1, hE.directory_count, hE.file_count) # TODO: check and fix this.
     else:
-      terminationCode = 0  
       clrprint.clrprint('Terminated.', clr='yellow')
       
     # Final merge
     clrprint.clrprint('\n\n#################################\n##    FINAL MERGE\n#################################\n', clr='yellow')
     hE.newMERGE(stk=hE.stack, final=True)
-  
-    subD = hE.stack.pop()
 
-    # Saving to file
-    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', root).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(terminationCode))
+    
+    #
+    # Save to file
+    #
+
+    # if no directories and no files are in the initial folder,
+    # generate an empty result for the SUBDIRECTORY template variable.  
+    if res[3] == 0 and res[4] == 0:
+       subD = {'html': ''}
+    else:   
+       subD = hE.stack.pop()
+
+    
+    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', root).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(res[0]))
     with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
          sf.write(h)
 
     clrprint.clrprint(f'\nFinished. Total file count:{hE.file_count} Total directory count:{hE.directory_count}. Ignored:{hE.nIgnored}', clr='yellow')
+
 
     return(res)
 

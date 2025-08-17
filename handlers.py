@@ -228,34 +228,10 @@ class HTMLExporter(Visitor):
         return(self.criteria.get(cname, default))
     
 
-    def emptyFile(self):
-        return(self.fileTemplate.replace('${FILELINK}', '').replace('${FILESIZE}', '').replace('${FILELASTMODIFIED}', ''))
-
-    def emptyDirectory(self):
-        return(self.dirTemplate.replace('${DIRNAME}', '').replace('${LEVEL}', '').replace('${FILELASTMODIFIED}', ''))
-
 
     # This is working!
     # TODO: Refactor and optimize this!
     def newMERGE(self, newD={'type':'directory', 'level':0, 'name':''}, stk=None, final=False):
-
-          # TODO: is the next needed?
-          #
-          # During final merge operation, there should always be 2 items in stack (in the following order):
-          # 2) the traversed and formatted contents of the initial root directory (a SUBDIRECTORY value)
-          # 1) the initial directory where the SUBDIRECTORY is replaced by 2)
-          # If there is only one in the stack, this means that the initial directory was empty. Hence, add one
-          # empty item into the stack. 
-          if final:
-             print(f'----->{len(stk)}') 
-             if len(stk) == 1:
-                top = stk.pop()
-                print(f'>>>>>> [{top["html"]}]')
-                top['html'] = top['html'].replace('${SUBDIRECTORY}', '___')
-                stk.append(top)
-                stk.append({'type':'file', 'level':1, 'name':'<empty>','html':self.emptyFile()})
-                return
-
                 
           #clrprint.clrprint(f"Seen: [{newD['name']}] Level[{newD['level']}]", clr='maroon')
           sDir = ''
@@ -358,7 +334,7 @@ class HTMLExporter(Visitor):
         self.file_count += 1
 
         nF={'type':'file',  'collapsed':False, 'level':level, 'name':path, 'dname':name, 'html':''}
-        nF['html'] = self.fileTemplate.replace('${FILELINK}', makeHtmlLink(path, name, False)).replace('${FILENAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level))
+        nF['html'] = self.fileTemplate.replace('${FILELINK}', makeHtmlLink(path, name, False)).replace('${FILENAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level)).replace('${FILESIZE}', str(finfo['size'])).replace('${FILELASTMODIFIED}', finfo['lastmodified'].strftime('%d/%m/%Y %H:%M:%S'))
         filename, fileExtension = os.path.splitext(path)
         nF['html'] = nF['html'].replace('${FILEEXTENSION}', fileExtension[1:])
 
