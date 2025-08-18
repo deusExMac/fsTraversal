@@ -9,7 +9,7 @@ import clrprint
 
 
 
-from utilities import fontColorPalette, normalizedPathJoin, nameComplies, searchNameComplies, fileCreationDate, fileInfo, strToBytes
+from utilities import fontColorPalette, normalizedPathJoin, nameComplies, searchNameComplies, fileCreationDate, fileInfo, strToBytes, getCurrentDateTime
 import handlers
 
 
@@ -233,7 +233,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
       clrprint.clrprint('Terminated due to criteriaException. Message:', str(ce), clr='red')
       res = (ce.errorCode, -1, -1, hE.directory_count, hE.file_count) # TODO: check and fix this.
     else:
-      clrprint.clrprint('Terminated.', clr='yellow')
+      clrprint.clrprint(f'[{getCurrentDateTime()}] Terminated.', clr='yellow')
       
     # Final merge
     clrprint.clrprint('\n\n#################################\n##    FINAL MERGE\n#################################\n', clr='yellow')
@@ -256,7 +256,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
     with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
          sf.write(h)
 
-    clrprint.clrprint(f'\nFinished. Total file count:{hE.file_count} Total directory count:{hE.directory_count}. Ignored:{hE.nIgnored}', clr='yellow')
+    clrprint.clrprint(f'\n[{getCurrentDateTime()}] Finished. Total file count:{hE.file_count} Total directory count:{hE.directory_count}. Ignored:{hE.nIgnored}', clr='yellow')
 
 
     return(res)
@@ -322,12 +322,12 @@ def main():
 
    clrprint.clrprint(f"\nStarting [{mode}] mode from root [{initialDir}] with following paramters:")
    clrprint.clrprint(f"{traversalCriteria}\n", clr='yellow')
-   for i in range(5):
+   for i in range(6):
        clrprint.clrprint(f'[{5-i}]', clr=random.choice(['red', 'blue', 'green', 'yellow', 'purple', 'black']), end='')
        time.sleep(1)
 
-   print(' Started')
-   time.sleep(0.3) # small delay to allow starting messages to appear (even when executed from within IDLE)
+   print(f'\n[{getCurrentDateTime()}] Started')
+   time.sleep(0.5) # small delay to allow starting messages to appear (even when executed from within IDLE)
 
 
 
