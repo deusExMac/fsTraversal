@@ -478,6 +478,13 @@ class SearchVisitor(Visitor):
                    self.ignored() 
                    return(-202)
 
+            # TODO: check this
+            if self.criteria.get('creationDate', None) != None:
+               if finfo['creationdate'] <= self.criteria.get('creationDate', -1):
+                  #clrprint.clrprint(f'Ignoring FILE [{name}] due to CREATION DATE criteria file created: {finfo["creationdate"].strftime("%d/%m/%Y")}', clr='red') 
+                  self.ignored()
+                  return(-203) 
+
             self.file_count += 1
 
             clrprint.clrprint('\t[F] ', clr='green', end='')

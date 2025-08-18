@@ -301,12 +301,12 @@ def main():
    initialDir = "testDirectories/exampleDir0"
 
    # maxTime is in seconds
-   traversalCriteria = { 'maxLevels':2,
+   traversalCriteria = { 'maxLevels':-1,
                       'maxTime': -1,
-                      'fileinclusionPattern':"",
-                      'fileexclusionPattern':"Rhistory|DS_Store",
+                      'fileinclusionPattern':r"",
+                      'fileexclusionPattern':"",
                       'dirinclusionPattern': '',
-                      'direxclusionPattern':'stfolder|git',
+                      'direxclusionPattern':'',
                       'minFileSize':-1,
                       'maxFileSize':-1,
                       'maxDirs':-1,
