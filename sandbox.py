@@ -180,8 +180,8 @@ def fsTraversal(root, lvl, visitor=None):
            tdc += subDirData[3]
            tfc += subDirData[4]
            if subDirData[0] < 0:
-                  if (subDirData[0] != -1): # TODO: need this check?
-                      return(subDirData[0], ldc, lfc, tdc, tfc)
+              #if (subDirData[0] != -1): # TODO: need this check?
+              return(subDirData[0], ldc, lfc, tdc, tfc)
      
     
     return 0, ldc, lfc, tdc, tfc
@@ -301,7 +301,7 @@ def main():
    initialDir = "testDirectories/exampleDir0"
 
    # maxTime is in seconds
-   traversalCriteria = { 'maxLevels':-1,
+   traversalCriteria = { 'maxLevels':2,
                       'maxTime': -1,
                       'fileinclusionPattern':"",
                       'fileexclusionPattern':"Rhistory|DS_Store",
@@ -333,7 +333,7 @@ def main():
 
 
    if mode == 'export':
-      htmlExporter(initialDir, 'html/template6.tmpl', traversalCriteria)
+      htmlExporter(initialDir, 'html/template1.tmpl', traversalCriteria)
    elif mode == 'search':
         while (True):
             q = input('Give query (regular expression)>')
