@@ -210,7 +210,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 
     if not os.path.isdir(root):
        clrprint.clrprint(f'[Error] Not such directory [{root}]', clr="red")
-       return(-3)
+       return((-2, 0, 0, 0, 0))
 
     dTemp, fTemp, pTemp = readHTMLTemplateFile(templateFile)
 
@@ -298,7 +298,7 @@ def search(root, query='.*', criteria={}):
 
 def main():
    mode = 'export'
-   initialDir = "testDirectories/exampleDir3"
+   initialDir = "testDirectories/exampleDir0"
 
    # maxTime is in seconds
    traversalCriteria = { 'maxLevels':-1,
@@ -333,7 +333,7 @@ def main():
 
 
    if mode == 'export':
-      htmlExporter(initialDir, 'html/template1.html', traversalCriteria)
+      htmlExporter(initialDir, 'html/template6.tmpl', traversalCriteria)
    elif mode == 'search':
         while (True):
             q = input('Give query (regular expression)>')
