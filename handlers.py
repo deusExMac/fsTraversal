@@ -464,26 +464,28 @@ class SearchVisitor(Visitor):
 
             matchedFileName = searchNameComplies(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern', ''), r'/\1/', False)
             if matchedFileName == '':
+               #clrprint.clrprint(f'File ignored [{path}]', clr='red')
                self.ignored() 
-               return(-200)
+               return(0)
 
-               
+            #clrprint.clrprint(f'File MATCHED [{path}]', clr='green')
+            
             if self.criteria.get('minFileSize', -1) >= 0:
                if int(finfo['size']) < self.criteria.get('minFileSize', -1):
                    self.ignored() 
-                   return(-201)
+                   return(0)
 
             if self.criteria.get('maxFileSize', -1) >= 0:
                if int(finfo['size']) > self.criteria.get('maxFileSize', -1):
                    self.ignored() 
-                   return(-202)
+                   return(0)
 
             # TODO: check this
             if self.criteria.get('creationDate', None) != None:
                if finfo['creationdate'] <= self.criteria.get('creationDate', -1):
-                  #clrprint.clrprint(f'Ignoring FILE [{name}] due to CREATION DATE criteria file created: {finfo["creationdate"].strftime("%d/%m/%Y")}', clr='red') 
+                  clrprint.clrprint(f'Ignoring FILE [{name}] due to CREATION DATE criteria file created: {finfo["creationdate"].strftime("%d/%m/%Y")}', clr='red') 
                   self.ignored()
-                  return(-203) 
+                  return(0) 
 
             self.file_count += 1
 
@@ -506,7 +508,7 @@ class SearchVisitor(Visitor):
             matchedDirName = searchNameComplies(name, self.criteria.get('direxclusionPattern', ''), self.criteria.get('dirinclusionPattern', ''), r'/\1/', False)
             if matchedDirName == '':
                self.ignored()  
-               return(-204)
+               return(0)
 
             self.directory_count += 1
             clrprint.clrprint('\t[D] ', clr='red', end='')

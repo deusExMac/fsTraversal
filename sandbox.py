@@ -279,7 +279,7 @@ def search(root, query='.*', criteria={}):
 
     clrprint.clrprint('Search results:', clr='maroon')
     try:
-      fsTraversal(initialDir, 1, visitor=sV)
+      fsTraversal(root, 1, visitor=sV)
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
     
@@ -297,7 +297,7 @@ def search(root, query='.*', criteria={}):
 # TODO: main guard here!
 
 def main():
-   mode = 'export'
+   mode = 'search'
    initialDir = "testDirectories/exampleDir0"
 
    # maxTime is in seconds
