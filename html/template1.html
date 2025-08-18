@@ -314,7 +314,7 @@ ${INTROTEXT}</div>
           ${INITIALDIRECTORY} <font color="red">[Termination code: ${TERMINATIONCODE}]</font> (${LNDIRS} - ${LNFILES} / ${NDIRS} - ${NFILES})
       </summary>
         <ul>
-           ${SUBDIRECTORY}
+           ${SUBDIRECTORY} <!-- This is only the contents of initial directory -->
         </ul>
       </details>
     </li>
@@ -324,14 +324,11 @@ ${INTROTEXT}</div>
 
 </div>
 
+<!-- Example of how to use ${TREE} which is the complete traversal
+     result, which includes initialdirectory. 
+-->
 <ul class="tree">
-  
-    
-      
-        ${TREE}
-      
-    
-  
+  ${TREE}
 </ul>
 
 
