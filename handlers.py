@@ -12,7 +12,7 @@ import random
 from collections import deque
 
 
-from utilities import searchNameComplies, printPath, fileInfo, strToBytes
+from utilities import searchNameComplies, printPath, fileInfo, strToBytes, normalizeDateTime
 
 
 
@@ -324,9 +324,12 @@ class HTMLExporter(Visitor):
 
         if self.criteria.get('creationDate', '') != '':
            try:
-              # make sure datetime has date and time part  
-              targetDateTime = datetime.datetime.strptime(parse(self.criteria.get('creationDate', '')).date().strftime('%m/%d/%Y') + ' ' + parse(self.criteria.get('creationDate', '')).time().strftime('%H:%M:%S'), '%d/%m/%Y %H:%M:%S') 
-              expr = f"finfo['creationdate'] {self.criteria.get('creationDateOp', '=')} targetDateTime"
+              # make sure datetime has date and time part
+              #v1=normalizeDateTime(self.criteria.get('creationDate', ''))
+              
+              
+              #targetDateTime = datetime.datetime.strptime(parse(self.criteria.get('creationDate', '')).date().strftime('%d/%m/%Y') + ' ' + parse(self.criteria.get('creationDate', '')).time().strftime('%H:%M:%S'), '%d/%m/%Y %H:%M:%S') 
+              expr = f"finfo['creationdate'].date() {self.criteria.get('creationDateOp', '==')} normalizeDateTime(self.criteria.get('creationDate', ''))"
               #clrprint.clrprint(f'\tExecuting {expr}', clr='yellow')
               if not eval(expr):
                  clrprint.clrprint(f'Ignoring FILE [{name}] due to CREATION DATE criteria file created: {finfo["creationdate"].strftime("%d/%m/%Y")}', clr='red') 

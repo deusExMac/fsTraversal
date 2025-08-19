@@ -312,7 +312,7 @@ def main():
                       'maxDirs':-1,
                       'maxFiles':-1,
                       'creationDateOp':'>',
-                      'creationDate':'',
+                      'creationDate':'21/08/2025',
                       'lastModifiedDateOp':'==',
                       'lastModifiedDate':''}
 

@@ -11,7 +11,7 @@ import random
 
 import urllib.parse
 import datetime
-
+from dateutil.parser import parse
 
 import clrprint
 import itertools
@@ -41,6 +41,10 @@ fontColorPalette = ['#4287f5', '#801408', '#08259c', '#4560d1', '#0a690a', '#9c5
 
 def getCurrentDateTime(tz=None):
     return(datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S'))
+
+
+def normalizeDateTime(td):
+    return(parse(td).date())
 
 
 # Prints path formated so that 
