@@ -8,6 +8,9 @@ import datetime
 import clrprint
 
 import json
+import argparse
+
+
 
 from utilities import fontColorPalette, normalizedPathJoin, nameComplies, searchNameComplies, fileCreationDate, fileInfo, strToBytes, getCurrentDateTime
 import handlers
@@ -297,6 +300,47 @@ def search(root, query='.*', criteria={}):
 # TODO: main guard here!
 
 def main():
+
+   cmdArgParser = argparse.ArgumentParser(description='Command line arguments', add_help=False)
+   # Configuration file
+   cmdArgParser.add_argument('-c', '--config', default="fsTraversal.conf")
+    
+   # Directory traversal related and criteria
+   cmdArgParser.add_argument('-d', '--directory', default="exampleDir")
+   cmdArgParser.add_argument('-NR', '--nonrecursive', action='store_true')
+   cmdArgParser.add_argument('-xf', '--fileexclusionPattern', default="")
+   cmdArgParser.add_argument('-if', '--fileinclusionPattern', default="")
+   cmdArgParser.add_argument('-xd', '--direxclusionPattern', default="")
+   cmdArgParser.add_argument('-id', '--dirinclusionPattern', default="")
+   cmdArgParser.add_argument('-L', '--maxLevels', default=-1)
+   cmdArgParser.add_argument('-mns', '--minFileSize',  default=-1)
+   cmdArgParser.add_argument('-mxs', '--maxFileSize',  default=-1)
+
+   cmdArgParser.add_argument('-nd', '--maxDirs',  default=-1)
+   cmdArgParser.add_argument('-nf', '--maxFiles',  default=-1)
+
+   # SEARCH functionality related
+   # If set, don't search for files. 
+   cmdArgParser.add_argument('-NF', '--nofiles', action='store_true')
+   cmdArgParser.add_argument('-ND', '--nodirs', action='store_true')
+   # If set, don't search for directories
+   cmdArgParser.add_argument('-Y', '--nodirectories', action='store_true')
+
+  
+   # REMAINDER is searchquery. Search query is interpreted as a regular expression
+   cmdArgParser.add_argument('searchquery', nargs=argparse.REMAINDER, default=[])
+
+   cmdArgParser.add_argument('-t', '--htmltemplate', default="html/template1.html")
+   cmdArgParser.add_argument('-o', '--outputhtmlfile', default="index.html")
+   cmdArgParser.add_argument('-s', '--cssfile', default="html/style.css")
+   cmdArgParser.add_argument('-i', '--introduction', default="")
+   cmdArgParser.add_argument('-tl', '--title', default="")
+   cmdArgParser.add_argument('-e', '--urlencode', action='store_true') 
+
+   knownArgs, unknownArgs = cmdArgParser.parse_known_args()
+   args = vars(knownArgs)
+   print(f'Command line arguments: {args}')  
+   
    mode = 'search'
    initialDir = "testDirectories/exampleDir0"
 
