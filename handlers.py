@@ -344,6 +344,11 @@ class HTMLExporter(Visitor):
         nF={'type':'file',  'collapsed':False, 'level':level, 'name':path, 'dname':name, 'html':''}
         nF['html'] = self.fileTemplate.replace('${FILELINK}', makeHtmlLink(path, name, False)).replace('${FILENAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level)).replace('${FILESIZE}', str(finfo['size'])).replace('${FILELASTMODIFIED}', finfo['lastmodified'].strftime('%d/%m/%Y %H:%M:%S')).replace('${FILECREATED}', finfo['creationdate'].strftime('%d/%m/%Y %H:%M:%S'))
         filename, fileExtension = os.path.splitext(path)
+        
+        if fileExtension == '':
+           fileExtension = '.ukn'
+        
+        # fileExtension starts with a dot
         nF['html'] = nF['html'].replace('${FILEEXTENSION}', fileExtension[1:])
 
         # Add to stack

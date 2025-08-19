@@ -341,7 +341,7 @@ def main():
    args = vars(knownArgs)
    print(f'Command line arguments: {args}')  
    
-   mode = 'search'
+   mode = 'export'
    initialDir = "testDirectories/exampleDir0"
 
    # maxTime is in seconds
