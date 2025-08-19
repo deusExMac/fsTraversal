@@ -216,7 +216,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 
     # Create visitor
     hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, criteria)
-    #hE = handlers.testhtmlEporter(dTemp, fTemp, pTemp, criteria)
+    
 
     
     # Add starting directory to stack
@@ -277,7 +277,7 @@ def search(root, query='.*', criteria={}):
     criteria['dirinclusionPattern'] = fr'({query})'
     sV = handlers.SearchVisitor(query, criteria)
 
-    clrprint.clrprint('Search results:', clr='maroon')
+    clrprint.clrprint(f'Search results for {query}:', clr='maroon')
     try:
       fsTraversal(root, 1, visitor=sV)
     except handlers.criteriaException as ce:

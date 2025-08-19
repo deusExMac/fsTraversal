@@ -143,7 +143,7 @@ class Directory(Visitable):
         if status < 0:
            self.ignored = True 
 
-    # TODO: is this correct?
+   
     def setLocalCounts(self, ldc, lfc, tdc, tfc, visitor):
 
         if self.ignored:
@@ -160,22 +160,11 @@ class Directory(Visitable):
 #
 #
 #
-# Actual visitors
+# Actual visitor implementations
 #
 #
 #
 #####################################################################
-
-
-
-
-#####################################################################
-#
-#     Simple visitors. 
-#
-#####################################################################
-
-
 
 
 
@@ -417,24 +406,7 @@ class HTMLExporter(Visitor):
               self.stack.append(i)
               
 
-#####################################################################
-#
-#     Testing - First version.
-#
-#####################################################################
-
-# Next class for testing purposes only
-# For testing purposes only to implement local file/directory count
-
-
-class testhtmlEporter(HTMLExporter):
-
-      def __init__(self, dirT, fileT, pageT, criteria):
-          super().__init__(dirT, fileT, pageT, criteria)
-
-
-      
-          
+     
           
 
 
@@ -444,7 +416,7 @@ class testhtmlEporter(HTMLExporter):
 
 #####################################################################
 #
-#     Searching - First version.
+#     Search
 #
 #####################################################################
 
@@ -488,11 +460,10 @@ class SearchVisitor(Visitor):
             matchedFileName = searchNameComplies(name, self.criteria.get('fileexclusionPattern', ''),
                                                  self.criteria.get('fileinclusionPattern', ''), r'/\1/', False)
             if matchedFileName == '':
-               #clrprint.clrprint(f'File ignored [{path}]', clr='red')
                self.ignored() 
                return(0)
 
-            #clrprint.clrprint(f'File MATCHED [{path}]', clr='green')
+            
             
             if self.criteria.get('minFileSize', -1) >= 0:
                if int(finfo['size']) < self.criteria.get('minFileSize', -1):
@@ -558,6 +529,7 @@ class SearchVisitor(Visitor):
                return(0)
 
             self.directory_count += 1
+            
             clrprint.clrprint('\t[D] ', clr='red', end='')
             self.matches.append(path)
             printPath(parent, matchedDirName, '/', 'red')
