@@ -275,7 +275,7 @@ def search(root, query='.*', criteria={}):
     
     criteria['fileinclusionPattern'] = '(' + query + ')'
     criteria['dirinclusionPattern'] = '(' + query + ')'
-    sV = handlers.SearchVisitor('(a)', criteria)
+    sV = handlers.SearchVisitor(query, criteria)
 
     clrprint.clrprint('Search results:', clr='maroon')
     try:
@@ -297,7 +297,7 @@ def search(root, query='.*', criteria={}):
 # TODO: main guard here!
 
 def main():
-   mode = 'search'
+   mode = 'export'
    initialDir = "testDirectories/exampleDir0"
 
    # maxTime is in seconds
@@ -311,9 +311,9 @@ def main():
                       'maxFileSize':-1,
                       'maxDirs':-1,
                       'maxFiles':-1,
-                      'creationDateOp':'=',
-                      'creationDate':None, #datetime.datetime.strptime('15/06/2025 14:30:00', '%d/%m/%Y %H:%M:%S'),
-                      'lastModifiedDateOp':'=',
+                      'creationDateOp':'>',
+                      'creationDate':'1/1/2025',
+                      'lastModifiedDateOp':'==',
                       'lastModifiedDate':''}
 
 

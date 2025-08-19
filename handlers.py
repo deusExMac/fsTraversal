@@ -4,6 +4,7 @@ import os
 import re
 import clrprint
 import datetime
+from dateutil.parser import parse
 
 import random
 
@@ -321,16 +322,24 @@ class HTMLExporter(Visitor):
               return(-202)    
 
 
-        if self.criteria.get('creationDate', None) != None:
-           if finfo['creationdate'] <= self.criteria.get('creationDate', -1):
-              #clrprint.clrprint(f'Ignoring FILE [{name}] due to CREATION DATE criteria file created: {finfo["creationdate"].strftime("%d/%m/%Y")}', clr='red') 
-              self.ignored()
-              return(-203)
-            
+        if self.criteria.get('creationDate', '') != '':
+           try:
+              # make sure datetime has date and time part  
+              targetDateTime = datetime.datetime.strptime(parse(self.criteria.get('creationDate', '')).date().strftime('%m/%d/%Y') + ' ' + parse(self.criteria.get('creationDate', '')).time().strftime('%H:%M:%S'), '%d/%m/%Y %H:%M:%S') 
+              expr = f"finfo['creationdate'] {self.criteria.get('creationDateOp', '=')} targetDateTime"
+              #clrprint.clrprint(f'\tExecuting {expr}', clr='yellow')
+              if not eval(expr):
+                 clrprint.clrprint(f'Ignoring FILE [{name}] due to CREATION DATE criteria file created: {finfo["creationdate"].strftime("%d/%m/%Y")}', clr='red') 
+                 self.ignored()
+                 return(-203)
+           except Exception as dateEx:
+                 print(f"Invalid date [{self.criteria.get('creationDate', '')}]. Ignored CREATIONDATE constraint. Message:", str(dateEx))
+                 
+           
         self.file_count += 1
 
         nF={'type':'file',  'collapsed':False, 'level':level, 'name':path, 'dname':name, 'html':''}
-        nF['html'] = self.fileTemplate.replace('${FILELINK}', makeHtmlLink(path, name, False)).replace('${FILENAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level)).replace('${FILESIZE}', str(finfo['size'])).replace('${FILELASTMODIFIED}', finfo['lastmodified'].strftime('%d/%m/%Y %H:%M:%S'))
+        nF['html'] = self.fileTemplate.replace('${FILELINK}', makeHtmlLink(path, name, False)).replace('${FILENAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level)).replace('${FILESIZE}', str(finfo['size'])).replace('${FILELASTMODIFIED}', finfo['lastmodified'].strftime('%d/%m/%Y %H:%M:%S')).replace('${FILECREATED}', finfo['creationdate'].strftime('%d/%m/%Y %H:%M:%S'))
         filename, fileExtension = os.path.splitext(path)
         nF['html'] = nF['html'].replace('${FILEEXTENSION}', fileExtension[1:])
 
