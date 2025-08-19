@@ -324,13 +324,10 @@ class HTMLExporter(Visitor):
 
         if self.criteria.get('creationDate', '') != '':
            try:
-              # make sure datetime has date and time part
-              #v1=normalizeDateTime(self.criteria.get('creationDate', ''))
-              
-              
-              #targetDateTime = datetime.datetime.strptime(parse(self.criteria.get('creationDate', '')).date().strftime('%d/%m/%Y') + ' ' + parse(self.criteria.get('creationDate', '')).time().strftime('%H:%M:%S'), '%d/%m/%Y %H:%M:%S') 
+              if self.criteria.get('creationDateOp', '==') == '=':
+                 clrprint.clrprint(f"[WARNING] Did you mean == (seen {self.criteria.get('creationDateOp', '==')}")
+                 
               expr = f"finfo['creationdate'].date() {self.criteria.get('creationDateOp', '==')} normalizeDateTime(self.criteria.get('creationDate', ''))"
-              #clrprint.clrprint(f'\tExecuting {expr}', clr='yellow')
               if not eval(expr):
                  clrprint.clrprint(f'Ignoring FILE [{name}] due to CREATION DATE criteria file created: {finfo["creationdate"].strftime("%d/%m/%Y")}', clr='red') 
                  self.ignored()
@@ -338,7 +335,21 @@ class HTMLExporter(Visitor):
            except Exception as dateEx:
                  print(f"Invalid date [{self.criteria.get('creationDate', '')}]. Ignored CREATIONDATE constraint. Message:", str(dateEx))
                  
-           
+
+        if self.criteria.get('lastModifiedDate', '') != '':
+           try:
+              if self.criteria.get('lastModifiedDateOp', '==') == '=':
+                 clrprint.clrprint(f"[WARNING] Did you mean == (seen {self.criteria.get('lastModifiedDateOp', '==')}")
+                 
+              expr = f"finfo['lastmodified'].date() {self.criteria.get('lastModifiedDateOp', '==')} normalizeDateTime(self.criteria.get('lastModifiedDate', ''))"
+              if not eval(expr):
+                 clrprint.clrprint(f'Ignoring FILE [{name}] due to MODIFIED DATE criteria file created: {finfo["lastmodified"].strftime("%d/%m/%Y")}', clr='red') 
+                 self.ignored()
+                 return(-203)
+           except Exception as dateEx:
+                 print(f"Invalid date [{self.criteria.get('lastModifiedDate', '')}]. Ignored MODIFIEDDATE constraint. Message:", str(dateEx))
+
+                 
         self.file_count += 1
 
         nF={'type':'file',  'collapsed':False, 'level':level, 'name':path, 'dname':name, 'html':''}
@@ -492,12 +503,35 @@ class SearchVisitor(Visitor):
                    self.ignored() 
                    return(0)
 
-            # TODO: check this
-            if self.criteria.get('creationDate', None) != None:
-               if finfo['creationdate'] <= self.criteria.get('creationDate', -1):
-                  clrprint.clrprint(f'Ignoring FILE [{name}] due to CREATION DATE criteria file created: {finfo["creationdate"].strftime("%d/%m/%Y")}', clr='red') 
-                  self.ignored()
-                  return(0) 
+            if self.criteria.get('creationDate', '') != '':
+               try:
+                 if self.criteria.get('creationDateOp', '==') == '=':
+                    clrprint.clrprint(f"[WARNING] Did you mean == (seen {self.criteria.get('creationDateOp', '==')}")
+                 
+                 expr = f"finfo['creationdate'].date() {self.criteria.get('creationDateOp', '==')} normalizeDateTime(self.criteria.get('creationDate', ''))"
+                 if not eval(expr):
+                    clrprint.clrprint(f'Ignoring FILE [{name}] due to CREATION DATE criteria file created: {finfo["creationdate"].strftime("%d/%m/%Y")}', clr='red') 
+                    self.ignored()
+                    return(0)
+               except Exception as dateEx:
+                    print(f"Invalid date [{self.criteria.get('creationDate', '')}]. Ignored CREATIONDATE constraint. Message:", str(dateEx))
+                 
+
+            if self.criteria.get('lastModifiedDate', '') != '':
+               try:
+                 if self.criteria.get('lastModifiedDateOp', '==') == '=':
+                    clrprint.clrprint(f"[WARNING] Did you mean == (seen {self.criteria.get('lastModifiedDateOp', '==')}")
+                 
+                 expr = f"finfo['lastmodified'].date() {self.criteria.get('lastModifiedDateOp', '==')} normalizeDateTime(self.criteria.get('lastModifiedDate', ''))"
+                 if not eval(expr):
+                    clrprint.clrprint(f'Ignoring FILE [{name}] due to MODIFIED DATE criteria file created: {finfo["lastmodified"].strftime("%d/%m/%Y")}', clr='red') 
+                    self.ignored()
+                    return(0)
+                
+               except Exception as dateEx:
+                 print(f"Invalid date [{self.criteria.get('lastModifiedDate', '')}]. Ignored MODIFIEDDATE constraint. Message:", str(dateEx))
+
+
 
             self.file_count += 1
 

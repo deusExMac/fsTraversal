@@ -273,7 +273,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 @timeit  
 def search(root, query='.*', criteria={}):
     
-    criteria['fileinclusionPattern'] = '(' + query + ')'
+    criteria['fileinclusionPattern'] = fr'({query})'
     criteria['dirinclusionPattern'] = '(' + query + ')'
     sV = handlers.SearchVisitor(query, criteria)
 
@@ -284,7 +284,7 @@ def search(root, query='.*', criteria={}):
       clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
     
 
-    clrprint.clrprint(f'\nTotal of {sV.directory_count} directories and {sV.file_count} files found. Ignored:{sV.nIgnored}\n', clr='maroon')
+    clrprint.clrprint(f'\nFound {sV.file_count} files and {sV.directory_count} directories. Ignored:{sV.nIgnored}\n', clr='maroon')
     return
 
 
@@ -297,7 +297,7 @@ def search(root, query='.*', criteria={}):
 # TODO: main guard here!
 
 def main():
-   mode = 'export'
+   mode = 'search'
    initialDir = "testDirectories/exampleDir0"
 
    # maxTime is in seconds
@@ -312,8 +312,8 @@ def main():
                       'maxDirs':-1,
                       'maxFiles':-1,
                       'creationDateOp':'>',
-                      'creationDate':'21/08/2025',
-                      'lastModifiedDateOp':'==',
+                      'creationDate':'',
+                      'lastModifiedDateOp':'>',
                       'lastModifiedDate':''}
 
 
