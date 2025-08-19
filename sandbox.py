@@ -274,7 +274,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 def search(root, query='.*', criteria={}):
     
     criteria['fileinclusionPattern'] = fr'({query})'
-    criteria['dirinclusionPattern'] = '(' + query + ')'
+    criteria['dirinclusionPattern'] = fr'({query})'
     sV = handlers.SearchVisitor(query, criteria)
 
     clrprint.clrprint('Search results:', clr='maroon')
@@ -285,7 +285,7 @@ def search(root, query='.*', criteria={}):
     
 
     clrprint.clrprint(f'\nFound {sV.file_count} files and {sV.directory_count} directories. Ignored:{sV.nIgnored}\n', clr='maroon')
-    return
+    return(0, sV.directory_count, sV.file_count, sV.nIgnored)
 
 
 
@@ -336,7 +336,7 @@ def main():
       htmlExporter(initialDir, 'html/template1.tmpl', traversalCriteria)
    elif mode == 'search':
         while (True):
-            q = input('Give query (regular expression)>')
+            q = input('Give query (regular expression - use (?i:<matching pattern>) for case sensitive search)> ')
             if q == '':
                continue
 

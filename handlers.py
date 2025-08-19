@@ -478,14 +478,15 @@ class SearchVisitor(Visitor):
 
 
 
-        
+      # TODO: change all finfo[] expressions with .get()  
       def visit_file(self, name, path, level, parent, finfo={}):
             
             if self.criteria.get('maxFiles', -1) > 0:
                if self.file_count >= self.criteria.get('maxFiles', -1):
                   raise criteriaException(-9, 'Maximum number of FILES reached.')
 
-            matchedFileName = searchNameComplies(name, self.criteria.get('fileexclusionPattern', ''), self.criteria.get('fileinclusionPattern', ''), r'/\1/', False)
+            matchedFileName = searchNameComplies(name, self.criteria.get('fileexclusionPattern', ''),
+                                                 self.criteria.get('fileinclusionPattern', ''), r'/\1/', False)
             if matchedFileName == '':
                #clrprint.clrprint(f'File ignored [{path}]', clr='red')
                self.ignored() 
