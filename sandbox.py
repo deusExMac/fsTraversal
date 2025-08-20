@@ -178,15 +178,16 @@ def fsTraversal(root, lvl, visitor=None):
         if not dH.ignored:
            ldc += 1
            tdc += 1 
-        
-           # Since not ignored, go into subdirectory and traverse it
-           subDirData = fsTraversal(directoryPath, lvl+1, visitor)
-           dH.setLocalCounts(subDirData[1], subDirData[2], subDirData[3], subDirData[4], visitor)
-           tdc += subDirData[3]
-           tfc += subDirData[4]
-           if subDirData[0] < 0:
-              #if (subDirData[0] != -1): # TODO: need this check?
-              return(subDirData[0], ldc, lfc, tdc, tfc)
+
+           if not visitor.getCriterium('nonRecursive', False):
+              # Since not ignored, go into subdirectory and traverse it
+              subDirData = fsTraversal(directoryPath, lvl+1, visitor)
+              dH.setLocalCounts(subDirData[1], subDirData[2], subDirData[3], subDirData[4], visitor)
+              tdc += subDirData[3]
+              tfc += subDirData[4]
+              if subDirData[0] < 0:
+                 #if (subDirData[0] != -1): # TODO: need this check?
+                 return(subDirData[0], ldc, lfc, tdc, tfc)
      
     
     return 0, ldc, lfc, tdc, tfc
@@ -422,7 +423,7 @@ def main():
 
 
 
-
+  
 
 
 
@@ -436,10 +437,11 @@ def main():
    time.sleep(0.5) # small delay to allow starting messages to appear (even when executed from within IDLE)
 
 
+   #sys.exit(-3)  
 
 
    if mode == 'export':
-      htmlExporter(initialDir, 'html/template1.tmpl', config)
+      htmlExporter(config['directory'], config['htmlTemplate'], config)
    elif mode == 'search':
         while (True):
             q = input('Give query (regular expression - use (?i:<matching pattern>) for case sensitive search)> ')
