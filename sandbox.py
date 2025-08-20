@@ -309,17 +309,26 @@ def main():
     
    # Directory traversal related and criteria
    cmdArgParser.add_argument('-d', '--directory', default="exampleDir")
-   cmdArgParser.add_argument('-NR', '--nonRecursive', action='store_true')
-   cmdArgParser.add_argument('-xf', '--fileexclusionPattern', default="")
-   cmdArgParser.add_argument('-if', '--fileinclusionPattern', default="")
-   cmdArgParser.add_argument('-xd', '--direxclusionPattern', default="")
-   cmdArgParser.add_argument('-id', '--dirinclusionPattern', default="")
+   cmdArgParser.add_argument('-mxt', '--maxTime',  default=-1)
    cmdArgParser.add_argument('-L', '--maxLevels', default=-1)
+   cmdArgParser.add_argument('-if', '--fileinclusionPattern', default="")
+   cmdArgParser.add_argument('-xf', '--fileexclusionPattern', default="")
+
+   cmdArgParser.add_argument('-id', '--dirinclusionPattern', default="")
+   cmdArgParser.add_argument('-xd', '--direxclusionPattern', default="")
    cmdArgParser.add_argument('-mns', '--minFileSize',  default=-1)
    cmdArgParser.add_argument('-mxs', '--maxFileSize',  default=-1)
-
    cmdArgParser.add_argument('-nd', '--maxDirs',  default=-1)
    cmdArgParser.add_argument('-nf', '--maxFiles',  default=-1)
+   cmdArgParser.add_argument('-cdo', '--creationDateOp',  default='==')
+   cmdArgParser.add_argument('-cd', '--creationDate',  default='')
+   cmdArgParser.add_argument('-lmdo', '--lastModifiedDateOp',  default='==')
+   cmdArgParser.add_argument('-lmd', '--lastModifiedDate',  default='')
+   
+   cmdArgParser.add_argument('-NR', '--nonRecursive', action='store_true')
+   
+
+   
 
    # TODO: add more here 
 
@@ -384,7 +393,7 @@ def main():
                       'lastModifiedDate':''}
 
    # TODO: fix next and include case where key is not existent in config
-   flattened.update( (k,v) for k,v in traversalCriteria.items() if (v != '') or (k not in flattened.items()))
+   flattened.update( (k,v) for k,v in args.items() if (v != '') or (k not in flattened.items()))
    
    print(f'AFTER ====> {flattened}')
    
