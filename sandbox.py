@@ -412,8 +412,9 @@ def main():
    #print(f'===>Config BEFORE update: {config}')
    #clrprint.clrprint(f'===>args: {args}', clr='maroon')
    #print(args.items())
-   config = updateDict(config, args)
-   #config.update( (k,v) for k,v in args.items() if ((v != '') or (k not in config.items())))
+   #config = updateDict(config, args)
+   config.update( (k,v) for k,v in args.items() if ((v != '') or (k not in config.keys())))
+   
    #print(f'===>Config AFTER update: {config}')
    #print(f'command line arguments: {args}')
    #print(f'AFTER ====> {config}')
