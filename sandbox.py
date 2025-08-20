@@ -321,6 +321,8 @@ def main():
    cmdArgParser.add_argument('-nd', '--maxDirs',  default=-1)
    cmdArgParser.add_argument('-nf', '--maxFiles',  default=-1)
 
+   # TODO: add more here 
+
    # SEARCH functionality related
    # If set, don't search for files. 
    cmdArgParser.add_argument('-NF', '--nofiles', action='store_true')
@@ -381,11 +383,17 @@ def main():
                       'lastModifiedDateOp':'>',
                       'lastModifiedDate':''}
 
-   # TODO: next one if
-   flattened.update( (k,v) for k,v in traversalCriteria.items() if v != '')
-   #flattened.update(traversalCriteria)
+   # TODO: fix next and include case where key is not existent in config
+   flattened.update( (k,v) for k,v in traversalCriteria.items() if (v != '') or (k not in flattened.items()))
+   
    print(f'AFTER ====> {flattened}')
    
+
+
+
+
+
+
 
    clrprint.clrprint(f"\nStarting [{mode}] mode from root [{initialDir}] with following paramters:")
    clrprint.clrprint(f"{traversalCriteria}\n", clr='yellow')
