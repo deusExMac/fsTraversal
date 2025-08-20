@@ -8,6 +8,8 @@ import datetime
 import clrprint
 
 import json
+
+import configparser
 import argparse
 
 
@@ -307,7 +309,7 @@ def main():
     
    # Directory traversal related and criteria
    cmdArgParser.add_argument('-d', '--directory', default="exampleDir")
-   cmdArgParser.add_argument('-NR', '--nonrecursive', action='store_true')
+   cmdArgParser.add_argument('-NR', '--nonRecursive', action='store_true')
    cmdArgParser.add_argument('-xf', '--fileexclusionPattern', default="")
    cmdArgParser.add_argument('-if', '--fileinclusionPattern', default="")
    cmdArgParser.add_argument('-xd', '--direxclusionPattern', default="")
@@ -330,8 +332,8 @@ def main():
    # REMAINDER is searchquery. Search query is interpreted as a regular expression
    cmdArgParser.add_argument('searchquery', nargs=argparse.REMAINDER, default=[])
 
-   cmdArgParser.add_argument('-t', '--htmltemplate', default="html/template1.html")
-   cmdArgParser.add_argument('-o', '--outputhtmlfile', default="index.html")
+   cmdArgParser.add_argument('-t', '--htmlTemplate', default="html/template1.html")
+   cmdArgParser.add_argument('-o', '--outputHtmlfile', default="index.html")
    cmdArgParser.add_argument('-s', '--cssfile', default="html/style.css")
    cmdArgParser.add_argument('-i', '--introduction', default="")
    cmdArgParser.add_argument('-tl', '--title', default="")
@@ -340,15 +342,34 @@ def main():
    knownArgs, unknownArgs = cmdArgParser.parse_known_args()
    args = vars(knownArgs)
    print(f'Command line arguments: {args}')  
+
+   print('\n\nLoading configuration settings from [', args['config'], ']\n', sep='' )
+   config = configparser.RawConfigParser(allow_no_value=True)
+   # To make keys case sensitive (for a strange reason configparser makes all lowercase).
+   config.optionxform = str
+   
+   config.read(args['config'])
+
+   flattened = {}
+   for s in config.sections():
+       for k in dict(config.items(s)):
+           flattened[k] = config.get(s, k, fallback='')   
+
+   print(f'BEFORE ====> {flattened}')
+   
+   #my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
+   #print(my_config_parser_dict)
+
+
    
    mode = 'export'
    initialDir = "testDirectories/exampleDir0"
 
    # maxTime is in seconds
-   traversalCriteria = { 'maxLevels':-1,
+   traversalCriteria = { 'maxLevels':18,
                       'maxTime': -1,
-                      'fileinclusionPattern':r"",
-                      'fileexclusionPattern':"",
+                      'fileinclusionPattern':r'',
+                      'fileexclusionPattern':'',
                       'dirinclusionPattern': '',
                       'direxclusionPattern':'',
                       'minFileSize':-1,
@@ -360,8 +381,10 @@ def main():
                       'lastModifiedDateOp':'>',
                       'lastModifiedDate':''}
 
-
-   
+   # TODO: next one if
+   flattened.update( (k,v) for k,v in traversalCriteria.items() if v != '')
+   #flattened.update(traversalCriteria)
+   print(f'AFTER ====> {flattened}')
    
 
    clrprint.clrprint(f"\nStarting [{mode}] mode from root [{initialDir}] with following paramters:")
