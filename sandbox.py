@@ -298,8 +298,28 @@ def search(root, query='.*', criteria={}):
 
 ####################### MAIN starts here#########################
     
+def isDefaultValue(v):
+    return( v=='' or v==-1)
 
-# TODO: main guard here!
+
+# dictionary's .update() method wasn't working as expected.
+# TODO: check this again
+def updateDict(old, new):
+    for k,v in new.items():
+        
+        if k  not in old.keys():
+              old[k] = v
+              continue
+
+        if not isDefaultValue(v):
+           old[k] = v
+
+        if k in ('maxLevels', 'maxTime', 'minFileSize', 'maxFileSize', 'maxDirs', 'maxFiles'):
+           old[k] = float(old[k])
+
+    return(old)    
+            
+              
 
 def main():
 
@@ -308,18 +328,18 @@ def main():
    cmdArgParser.add_argument('-c', '--config', default="fsTraversal.conf")
     
    # Directory traversal related and criteria
-   cmdArgParser.add_argument('-d', '--directory', default="exampleDir")
-   cmdArgParser.add_argument('-mxt', '--maxTime',  default=-1)
-   cmdArgParser.add_argument('-L', '--maxLevels', default=-1)
+   cmdArgParser.add_argument('-d', '--directory', default="")
+   cmdArgParser.add_argument('-mxt', '--maxTime',  type=float, default=-1)
+   cmdArgParser.add_argument('-ml', '--maxLevels', type=int, default=-1)
    cmdArgParser.add_argument('-if', '--fileinclusionPattern', default="")
    cmdArgParser.add_argument('-xf', '--fileexclusionPattern', default="")
 
    cmdArgParser.add_argument('-id', '--dirinclusionPattern', default="")
    cmdArgParser.add_argument('-xd', '--direxclusionPattern', default="")
-   cmdArgParser.add_argument('-mns', '--minFileSize',  default=-1)
-   cmdArgParser.add_argument('-mxs', '--maxFileSize',  default=-1)
-   cmdArgParser.add_argument('-nd', '--maxDirs',  default=-1)
-   cmdArgParser.add_argument('-nf', '--maxFiles',  default=-1)
+   cmdArgParser.add_argument('-mns', '--minFileSize', type=float, default=-1)
+   cmdArgParser.add_argument('-mxs', '--maxFileSize', type=float, default=-1)
+   cmdArgParser.add_argument('-nd', '--maxDirs', type=int, default=-1)
+   cmdArgParser.add_argument('-nf', '--maxFiles', type=int,  default=-1)
    cmdArgParser.add_argument('-cdo', '--creationDateOp',  default='==')
    cmdArgParser.add_argument('-cd', '--creationDate',  default='')
    cmdArgParser.add_argument('-lmdo', '--lastModifiedDateOp',  default='==')
@@ -328,22 +348,19 @@ def main():
    cmdArgParser.add_argument('-NR', '--nonRecursive', action='store_true')
    
 
-   
-
-   # TODO: add more here 
 
    # SEARCH functionality related
    # If set, don't search for files. 
    cmdArgParser.add_argument('-NF', '--nofiles', action='store_true')
    cmdArgParser.add_argument('-ND', '--nodirs', action='store_true')
    # If set, don't search for directories
-   cmdArgParser.add_argument('-Y', '--nodirectories', action='store_true')
+   #cmdArgParser.add_argument('-Y', '--nodirectories', action='store_true')
 
   
    # REMAINDER is searchquery. Search query is interpreted as a regular expression
    cmdArgParser.add_argument('searchquery', nargs=argparse.REMAINDER, default=[])
 
-   cmdArgParser.add_argument('-t', '--htmlTemplate', default="html/template1.html")
+   cmdArgParser.add_argument('-t', '--htmlTemplate', default="")
    cmdArgParser.add_argument('-o', '--outputHtmlfile', default="index.html")
    cmdArgParser.add_argument('-s', '--cssfile', default="html/style.css")
    cmdArgParser.add_argument('-i', '--introduction', default="")
@@ -352,24 +369,22 @@ def main():
 
    knownArgs, unknownArgs = cmdArgParser.parse_known_args()
    args = vars(knownArgs)
-   print(f'Command line arguments: {args}')  
+     
 
    print('\n\nLoading configuration settings from [', args['config'], ']\n', sep='' )
-   config = configparser.RawConfigParser(allow_no_value=True)
+   cSettings = configparser.RawConfigParser(allow_no_value=True)
    # To make keys case sensitive (for a strange reason configparser makes all lowercase).
-   config.optionxform = str
-   
-   config.read(args['config'])
+   cSettings.optionxform = str   
+   cSettings.read(args['config'])
 
-   flattened = {}
-   for s in config.sections():
-       for k in dict(config.items(s)):
-           flattened[k] = config.get(s, k, fallback='')   
+   #print(f'Read from file: {dict(cSettings.items())}') 
+   # Flatten the red configuration settings
+   config = {}
+   for s in cSettings.sections():
+       for k in dict(cSettings.items(s)):
+           config[k] = cSettings.get(s, k, fallback='')
+           #print(f'Added: {k}:{config[k]}')
 
-   print(f'BEFORE ====> {flattened}')
-   
-   #my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
-   #print(my_config_parser_dict)
 
 
    
@@ -392,10 +407,16 @@ def main():
                       'lastModifiedDateOp':'>',
                       'lastModifiedDate':''}
 
+   # Override configuration with non-default command line settings
    # TODO: fix next and include case where key is not existent in config
-   flattened.update( (k,v) for k,v in args.items() if (v != '') or (k not in flattened.items()))
-   
-   print(f'AFTER ====> {flattened}')
+   #print(f'===>Config BEFORE update: {config}')
+   #clrprint.clrprint(f'===>args: {args}', clr='maroon')
+   #print(args.items())
+   config = updateDict(config, args)
+   #config.update( (k,v) for k,v in args.items() if ((v != '') or (k not in config.items())))
+   #print(f'===>Config AFTER update: {config}')
+   #print(f'command line arguments: {args}')
+   #print(f'AFTER ====> {config}')
    
 
 
@@ -405,7 +426,7 @@ def main():
 
 
    clrprint.clrprint(f"\nStarting [{mode}] mode from root [{initialDir}] with following paramters:")
-   clrprint.clrprint(f"{traversalCriteria}\n", clr='yellow')
+   clrprint.clrprint(f"{config}\n", clr='yellow')
    for i in range(6):
        clrprint.clrprint(f'[{5-i}]', clr=random.choice(['red', 'blue', 'green', 'yellow', 'purple', 'black']), end='')
        time.sleep(1)
@@ -417,7 +438,7 @@ def main():
 
 
    if mode == 'export':
-      htmlExporter(initialDir, 'html/template1.tmpl', traversalCriteria)
+      htmlExporter(initialDir, 'html/template1.tmpl', config)
    elif mode == 'search':
         while (True):
             q = input('Give query (regular expression - use (?i:<matching pattern>) for case sensitive search)> ')
