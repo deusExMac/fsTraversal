@@ -360,8 +360,8 @@ def main():
 
    # SEARCH functionality related
    # If set, don't search for files. 
-   cmdArgParser.add_argument('-NF', '--nofiles', action='store_true')
-   cmdArgParser.add_argument('-ND', '--nodirs', action='store_true')
+   cmdArgParser.add_argument('-NF', '--noFiles', action='store_true')
+   cmdArgParser.add_argument('-ND', '--noDirs', action='store_true')
    cmdArgParser.add_argument('-I', '--interactive', action='store_true')
    # If set, don't search for directories
    #cmdArgParser.add_argument('-Y', '--nodirectories', action='store_true')
@@ -387,11 +387,20 @@ def main():
    cSettings.optionxform = str   
    cSettings.read(args['config'])
 
-   # Flatten the red configuration settings
+   # Flatten the red configuration settings and change to necessary type
    config = {}
+   
+   # TODO: Find a better way to do this
+   intKeys = ['maxLevels', 'maxDirs', 'maxFiles']
+   floatKeys = ['minFileSize', 'maxFileSize', 'maxTime']
    for s in cSettings.sections():
        for k in dict(cSettings.items(s)):
-           config[k] = cSettings.get(s, k, fallback='')
+           if k in intKeys:
+              config[k] = cSettings.getint(s, k, fallback=-1)
+           elif k in floatKeys:
+              config[k] = cSettings.getfloat(s, k, fallback=-1.0)
+           else:   
+              config[k] = cSettings.get(s, k, fallback='')
            
 
 
@@ -419,7 +428,7 @@ def main():
    
    # Override configuration with non-default command line settings.
    # Command line arguments have highest priority
-   config.update( (k,v) for k,v in args.items() if ((v != '') or (k not in config.keys())))
+   config.update( (k,v) for k,v in args.items() if ((v != '' and v!=-1) or (k not in config.keys())))
 
    mode = 'xxx'
    if not config.get('searchquery', []):

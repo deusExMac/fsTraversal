@@ -458,8 +458,10 @@ class SearchVisitor(Visitor):
       # TODO: change all finfo[] expressions with .get()  
       def visit_file(self, name, path, level, parent, finfo={}):
 
-            # TODO: add here nofiles check
-
+            
+            if self.criteria.get('noFiles', False):
+               self.ignored() 
+               return(0) 
             
             if self.criteria.get('maxFiles', -1) > 0:
                if self.file_count >= self.criteria.get('maxFiles', -1):
@@ -527,7 +529,10 @@ class SearchVisitor(Visitor):
 
       def visit_directory(self, name, path, level, parent, ldc, lfc):
 
-            # TODO: add here nodirs check
+            
+            if self.criteria.get('noDirs', False):
+               #self.ignored() 
+               return(0)
             
             if self.criteria.get('maxDirs', -1) > 0:
                if self.directory_count >= self.criteria.get('maxDirs', -1):
