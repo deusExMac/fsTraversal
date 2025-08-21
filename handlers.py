@@ -289,7 +289,7 @@ class HTMLExporter(Visitor):
 
     def visit_file(self, name, path, level, parent, finfo={}, urlEncode=False):
 
-
+                
         if self.criteria.get('maxFiles', -1) > 0:
            if self.file_count >= self.criteria.get('maxFiles', -1):
               raise criteriaException(-9, 'Maximum number of FILES reached.')
@@ -457,6 +457,9 @@ class SearchVisitor(Visitor):
 
       # TODO: change all finfo[] expressions with .get()  
       def visit_file(self, name, path, level, parent, finfo={}):
+
+            # TODO: add here nofiles check
+
             
             if self.criteria.get('maxFiles', -1) > 0:
                if self.file_count >= self.criteria.get('maxFiles', -1):
@@ -524,6 +527,8 @@ class SearchVisitor(Visitor):
 
       def visit_directory(self, name, path, level, parent, ldc, lfc):
 
+            # TODO: add here nodirs check
+            
             if self.criteria.get('maxDirs', -1) > 0:
                if self.directory_count >= self.criteria.get('maxDirs', -1):
                   raise criteriaException(-10, 'Maximum number of DIRECTORIES reached.')

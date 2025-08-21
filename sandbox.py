@@ -72,8 +72,8 @@ def timeit(f):
         result = f(*args, **kw)
         te = time.time()
 
-        print('[TIMING] func:%r dir:[%r] took: %2.4f sec' % \
-                 (f.__name__, args[0], te-ts) )
+        print('[TIMING] func:%r took: %2.4f sec' % \
+                 (f.__name__,  te-ts) )
         return result
         
 
@@ -212,13 +212,13 @@ def fsTraversal(root, lvl, visitor=None):
 
 # TODO: More tests needed
 @timeit
-def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
+def export(criteria={}):
 
-    if not os.path.isdir(root):
+    if not os.path.isdir(criteria.get('directory', 'testDirectories/exampleDir0')):
        clrprint.clrprint(f'[Error] Not such directory [{root}]', clr="red")
        return((-2, 0, 0, 0, 0))
 
-    dTemp, fTemp, pTemp = readHTMLTemplateFile(templateFile)
+    dTemp, fTemp, pTemp = readHTMLTemplateFile(criteria.get('htmlTemplate', 'html/template1.tmpl'))
 
     # Create visitor
     hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, criteria)
@@ -229,12 +229,12 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
     hE.stack.append({'type':'directory',
                      'collapsed':False,
                      'level':0,
-                     'name':root,
-                     'dname':root,
-                     'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', root).replace('${PATH}', root).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
+                     'name':criteria.get('directory', 'testDirectories/exampleDir0'),
+                     'dname':criteria.get('directory', 'testDirectories/exampleDir0'),
+                     'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', criteria.get('directory', 'testDirectories/exampleDir0')).replace('${PATH}', criteria.get('directory', 'testDirectories/exampleDir0')).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
 
     try:
-      res=fsTraversal(root, 1, visitor=hE)
+      res=fsTraversal(criteria.get('directory', 'testDirectories/exampleDir0'), 1, visitor=hE)
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criteriaException. Message:', str(ce), clr='red')
       res = (ce.errorCode, -1, -1, hE.directory_count, hE.file_count) # TODO: check and fix this.
@@ -258,7 +258,7 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
        subD = hE.stack.pop()
 
     fullTree = hE.stack.pop()
-    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', root).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(res[0])).replace('${TREE}', fullTree['html']).replace("${OPENSTATE}", "open").replace("${CRITERIA}", json.dumps(criteria))
+    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', criteria.get('directory', 'testDirectories/exampleDir0')).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(res[0])).replace('${TREE}', fullTree['html']).replace("${OPENSTATE}", "open").replace("${CRITERIA}", json.dumps(criteria))
     with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
          sf.write(h)
 
@@ -277,15 +277,23 @@ def htmlExporter(root='./', templateFile='html/template1.html', criteria={}):
 # NOTE: to avoid error messages when using case insensitive regex, use the following way:
 #       (?i:<matching pattern>)
 @timeit  
-def search(root, query='.*', criteria={}):
-    
-    criteria['fileinclusionPattern'] = fr'({query})'
-    criteria['dirinclusionPattern'] = fr'({query})'
+def search(query='', criteria={}):
+
+    if query=='':
+       q = ' '.join(criteria.get('searchquery', []))
+    else:
+       q = query
+       
+    #print( f'Searching for: {q}' )
+      
+    criteria['fileinclusionPattern'] = fr'({q})'
+    criteria['dirinclusionPattern'] = fr'({q})'
+
     sV = handlers.SearchVisitor(query, criteria)
 
-    clrprint.clrprint(f'Search results for {query}:', clr='maroon')
+    clrprint.clrprint(f'Search results for {q}:', clr='maroon')
     try:
-      fsTraversal(root, 1, visitor=sV)
+      fsTraversal(criteria.get('directory', 'testDirectories/exampleDir0'), 1, visitor=sV)
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
     
@@ -298,7 +306,7 @@ def search(root, query='.*', criteria={}):
 
 
 ####################### MAIN starts here#########################
-    
+'''    
 def isDefaultValue(v):
     return( v=='' or v==-1)
 
@@ -319,7 +327,7 @@ def updateDict(old, new):
            old[k] = float(old[k])
 
     return(old)    
-            
+'''            
               
 
 def main():
@@ -329,7 +337,7 @@ def main():
    cmdArgParser.add_argument('-c', '--config', default="fsTraversal.conf")
     
    # Directory traversal related and criteria
-   cmdArgParser.add_argument('-d', '--directory', default="")
+   cmdArgParser.add_argument('-d', '--directory', default="testDirectories/exampleDir0")
    cmdArgParser.add_argument('-mxt', '--maxTime',  type=float, default=-1)
    cmdArgParser.add_argument('-ml', '--maxLevels', type=int, default=-1)
    cmdArgParser.add_argument('-if', '--fileinclusionPattern', default="")
@@ -354,6 +362,7 @@ def main():
    # If set, don't search for files. 
    cmdArgParser.add_argument('-NF', '--nofiles', action='store_true')
    cmdArgParser.add_argument('-ND', '--nodirs', action='store_true')
+   cmdArgParser.add_argument('-I', '--interactive', action='store_true')
    # If set, don't search for directories
    #cmdArgParser.add_argument('-Y', '--nodirectories', action='store_true')
 
@@ -378,17 +387,16 @@ def main():
    cSettings.optionxform = str   
    cSettings.read(args['config'])
 
-   #print(f'Read from file: {dict(cSettings.items())}') 
    # Flatten the red configuration settings
    config = {}
    for s in cSettings.sections():
        for k in dict(cSettings.items(s)):
            config[k] = cSettings.get(s, k, fallback='')
-           #print(f'Added: {k}:{config[k]}')
+           
 
 
 
-   
+   '''
    mode = 'export'
    initialDir = "testDirectories/exampleDir0"
 
@@ -407,52 +415,48 @@ def main():
                       'creationDate':'',
                       'lastModifiedDateOp':'>',
                       'lastModifiedDate':''}
-
-   # Override configuration with non-default command line settings
-   # TODO: fix next and include case where key is not existent in config
-   #print(f'===>Config BEFORE update: {config}')
-   #clrprint.clrprint(f'===>args: {args}', clr='maroon')
-   #print(args.items())
-   #config = updateDict(config, args)
+   '''
+   
+   # Override configuration with non-default command line settings.
+   # Command line arguments have highest priority
    config.update( (k,v) for k,v in args.items() if ((v != '') or (k not in config.keys())))
+
+   mode = 'xxx'
+   if not config.get('searchquery', []):
+      mode = 'export'
+   else:
+      mode = 'search'
+      
    
-   #print(f'===>Config AFTER update: {config}')
-   #print(f'command line arguments: {args}')
-   #print(f'AFTER ====> {config}')
    
-
-
-
-  
-
-
-
-   clrprint.clrprint(f"\nStarting [{mode}] mode from root [{initialDir}] with following paramters:")
+   clrprint.clrprint(f"\nStarting [{mode}] mode from root [{config.get('directory', 'testDirectories/exampleDir0')}] with following paramters:")
    clrprint.clrprint(f"{config}\n", clr='yellow')
    for i in range(6):
        clrprint.clrprint(f'[{5-i}]', clr=random.choice(['red', 'blue', 'green', 'yellow', 'purple', 'black']), end='')
        time.sleep(1)
 
    print(f'\n[{getCurrentDateTime()}] Started')
-   time.sleep(0.5) # small delay to allow starting messages to appear (even when executed from within IDLE)
+   time.sleep(0.5) # small delay to allow starting messages to appear (even when executed from within IDLE)  
 
-
-   #sys.exit(-3)  
-
+   
+   #sys.exit(-33)
 
    if mode == 'export':
-      htmlExporter(config['directory'], config['htmlTemplate'], config)
+      export(config)
    elif mode == 'search':
-        while (True):
-            q = input('Give query (regular expression - use (?i:<matching pattern>) for case sensitive search)> ')
-            if q == '':
-               continue
+       if not config.get('interactive'):
+          search(query='', criteria=config)
+       else:    
+           while (True):
+              q = input('Give query (regular expression - use (?i:<matching pattern>) for case sensitive search)> ')
+              if q == '':
+                 continue
 
-            if q.lower()=='eof':
-               print('terminating.') 
-               break 
-
-            search(initialDir, q,  traversalCriteria)
+              if q.lower()=='eof':
+                 print('terminating.') 
+                 break
+                
+              search(config.get('directory', 'testDirectories/exampleDir0'), " ".join(config.get('searchquery', '[]')),  config)
 
    sys.exit(-3)
 
