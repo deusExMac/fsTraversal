@@ -204,7 +204,8 @@ class HTMLExporter(Visitor):
         
         self.file_count = 0
         self.directory_count = 0
-
+        self.directoryList = []
+        
         self.dirTemplate = dirT
         self.fileTemplate = fileT
         self.pageTemplate = pageT
@@ -374,6 +375,9 @@ class HTMLExporter(Visitor):
             
         self.directory_count += 1
 
+        # Add to directory list. Will be used for  ${LISTOFDIRECTORIES}  
+        self.directoryList.append(path)
+        
         # Add to stack
         nD = {'type':'directory', 'collapsed':False, 'level':level, 'name':path, 'dname':name, 'lndir':-1, 'lnfiles':-1, 'html':''}
 
@@ -529,9 +533,11 @@ class SearchVisitor(Visitor):
 
       def visit_directory(self, name, path, level, parent, ldc, lfc):
 
-            
+            # noDirs means in essense don't process directories. Just traverse into them.
+            # noDirs ignores any directory related constraints.
             if self.criteria.get('noDirs', False):
-               #self.ignored() 
+               # It would be wrong to signal this as ignored here.
+               # If ignored, this will result into not traversing into it 
                return(0)
             
             if self.criteria.get('maxDirs', -1) > 0:

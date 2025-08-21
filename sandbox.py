@@ -259,11 +259,16 @@ def export(criteria={}):
 
     fullTree = hE.stack.pop()
     h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', criteria.get('directory', 'testDirectories/exampleDir0')).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(res[0])).replace('${TREE}', fullTree['html']).replace("${OPENSTATE}", "open").replace("${CRITERIA}", json.dumps(criteria))
-    with open('sandBoxSTACK.html', 'w', encoding='utf8') as sf:
+     
+    with open(criteria.get('outputFile', 'index'+'-'+getCurrentDateTime().replace(':', '-') + '.html'), 'w', encoding='utf8') as sf:
          sf.write(h)
 
     clrprint.clrprint(f'\n[{getCurrentDateTime()}] Finished. Total file count:{hE.file_count} Total directory count:{hE.directory_count}. Ignored:{hE.nIgnored}', clr='yellow')
 
+    '''
+    for i, d in enumerate(hE.directoryList):
+        print(f'{i+1}) {d}')
+    '''    
 
     return(res)
 
@@ -371,7 +376,7 @@ def main():
    cmdArgParser.add_argument('searchquery', nargs=argparse.REMAINDER, default=[])
 
    cmdArgParser.add_argument('-t', '--htmlTemplate', default="")
-   cmdArgParser.add_argument('-o', '--outputHtmlfile', default="index.html")
+   cmdArgParser.add_argument('-o', '--outputFile', default="index.html")
    cmdArgParser.add_argument('-s', '--cssfile', default="html/style.css")
    cmdArgParser.add_argument('-i', '--introduction', default="")
    cmdArgParser.add_argument('-tl', '--title', default="")
@@ -444,7 +449,7 @@ def main():
        clrprint.clrprint(f'[{5-i}]', clr=random.choice(['red', 'blue', 'green', 'yellow', 'purple', 'black']), end='')
        time.sleep(1)
 
-   print(f'\n[{getCurrentDateTime()}] Started')
+   clrprint.clrprint(f'\n[{getCurrentDateTime()}] Started', clr='yellow')
    time.sleep(0.5) # small delay to allow starting messages to appear (even when executed from within IDLE)  
 
    
