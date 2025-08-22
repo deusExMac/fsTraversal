@@ -243,7 +243,7 @@ def export(criteria={}):
       
     # Final merge
     clrprint.clrprint('\n\n#################################\n##    FINAL MERGE\n#################################\n', clr='yellow')
-    hE.newMERGE(stk=hE.stack, final=True)
+    hE.collapse(final=True)
 
     
     ################################################################################

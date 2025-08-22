@@ -230,10 +230,30 @@ class HTMLExporter(Visitor):
     
 
 
-    # This is working!
-    # TODO: Refactor and optimize this!
-    def newMERGE(self, newD={'type':'directory', 'level':0, 'name':''}, stk=None, final=False):
+    def showStack(self):
+        elem = []
+        pos = 0
+        while True:
+              if len(self.stack) <= 0 :
+                 break
                 
+              sItem = self.stack.pop()
+              clrprint.clrprint(f'{len(self.stack) - pos}) {sItem["name"]}', clr='maroon')
+              elem.append(sItem)  
+
+        for sI in elem[::-1]:
+            self.stack.append(sI)
+
+
+
+
+
+    def collapse(self, newD={'type':'directory', 'level':0, 'name':''}, stk=None, final=False):
+
+
+          if stk is None:
+             stk = self.stack
+             
           #clrprint.clrprint(f"Seen: [{newD['name']}] Level[{newD['level']}]", clr='maroon')
           sDir = ''
           
@@ -292,9 +312,6 @@ class HTMLExporter(Visitor):
                       
           # TODO: Do we need this?   
           return(sDir)
-    
-
-
 
 
 
@@ -392,7 +409,7 @@ class HTMLExporter(Visitor):
         nD = {'type':'directory', 'collapsed':False, 'level':level, 'name':path, 'dname':name, 'lndir':-1, 'lnfiles':-1, 'html':''}
 
         # See if stack can be collapsed
-        self.newMERGE(nD, self.stack)
+        self.collapse(newD=nD)
 
         # Add to stack
         dId = "d" + str(level) + "-" + str( random.randint(0, 1000000) )      
