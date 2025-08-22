@@ -250,6 +250,37 @@ class HTMLExporter(Visitor):
 
     # Collapses the items in the stack
     # Stack contains the visited directories in order to create the desired html output.
+    # Directories in the stack are represented using dictionaries with the following keys:
+    # type: type of item (file or directory)
+    # collapsed: whether this directory has been collapsed i.e. all its subdirectories have been
+    #            visited, the respective html of subdirectories have been calculated and replaced
+    #            the subdirectory psudovariable of this directory
+    # level: level of item
+    # name: full path of item
+    # dname: only the name of item
+    # html: the html formated item using the loaded templates. If the subdirectory pseudovariable
+    #       of this key has been replaced, the directory is considered as collapsed
+    #
+    # An instance of a stack (first element in stack is always the initial root directory): 
+    # 
+    # {type:file, level:2, name:exampleDir0/1/excelFile.xlsx, html:''}
+    # {type:file, level:2, name:exampleDir0/1/anImageFile.jpg, html:''}
+    # {type:file, level:1, name:exampleDir0/1/, html:'...${SUBDIRECTORY}'}
+    # {type:file, level:0, name:exampleDir0/}
+    #
+    # If collapsed, the stack will become:
+    #
+    # {type:file, level:1, name:exampleDir0/1/, html:'...<html of excelFile.xlsx, html of anImageFile.jpg>'}
+    # {type:file, level:0, name:exampleDir0/}
+    #
+    # If exampleDir0 would have another dir (e.g. 2), the stack would become:
+    #
+    # {type:file, level:1, name:exampleDir0/2/, html:'...${SUBDIRECTORY}'}
+    # {type:file, level:1, name:exampleDir0/1/, html:'...<html of excelFile.xlsx, html of anImageFile.jpg>'}
+    # {type:file, level:0, name:exampleDir0/}
+    #
+    # All items in level 1 would be collapsed if all level 1 items have been exhausted
+    #
     # By collapsing, the html for the directory that has been exhausted (i.e. processed) is generated
     
     def collapse(self, newD={'type':'directory', 'level':0, 'name':''}, stk=None, final=False):
