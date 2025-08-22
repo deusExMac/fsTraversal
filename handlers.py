@@ -49,7 +49,8 @@ def nameMatches( on, xP='', iP='', lvl=-1, dbg=False ):
 
 
 
-
+# Special exception class.
+#
 # Exception raised when *some* criteria do not hold such as maxDirs or maxFiles.
 # Used to terminate traversal immediately without requiring to unfold
 # the entire execution stack. Makes things faster.
@@ -65,6 +66,7 @@ class criteriaException(Exception):
 
 
 # 1. Define the Visitable interface
+# Files/Directories extend this class
 class Visitable(ABC):
 
     @abstractmethod
@@ -75,6 +77,8 @@ class Visitable(ABC):
         
 
 # 2. Define the Visitor interface
+# Visitor, which has implemented the actual behaviors i.e. what and how to handle
+# each File/directory, is implemented by overriding visit_file and visit_directory.
 class Visitor(ABC):
 
     def __init__(self):
@@ -104,14 +108,17 @@ class Visitor(ABC):
 
 
 
+
+
 ###################################################################
 #
-#  Classes for handling elements
+#  Concrete element classes (Files and Directories).
+#  Handle encountered elements while traversing.
 #
 ###################################################################
 
 
-# Concrete element classes (Files and Directories)
+
 class File(Visitable):
     def __init__(self, name, path, level=0, parent="", finfo={}):
         self.name = name
@@ -143,7 +150,9 @@ class Directory(Visitable):
         if status < 0:
            self.ignored = True 
 
-   
+
+    # Updates the number of local files and directories inside a directory, i.e. not counting into
+    # subdirectories. 
     def setLocalCounts(self, ldc, lfc, tdc, tfc, visitor):
 
         if self.ignored:
@@ -152,6 +161,9 @@ class Directory(Visitable):
         self.localDirCount = ldc
         self.localFileCount = lfc
         visitor.updateCounts(self.path, ldc, lfc, tdc, tfc)
+
+
+
 
 
 
@@ -194,8 +206,6 @@ def makeHtmlLink(itemPath, displayAnchor, urlEncode):
 
 
 
-
-# Another concrete visitor class
 class HTMLExporter(Visitor):
     
     def __init__(self, dirT, fileT, pageT, criteria):
