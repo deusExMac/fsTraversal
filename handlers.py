@@ -229,7 +229,7 @@ class HTMLExporter(Visitor):
         return(self.criteria.get(cname, default))
     
 
-
+    # TODO: Check this
     def showStack(self):
         elem = []
         pos = 0
