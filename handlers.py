@@ -241,13 +241,17 @@ class HTMLExporter(Visitor):
               clrprint.clrprint(f'{len(self.stack) - pos}) {sItem["name"]}', clr='maroon')
               elem.append(sItem)  
 
+        # put back
         for sI in elem[::-1]:
             self.stack.append(sI)
 
 
 
 
-
+    # Collapses the items in the stack
+    # Stack contains the visited directories in order to create the desired html output.
+    # By collapsing, the html for the directory that has been exhausted (i.e. processed) is generated
+    
     def collapse(self, newD={'type':'directory', 'level':0, 'name':''}, stk=None, final=False):
 
 

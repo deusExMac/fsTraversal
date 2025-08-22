@@ -186,7 +186,6 @@ def fsTraversal(root, lvl, visitor=None):
               tdc += subDirData[3]
               tfc += subDirData[4]
               if subDirData[0] < 0:
-                 #if (subDirData[0] != -1): # TODO: need this check?
                  return(subDirData[0], ldc, lfc, tdc, tfc)
      
     
