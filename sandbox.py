@@ -257,8 +257,28 @@ def export(criteria={}):
        subD = hE.stack.pop()
 
     fullTree = hE.stack.pop()
-    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${INITIALDIRECTORY}', criteria.get('directory', 'testDirectories/exampleDir0')).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(res[0])).replace('${TREE}', fullTree['html']).replace("${OPENSTATE}", "open").replace("${CRITERIA}", json.dumps(criteria))
-     
+
+
+    #################################################################################
+    # Prepare page from tamplate
+    #################################################################################
+    
+    # Replace psudovariables related to traversal
+    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${TRAVERSALROOTDIR}', criteria.get('directory', 'testDirectories/exampleDir0')).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(res[0])).replace('${TREE}', fullTree['html']).replace("${OPENSTATE}", "open").replace("${CRITERIA}", json.dumps(criteria))
+
+    # Replace psudovariables related to page
+    h = h.replace('${TITLE}', criteria.get('title', '')).replace('${INTROTEXT}', criteria.get('introduction', ''))
+
+    # Replacing externam css files in page template 
+    cssImports = ''
+    for cssFile in criteria.get('css', '').split():
+         cssImports = cssImports + '<link rel="stylesheet" type="text/css" ' +  'href="'+ cssFile +'"><br>'
+
+    #print(f'{cssImports}')     
+    h.replace('${CSS}', cssImports)
+
+
+    
     with open(criteria.get('outputFile', 'index'+'-'+getCurrentDateTime().replace(':', '-') + '.html'), 'w', encoding='utf8') as sf:
          sf.write(h)
 
@@ -376,7 +396,7 @@ def main():
 
    cmdArgParser.add_argument('-t', '--htmlTemplate', default="")
    cmdArgParser.add_argument('-o', '--outputFile', default="index.html")
-   cmdArgParser.add_argument('-s', '--cssfile', default="html/style.css")
+   cmdArgParser.add_argument('-s', '--css', default="html/style.css")
    cmdArgParser.add_argument('-i', '--introduction', default="")
    cmdArgParser.add_argument('-tl', '--title', default="")
    cmdArgParser.add_argument('-e', '--urlencode', action='store_true') 

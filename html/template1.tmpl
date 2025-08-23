@@ -303,6 +303,7 @@ h2 {
 <div id="introText">
 <h2>${TITLE}</h2>
 ${INTROTEXT}
+<br>
 ${CRITERIA}
 </div>
 <div class="tableOfDictionaries">
@@ -313,7 +314,7 @@ ${CRITERIA}
   <li>
     <details open>
       <summary class="folder"><img src="html/fld7.png" style="margin-left:-7px;margin-right:5px;">
-          ${INITIALDIRECTORY} <font color="red">[Termination code: ${TERMINATIONCODE}]</font> (${LNDIRS} - ${LNFILES} / ${NDIRS} - ${NFILES})
+          ${TRAVERSALROOTDIR} <font color="red">[Termination code: ${TERMINATIONCODE}]</font> (${LNDIRS} - ${LNFILES} / ${NDIRS} - ${NFILES})
       </summary>
         <ul>
            ${SUBDIRECTORY} <!-- This is only the contents of initial directory -->
