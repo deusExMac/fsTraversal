@@ -269,16 +269,17 @@ def export(criteria={}):
     # Replace psudovariables related to page
     h = h.replace('${TITLE}', criteria.get('title', '')).replace('${INTROTEXT}', criteria.get('introduction', ''))
 
-    # Replacing externam css files in page template 
+    # Replacing external css files in page template.
+    # Note: if many css files are specified, separate them with a comma (,)
     cssImports = ''
-    for cssFile in criteria.get('css', '').split():
-         cssImports = cssImports + '<link rel="stylesheet" type="text/css" ' +  'href="'+ cssFile +'"><br>'
+    for cssFile in criteria.get('css', '').split(','):
+         cssImports = cssImports + '<link rel="stylesheet" type="text/css" ' +  'href="'+ cssFile.strip() +'"><br>'
 
-    #print(f'{cssImports}')     
+    #print(f'{cssImports}') 
     h.replace('${CSS}', cssImports)
 
 
-    
+    # Replacements done. Save to file
     with open(criteria.get('outputFile', 'index'+'-'+getCurrentDateTime().replace(':', '-') + '.html'), 'w', encoding='utf8') as sf:
          sf.write(h)
 
@@ -396,6 +397,8 @@ def main():
 
    cmdArgParser.add_argument('-t', '--htmlTemplate', default="")
    cmdArgParser.add_argument('-o', '--outputFile', default="index.html")
+   # Note: if many css files are specified, enclose the arguments in double quotes "" and
+   # separate individual css files with a comma (,) e.g. -s "a.css, folder/b.css, c.css"
    cmdArgParser.add_argument('-s', '--css', default="html/style.css")
    cmdArgParser.add_argument('-i', '--introduction', default="")
    cmdArgParser.add_argument('-tl', '--title', default="")
