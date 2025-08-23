@@ -98,12 +98,10 @@ def timeit(f):
 
 
 
-# Ths core part of the file system traversal. This
-# traverses all objects.
+# Ths core part of the file system traversal. This traverses all objects.
 # How encountered files/directories should be handled are in the visitor classes  
-
-     
-      
+# NOTE: the idea was to keep this function as generic as possible
+       
 def fsTraversal(root, lvl, visitor=None):
     # TODO: check this
     global timeStarted
@@ -122,8 +120,6 @@ def fsTraversal(root, lvl, visitor=None):
              raise handlers.criteriaException(-10, f'Maximum time constraint of {maxTime}s reached (elapsed:{elapsed:.4f}s).')
 
 
-
-
       
    # Maximum number of levels to delve into.
    # This is checked here; makes things easier
@@ -132,9 +128,17 @@ def fsTraversal(root, lvl, visitor=None):
        if lvl > mxLvl:
           return(0, 0, 0, 0, 0)
 
-        
+    # Update window if gui version is used
+    lbl = visitor.getCriterium('guistatuslabel', None)
+    if lbl is not None:
+       lbl.configure(text=f'{root}')
+       visitor.getCriterium('window', None).update_idletasks()
+       visitor.getCriterium('window', None).update()
+
+
+    # Get list of directories and files
     try:
-      path, dirs, files = next( os.walk(root) )    
+      path, dirs, files = next(os.walk(root) )
     except Exception as wEx:
       print('Exception during walk:', str(wEx) )
       if ON_TRAVERSE_ERROR_QUIT:
@@ -304,6 +308,7 @@ def export(criteria={}):
 @timeit  
 def search(query='', criteria={}):
 
+    print(f'Using settings: {criteria}')
     if query=='':
        q = ' '.join(criteria.get('searchquery', []))
     else:
@@ -458,7 +463,7 @@ def main():
    config.update( (k,v) for k,v in args.items() if ((v != '' and v!=-1) or (k not in config.keys())))
 
    mode = 'xxx'
-   if not config.get('searchquery', []):
+   if not config.get('searchquery', []) and not config.get('interactive'):
       mode = 'export'
    else:
       mode = 'search'
@@ -492,7 +497,7 @@ def main():
                  print('terminating.') 
                  break
                 
-              search(config.get('directory', 'testDirectories/exampleDir0'), " ".join(config.get('searchquery', '[]')),  config)
+              search(q,  config)
 
    sys.exit(-3)
 
