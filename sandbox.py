@@ -16,7 +16,7 @@ import argparse
 
 from utilities import fontColorPalette, normalizedPathJoin, nameComplies, searchNameComplies, fileCreationDate, fileInfo, strToBytes, getCurrentDateTime
 import handlers
-
+import GUI
 
 
 
@@ -357,9 +357,9 @@ def interactiveMode(cfg={}):
                break
 
             if cfg.get('progress', False):
-               import searchGUI 
-               searchGUI.progressSearch(q, cfg) 
+               GUI.progressSearch(q, cfg) 
             else:
+               # Simple search without progress 
                search(q,  cfg)
 
 
@@ -381,10 +381,14 @@ def selector(mode='export', cfg={}):
     if mode == 'export':
        export(cfg)
     elif mode == 'search':
-         if not cfg.get('interactive'):
-            search(query='', criteria=cfg)
-         else:    
+         if cfg.get('interactive'):
             interactiveMode(cfg)
+         elif not cfg.get('progress', False): 
+               search(query='', criteria=cfg)
+         else:
+               GUI.progressSearch(' '.join(cfg.get('searchquery', [])), cfg)  
+             
+            
 
 
 
@@ -461,7 +465,9 @@ def main():
    # Flatten the red configuration settings and change to necessary type
    config = {}
    
-   # TODO: Find a better way to do this
+   # Flatten the configuration settings while at the same time
+   # change the data type for some settings.
+   # TODO: Is there a better way?
    intKeys = ['maxLevels', 'maxDirs', 'maxFiles']
    floatKeys = ['minFileSize', 'maxFileSize', 'maxTime']
    for s in cSettings.sections():

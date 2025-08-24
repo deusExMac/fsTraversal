@@ -49,6 +49,10 @@ def doSearch(query='', win=None, progressLabel=None, statusLabel=None, cfg={}):
     cfg['guistatus'] = statusLabel
     
     search(query=f'{query}', criteria=cfg)
+
+    # Small delay before closing window to give
+    # a better glimpse on the numbers or messages. 
+    time.sleep(0.7)
     
     closeWindow(win)
 
