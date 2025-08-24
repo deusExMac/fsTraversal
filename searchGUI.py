@@ -122,6 +122,7 @@ def doSearch(win=None, query='', statusLabel=None, cfg={}):
     config['guistatuslabel'] = statusLabel
     
     search(query=f'{query}', criteria=config)
+    
     closeWindow(win)
 
 
@@ -136,14 +137,12 @@ def closeWindow(w=None):
 
        
 def progressSearch(q, config={}):
-#if __name__ == "__main__":
 
    # light, dark and System supported
    ctk.set_appearance_mode("System")
    ctk.set_default_color_theme("blue")
 
    # Create main window  of app
-   
    root = ctk.CTk()
    root.geometry("550x150")
    root.title('Search progress')
@@ -152,9 +151,9 @@ def progressSearch(q, config={}):
    frame.pack(pady=10, padx=70, fill="both", expand=True)
 
 
-   # Create all elements of main window
+   # Create elements of main window
 
-   # label   
+   # Progress label   
    label = ctk.CTkLabel(master=frame, text="Status...", font=("Roboto", 14) )
    label.pack(pady=30, padx=40)
 

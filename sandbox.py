@@ -358,7 +358,45 @@ def updateDict(old, new):
 
     return(old)    
 '''            
-              
+
+
+
+
+def selector(mode='export', cfg={}):
+    
+    clrprint.clrprint(f"\nStarting [{mode}] mode from root [{cfg.get('directory', 'testDirectories/exampleDir0')}] with following paramters:")
+    clrprint.clrprint(f"{cfg}\n", clr='yellow')
+    for i in range(6):
+        clrprint.clrprint(f'[{5-i}]', clr=random.choice(['red', 'blue', 'green', 'yellow', 'purple', 'black']), end='')
+        time.sleep(1)
+
+    clrprint.clrprint(f'\n[{getCurrentDateTime()}] Started', clr='yellow')
+    time.sleep(0.5) # small delay to allow starting messages to appear (even when executed from within IDLE)  
+
+   
+   #sys.exit(-33)
+
+    if mode == 'export':
+       export(cfg)
+    elif mode == 'search':
+         if not config.get('interactive'):
+            search(query='', criteria=cfg)
+         else:    
+            while (True):
+                   q = input('Give query (regular expression - use (?i:<matching pattern>) for case sensitive search)> ')
+                   if q == '':
+                      continue
+
+                   if q.lower()=='eof':
+                      print('terminating.') 
+                      break
+                
+                   search(q,  cfg)
+
+
+
+
+      
 
 def main():
 
@@ -435,7 +473,7 @@ def main():
               config[k] = cSettings.get(s, k, fallback='')
            
 
-
+   
 
    '''
    mode = 'export'
@@ -462,14 +500,19 @@ def main():
    # Command line arguments have highest priority
    config.update( (k,v) for k,v in args.items() if ((v != '' and v!=-1) or (k not in config.keys())))
 
+
+
+
+   
    mode = 'xxx'
    if not config.get('searchquery', []) and not config.get('interactive'):
       mode = 'export'
    else:
       mode = 'search'
       
+   selector(mode, config)
    
-   
+   '''
    clrprint.clrprint(f"\nStarting [{mode}] mode from root [{config.get('directory', 'testDirectories/exampleDir0')}] with following paramters:")
    clrprint.clrprint(f"{config}\n", clr='yellow')
    for i in range(6):
@@ -499,8 +542,9 @@ def main():
                 
               search(q,  config)
 
-   sys.exit(-3)
 
+   sys.exit(-3)
+   '''
 
 # Reset timer
 # TODO: check if this is correct
