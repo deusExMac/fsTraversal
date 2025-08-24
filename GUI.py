@@ -47,7 +47,9 @@ def closeWindow(w=None):
        w.destroy()
 
 
-       
+
+
+    
 def progressSearch(q, config={}):
 
    # light, dark and System supported
@@ -67,11 +69,11 @@ def progressSearch(q, config={}):
 
    # Progress label (current directory being scanned)   
    progressLbl = ctk.CTkLabel(master=frame, text=".....", font=("Roboto", 14) )
-   progressLbl.pack(pady=10, padx=40)
+   progressLbl.pack(pady=10, padx=40, anchor="w")
 
    # Status (how many found)
    statusLbl = ctk.CTkLabel(master=frame, text="Found: 0",  text_color='red', font=("Roboto", 14) )
-   statusLbl.pack(pady=5, padx=40)
+   statusLbl.pack(pady=5, padx=40, anchor="w")
    
    
    root.after(2, doSearch, q, root, progressLbl, statusLbl, config)

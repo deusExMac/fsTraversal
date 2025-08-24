@@ -93,7 +93,7 @@ class Visitor(ABC):
         pass
 
     @abstractmethod
-    def visit_directory(self, name, path, level, parent, ldc, lfc):
+    def visit_directory(self, name, path, level, parent, ldc, lfc, finfo={}):
         pass
 
     #TODO: Is this correct?
@@ -144,6 +144,7 @@ class Directory(Visitable):
         self.localDirCount = ldc
         self.localFileCount = lfc
         self.ignored = False
+
 
     def accept(self, visitor):
         status=visitor.visit_directory(self.name, self.path, self.level, self.parent,  self.localDirCount, self.localFileCount)
@@ -584,6 +585,7 @@ class SearchVisitor(Visitor):
             self.file_count += 1
 
             clrprint.clrprint('\t[F] ', clr='green', end='')
+            clrprint.clrprint(f' [{finfo["size"]}][{finfo["creationdate"]}][{finfo["lastmodified"]}] ', clr='maroon', end='')
             self.matches.append(path)
             printPath(parent, matchedFileName, '/', 'green')
             return(0)
@@ -605,11 +607,16 @@ class SearchVisitor(Visitor):
             if self.criteria.get('maxDirs', -1) > 0:
                if self.directory_count >= self.criteria.get('maxDirs', -1):
                   raise criteriaException(-10, 'Maximum number of DIRECTORIES reached.')
+
+            # TODO: Should creation/modified date checked as well?
+            
             
             matchedDirName = searchNameComplies(name, self.criteria.get('direxclusionPattern', ''), self.criteria.get('dirinclusionPattern', ''), r'/\1/', False)
             if matchedDirName == '':
                self.ignored()  
                return(0)
+
+
 
             self.directory_count += 1
             

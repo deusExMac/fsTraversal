@@ -313,8 +313,6 @@ def export(criteria={}):
 
 
 # Searching
-
-# TODO: Complete me...
 # NOTE: to avoid error messages when using case insensitive regex, use the following way:
 #       (?i:<matching pattern>)
 @timeit  
@@ -449,6 +447,11 @@ def main():
    cmdArgParser.add_argument('-i', '--introduction', default="")
    cmdArgParser.add_argument('-tl', '--title', default="")
    cmdArgParser.add_argument('-e', '--urlencode', action='store_true')
+
+
+   # Debugging
+   # TODO: Not yet used
+   cmdArgParser.add_argument('-D', '--debugmode', action='store_true')
 
    # REMAINDER is always the searchquery. Search query is interpreted as a regular expression.
    # NOTE: if a remainder exists, the mode is set to search.  
