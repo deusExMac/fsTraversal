@@ -1,6 +1,9 @@
 import os
 import os.path
 from os.path import join, commonprefix, relpath
+
+from pathlib import Path
+
 import sys
 import platform
 import subprocess
@@ -124,6 +127,24 @@ def shortenPath(path, max_length=6, ellipsis='...', doRename=False):
                     print(f"Renamed file: {path} -> {new_name}")
                 return new_path
     return path
+
+
+
+
+def shortenPathPrefix(file_path, length):
+     """Split the path into separate parts, select the last 
+     'length' elements and join them again"""
+     return Path(*Path(file_path).parts[-length:])
+
+
+def shortenFullPath(fullPath, length):
+    path = os.path.normpath(fullPath)
+    prts = path.split(os.sep)
+    if len(prts) >=2*length:
+       return(os.sep.join(prts[:length+1]) + '...' + os.sep.join(prts[-length:])) 
+
+    return(fullPath) 
+
 
 
 
