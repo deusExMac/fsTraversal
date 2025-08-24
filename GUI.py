@@ -1,23 +1,6 @@
 
 #
-# Trivial attemps to see how python support GUIs . Here module customtkinter is used to
-# create simple windows and UI elements. The emphasis here is how these elements
-# appear and how they interract. This is not a complete, coherent and finished application;
-# most elements were put on windows/forms to see how they interact what characteristics they have.
-# Cases that were implemented:
-#    * how to place elements
-#    * how to create a new window dynamically (a modal window)
-#    * how to create a custom UI class (a dialog window)
-#    * how to interact with buttons
-#    * how to change visual cues of elements
-#    * how to use progress bar
-#    * how to use callbacks
-#    * how to enable/disable elements/buttons
-#    * ... some other ...
-#
-# Some basic elements were created and put on windows.
-#
-# A simple download form has been implemented for testing purposes only. 
+
 #
 # tzagara|v0.3@13/04/2024
 
@@ -31,12 +14,8 @@ import datetime
 import requests
 import customtkinter as ctk
 
-import configparser
-import argparse
 
 from sandbox import search
-
-
 
 
         

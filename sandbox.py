@@ -60,11 +60,13 @@ def readHTMLTemplateFile(fname, dm='<!---directorytemplate--->\n', fm='<!---file
 
 
 # Works only for function traverseDirectory.
-# TODO: generalize it to make it work.
+
 def timeit(f):
     
     def timed(*args, **kw):
-        
+
+        # This is done to avoid calling function for every call in
+        # recursive functions
         if (f.__name__ == 'fsTraversal' and args[1] > 1 ):
             return( f(*args, **kw) )
         
@@ -90,22 +92,22 @@ def timeit(f):
 #
 #####################################################
 
-
-
-
-
-
-
-
-
 # Ths core part of the file system traversal. This traverses all objects.
 # How encountered files/directories should be handled are in the visitor classes  
 # NOTE: the idea was to keep this function as generic as possible
        
 def fsTraversal(root, lvl, visitor=None):
+
+
     # TODO: check this
     global timeStarted
 
+
+
+    ###########################################
+    # Check if traversal should continue or not
+    # based on the configuration
+    ###########################################
     
     maxTime = visitor.getCriterium('maxTime', -1)
     if maxTime > 0:
@@ -114,8 +116,6 @@ def fsTraversal(root, lvl, visitor=None):
        else:
           # Elapsed in seconds. 
           elapsed = time.perf_counter() - timeStarted
-          #if (int(elapsed)%10 == 0):
-          #    print(f'>>>elapsed:{elapsed:.4f}')
           if elapsed >= maxTime: 
              raise handlers.criteriaException(-10, f'Maximum time constraint of {maxTime}s reached (elapsed:{elapsed:.4f}s).')
 
@@ -143,7 +143,8 @@ def fsTraversal(root, lvl, visitor=None):
           pass 
 
 
-    # Get list of directories and files
+
+    # Get actual list of directories and files
     try:
       path, dirs, files = next(os.walk(root) )
     except Exception as wEx:
@@ -157,6 +158,10 @@ def fsTraversal(root, lvl, visitor=None):
     dirs.sort()
     files.sort()
 
+    ###########################################
+    # Handle files
+    ###########################################
+    
     lfc = 0 # local file count
     tfc = 0 # total file count until here
     for encounteredFile in files:
@@ -170,8 +175,12 @@ def fsTraversal(root, lvl, visitor=None):
         if not fv.ignored: 
            lfc += 1
            tfc += 1 
+
            
-           
+    ###########################################
+    # Handle directories
+    ###########################################
+    
     ldc = 0 # local directory count
     tdc = 0 # total directory count until here 
     for encounteredDirectory in dirs:
@@ -185,7 +194,7 @@ def fsTraversal(root, lvl, visitor=None):
                                -1,
                                -1)
         dH.accept(visitor)
-        # TODO: Check this
+        # if not ignored, traverse into if so specified
         if not dH.ignored:
            ldc += 1
            tdc += 1 
@@ -295,11 +304,7 @@ def export(criteria={}):
          sf.write(h)
 
     clrprint.clrprint(f'\n[{getCurrentDateTime()}] Finished. Total file count:{hE.file_count} Total directory count:{hE.directory_count}. Ignored:{hE.nIgnored}', clr='yellow')
-
-    '''
-    for i, d in enumerate(hE.directoryList):
-        print(f'{i+1}) {d}')
-    '''    
+  
 
     return(res)
 
@@ -342,7 +347,7 @@ def search(query='', criteria={}):
 
 
 
-####################### MAIN starts here#########################
+
 
 
 def interactiveMode(cfg={}):
@@ -367,6 +372,7 @@ def interactiveMode(cfg={}):
 
 
 def selector(mode='export', cfg={}):
+   
     
     clrprint.clrprint(f"\nStarting [{mode}] mode from root [{cfg.get('directory', 'testDirectories/exampleDir0')}] with following paramters:")
     clrprint.clrprint(f"{cfg}\n", clr='yellow')
@@ -391,18 +397,14 @@ def selector(mode='export', cfg={}):
             
 
 
-
-
-      
+###############################################################################
+#
+# Main parses command line arguments
+#
+###############################################################################   
 
 def main():
 
-   ###############################################################################
-   #
-   # Parsing command line arguments
-   #
-   ###############################################################################
-   
    cmdArgParser = argparse.ArgumentParser(description='Command line arguments', add_help=False)
 
    # Configuration file
