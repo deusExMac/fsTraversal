@@ -324,7 +324,6 @@ def search(query='', criteria={}):
     else:
        q = query
        
-    #print( f'Searching for: {q}' )
       
     criteria['fileinclusionPattern'] = fr'({q})'
     criteria['dirinclusionPattern'] = fr'({q})'
