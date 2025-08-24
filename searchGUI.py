@@ -47,6 +47,7 @@ def doSearch(query='', win=None, progressLabel=None, statusLabel=None, cfg={}):
     cfg['guiwindow'] = win
     cfg['guiprogress'] = progressLabel
     cfg['guistatus'] = statusLabel
+    
     search(query=f'{query}', criteria=cfg)
     
     closeWindow(win)
