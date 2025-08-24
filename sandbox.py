@@ -407,7 +407,7 @@ def main():
    # Directory traversal related and criteria
    cmdArgParser.add_argument('-d', '--directory', default="testDirectories/exampleDir0")
    cmdArgParser.add_argument('-mxt', '--maxTime',  type=float, default=-1)
-   cmdArgParser.add_argument('-ml', '--maxLevels', type=int, default=-1)
+   cmdArgParser.add_argument('-mxl', '--maxLevels', type=int, default=-1)
    cmdArgParser.add_argument('-if', '--fileinclusionPattern', default="")
    cmdArgParser.add_argument('-xf', '--fileexclusionPattern', default="")
 
@@ -431,13 +431,12 @@ def main():
    cmdArgParser.add_argument('-NF', '--noFiles', action='store_true')
    cmdArgParser.add_argument('-ND', '--noDirs', action='store_true')
    cmdArgParser.add_argument('-I', '--interactive', action='store_true')
-   # If set, don't search for directories
-   #cmdArgParser.add_argument('-Y', '--nodirectories', action='store_true')
 
-  
-   # REMAINDER is searchquery. Search query is interpreted as a regular expression
-   cmdArgParser.add_argument('searchquery', nargs=argparse.REMAINDER, default=[])
-
+   # If set, this will display a gui showing the progress of search as it
+   # proceeds.
+   cmdArgParser.add_argument('-P', '--progress', action='store_true')
+   
+   # PAGE TEMPLATE  related
    cmdArgParser.add_argument('-t', '--htmlTemplate', default="")
    cmdArgParser.add_argument('-o', '--outputFile', default="index.html")
    # Note: if many css files are specified, enclose the arguments in double quotes "" and
@@ -445,7 +444,11 @@ def main():
    cmdArgParser.add_argument('-s', '--css', default="html/style.css")
    cmdArgParser.add_argument('-i', '--introduction', default="")
    cmdArgParser.add_argument('-tl', '--title', default="")
-   cmdArgParser.add_argument('-e', '--urlencode', action='store_true') 
+   cmdArgParser.add_argument('-e', '--urlencode', action='store_true')
+
+   # REMAINDER is always the searchquery. Search query is interpreted as a regular expression.
+   # NOTE: if a remainder exists, the mode is set to search.  
+   cmdArgParser.add_argument('searchquery', nargs=argparse.REMAINDER, default=[])
 
    knownArgs, unknownArgs = cmdArgParser.parse_known_args()
    args = vars(knownArgs)
