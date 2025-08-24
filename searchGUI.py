@@ -89,11 +89,15 @@ def progressSearch(q, config={}):
    statusLbl = ctk.CTkLabel(master=frame, text="Found: 0",  text_color='red', font=("Roboto", 14) )
    statusLbl.pack(pady=5, padx=40)
    
-
+   
    root.after(2, doSearch, q, root, progressLbl, statusLbl, config)
    
    # Start the GUI
    root.mainloop()
+
+
+
+
 
 
 if __name__ == '__main__':
