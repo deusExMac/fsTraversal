@@ -9,21 +9,22 @@
 
 import unittest
 
-from sandbox import htmlExporter
+import GUI
+import sandbox 
 
 class TestCriteria(unittest.TestCase):
     
-      def testMaxLevels(self):
-          tCriteria = {}
-          self.assertEqual(htmlExporter('testDirectories/exampleDir0', 'html/template1.tmpl', tCriteria), (0, 3, 0, 14, 25))
+      def test_search_MaxLevels(self):
+          tCriteria = {'directory':'testDirectories/exampleDir0'}
+          self.assertEqual(sandbox.search(query='\.jpg$', criteria=tCriteria), (0, 0, 5, 53))
           
-          #tCriteria = { 'maxLevels':2 }
-          #self.assertEqual(htmlExporter('testDirectories/exampleDir0', 'html/template1.tmpl', tCriteria), (0, 3, 0, 7, 6))
+          
 
-      def testFileNameInclusion(self):
+      def test_search_FileNameInclusionPattern(self):
           # files ending in .jpg (case sensitive)  
-          tCriteria = {'fileinclusionPattern':r"(.*)\.jpg$"}
-          self.assertEqual(htmlExporter('testDirectories/exampleDir0', 'html/template1.tmpl', tCriteria), (0, 3, 0, 14, 5))
+          tCriteria = {'directory':'testDirectories/exampleDir0',
+                       'fileinclusionPattern':r"(.*)\.jpg$"}
+          self.assertEqual(sandbox.search('', tCriteria), (0, 3, 0, 14, 5))
 
 
 if __name__ == "__main__":
