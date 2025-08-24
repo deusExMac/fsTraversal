@@ -129,11 +129,18 @@ def fsTraversal(root, lvl, visitor=None):
           return(0, 0, 0, 0, 0)
 
     # Update window if gui version is used
-    lbl = visitor.getCriterium('guistatuslabel', None)
-    if lbl is not None:
-       lbl.configure(text=f'{root}')
-       visitor.getCriterium('window', None).update_idletasks()
-       visitor.getCriterium('window', None).update()
+    guiWin = visitor.getCriterium('guiwindow', None)
+    if guiWin is not None:
+       try: 
+          visitor.getCriterium('guiprogress', None).configure(text=f'{root}')
+          if visitor.file_count + visitor.directory_count > 0:
+             visitor.getCriterium('guistatus', None).configure(text_color='green')
+             
+          visitor.getCriterium('guistatus', None).configure(text=f'Found: {visitor.file_count + visitor.directory_count} (dirs:{visitor.directory_count} files:{visitor.file_count})')
+          visitor.getCriterium('guiwindow', None).update_idletasks()
+          visitor.getCriterium('guiwindow', None).update()
+       except Exception as updEx:
+          pass 
 
 
     # Get list of directories and files
@@ -336,28 +343,25 @@ def search(query='', criteria={}):
 
 
 ####################### MAIN starts here#########################
-'''    
-def isDefaultValue(v):
-    return( v=='' or v==-1)
 
 
-# dictionary's .update() method wasn't working as expected.
-# TODO: check this again
-def updateDict(old, new):
-    for k,v in new.items():
-        
-        if k  not in old.keys():
-              old[k] = v
-              continue
+def interactiveMode(cfg={}):
+    
+     while (True):
+            q = input('Give query (regular expression - use (?i:<matching pattern>) for case sensitive search)> ')
+            if q == '':
+               continue
 
-        if not isDefaultValue(v):
-           old[k] = v
+            if q.lower()=='eof':
+               print('terminating.') 
+               break
 
-        if k in ('maxLevels', 'maxTime', 'minFileSize', 'maxFileSize', 'maxDirs', 'maxFiles'):
-           old[k] = float(old[k])
+            if cfg.get('progress', False):
+               import searchGUI 
+               searchGUI.progressSearch(q, cfg) 
+            else:
+               search(q,  cfg)
 
-    return(old)    
-'''            
 
 
 
@@ -373,25 +377,14 @@ def selector(mode='export', cfg={}):
     clrprint.clrprint(f'\n[{getCurrentDateTime()}] Started', clr='yellow')
     time.sleep(0.5) # small delay to allow starting messages to appear (even when executed from within IDLE)  
 
-   
-   #sys.exit(-33)
 
     if mode == 'export':
        export(cfg)
     elif mode == 'search':
-         if not config.get('interactive'):
+         if not cfg.get('interactive'):
             search(query='', criteria=cfg)
          else:    
-            while (True):
-                   q = input('Give query (regular expression - use (?i:<matching pattern>) for case sensitive search)> ')
-                   if q == '':
-                      continue
-
-                   if q.lower()=='eof':
-                      print('terminating.') 
-                      break
-                
-                   search(q,  cfg)
+            interactiveMode(cfg)
 
 
 
@@ -400,7 +393,14 @@ def selector(mode='export', cfg={}):
 
 def main():
 
+   ###############################################################################
+   #
+   # Parsing command line arguments
+   #
+   ###############################################################################
+   
    cmdArgParser = argparse.ArgumentParser(description='Command line arguments', add_help=False)
+
    # Configuration file
    cmdArgParser.add_argument('-c', '--config', default="fsTraversal.conf")
     
@@ -421,10 +421,8 @@ def main():
    cmdArgParser.add_argument('-cd', '--creationDate',  default='')
    cmdArgParser.add_argument('-lmdo', '--lastModifiedDateOp',  default='==')
    cmdArgParser.add_argument('-lmd', '--lastModifiedDate',  default='')
-   
    cmdArgParser.add_argument('-NR', '--nonRecursive', action='store_true')
    
-
 
    # SEARCH functionality related
    # If set, don't search for files. 
@@ -477,77 +475,24 @@ def main():
            
 
    
-
-   '''
-   mode = 'export'
-   initialDir = "testDirectories/exampleDir0"
-
-   # maxTime is in seconds
-   traversalCriteria = { 'maxLevels':18,
-                      'maxTime': -1,
-                      'fileinclusionPattern':r'',
-                      'fileexclusionPattern':'',
-                      'dirinclusionPattern': '',
-                      'direxclusionPattern':'',
-                      'minFileSize':-1,
-                      'maxFileSize':-1,
-                      'maxDirs':-1,
-                      'maxFiles':-1,
-                      'creationDateOp':'>',
-                      'creationDate':'',
-                      'lastModifiedDateOp':'>',
-                      'lastModifiedDate':''}
-   '''
-   
    # Override configuration with non-default command line settings.
    # Command line arguments have highest priority
    config.update( (k,v) for k,v in args.items() if ((v != '' and v!=-1) or (k not in config.keys())))
 
-
-
-
    
-   mode = 'xxx'
+   mode = ''
    if not config.get('searchquery', []) and not config.get('interactive'):
       mode = 'export'
    else:
       mode = 'search'
-      
+
+   # Config set. Now, execute operation based on mode   
    selector(mode, config)
    
-   '''
-   clrprint.clrprint(f"\nStarting [{mode}] mode from root [{config.get('directory', 'testDirectories/exampleDir0')}] with following paramters:")
-   clrprint.clrprint(f"{config}\n", clr='yellow')
-   for i in range(6):
-       clrprint.clrprint(f'[{5-i}]', clr=random.choice(['red', 'blue', 'green', 'yellow', 'purple', 'black']), end='')
-       time.sleep(1)
 
-   clrprint.clrprint(f'\n[{getCurrentDateTime()}] Started', clr='yellow')
-   time.sleep(0.5) # small delay to allow starting messages to appear (even when executed from within IDLE)  
+
 
    
-   #sys.exit(-33)
-
-   if mode == 'export':
-      export(config)
-   elif mode == 'search':
-       if not config.get('interactive'):
-          search(query='', criteria=config)
-       else:    
-           while (True):
-              q = input('Give query (regular expression - use (?i:<matching pattern>) for case sensitive search)> ')
-              if q == '':
-                 continue
-
-              if q.lower()=='eof':
-                 print('terminating.') 
-                 break
-                
-              search(q,  config)
-
-
-   sys.exit(-3)
-   '''
 
 # Reset timer
 # TODO: check if this is correct
