@@ -19,7 +19,26 @@ from sandbox import search
 
 
         
+def doGUIOperation(op='', query='', win=None, progressLabel=None, statusLabel=None, cfg={}):
 
+    
+    cfg['guiwindow'] = win
+    cfg['guiprogress'] = progressLabel
+    cfg['guistatus'] = statusLabel
+
+    if op=='search':
+       search(query=f'{query}', criteria=cfg)
+    elif op=='export':
+         export(cfg)
+
+    # Small delay before closing window to give
+    # a better glimpse on the numbers or messages. 
+    time.sleep(0.7)
+    
+    closeWindow(win)
+
+
+    
 def doSearch(query='', win=None, progressLabel=None, statusLabel=None, cfg={}):
 
     
@@ -50,7 +69,7 @@ def closeWindow(w=None):
 
 
     
-def progressSearch(q, config={}):
+def progressCommand(op='export', q='', config={}):
 
    # light, dark and System supported
    ctk.set_appearance_mode("System")
@@ -76,7 +95,7 @@ def progressSearch(q, config={}):
    statusLbl.pack(pady=5, padx=40, anchor="w")
    
    
-   root.after(2, doSearch, q, root, progressLbl, statusLbl, config)
+   root.after(2, doGUIOperation, op, q, root, progressLbl, statusLbl, config)
    
    # Start the GUI
    root.mainloop()
@@ -87,4 +106,4 @@ def progressSearch(q, config={}):
 
 
 if __name__ == '__main__':
-   progressSearch('pdf')
+   progressCommand('search', 'pdf')

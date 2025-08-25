@@ -359,7 +359,7 @@ def interactiveMode(cfg={}):
                break
 
             if cfg.get('progress', False):
-               GUI.progressSearch(q, cfg) 
+               GUI.progressCommand('search', q, cfg) 
             else:
                # Simple search without progress 
                search(q,  cfg)
@@ -389,9 +389,9 @@ def selector(mode='export', cfg={}):
             interactiveMode(cfg)
          elif not cfg.get('progress', False): 
                result=search(query='', criteria=cfg)
-               print(result)
+               #print(result)
          else:
-               GUI.progressSearch(' '.join(cfg.get('searchquery', [])), cfg)  
+               GUI.progressCommand('search', ' '.join(cfg.get('searchquery', [])), cfg)  
              
             
 
