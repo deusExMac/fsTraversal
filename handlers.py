@@ -585,7 +585,7 @@ class SearchVisitor(Visitor):
             self.file_count += 1
 
             clrprint.clrprint('\t[F] ', clr='green', end='')
-            clrprint.clrprint(f' [{finfo["size"]}][{finfo["creationdate"].strftime("%d/%m/%Y %H:%M:%S")}][{finfo["lastmodified"].strftime("%d/%m/%Y %H:%M:%S")}] ', clr='maroon', end='')
+            clrprint.clrprint(f' [{finfo["size"]}][{finfo["creationdate"].strftime("%d/%m/%Y %H:%M:%S")}][{finfo["lastmodified"].strftime("%d/%m/%Y %H:%M:%S")}] ', clr='yellow', end='')
             self.matches.append(path)
             printPath(parent, matchedFileName, '/', 'green')
             return(0)
