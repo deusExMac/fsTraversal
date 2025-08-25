@@ -61,8 +61,8 @@ def normalizeDateTime(td):
 
 def printPath(parent, resourceName, delim, color='red'):
     # TODO: fix slash/backslash issue
-    print( os.path.normpath(parent + '\\'), sep='', end='')
-    print('\\', end='')
+    print( os.path.normpath(parent + os.sep), sep='', end='')
+    print(os.sep, end='')
     parts = resourceName.split(delim)
     
     for idx, p in enumerate(parts):
