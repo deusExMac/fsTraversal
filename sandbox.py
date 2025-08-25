@@ -14,7 +14,7 @@ import argparse
 
 
 
-from utilities import fontColorPalette, normalizedPathJoin, nameComplies, searchNameComplies, fileCreationDate, fileInfo, strToBytes, getCurrentDateTime
+from utilities import fontColorPalette, normalizedPathJoin, fileInfo, strToBytes, getCurrentDateTime
 import handlers
 import GUI
 
@@ -230,7 +230,7 @@ def fsTraversal(root, lvl, visitor=None):
 # Exporting
 
 # TODO: More tests needed
-@timeit
+#@timeit
 def export(criteria={}):
 
     if not os.path.isdir(criteria.get('directory', 'testDirectories/exampleDir0')):
@@ -278,14 +278,20 @@ def export(criteria={}):
 
     fullTree = hE.stack.pop()
 
-
+    
     #################################################################################
     # Prepare page from tamplate
     #################################################################################
+
+    # These keys have non-seriazable values and hence must be removed before replacing
+    # psudovariable ${CRITERIA}
+    excludeKeys = ['guiwindow', 'guiprogress', 'guistatus']
     
     # Replace psudovariables related to traversal
-    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${TRAVERSALROOTDIR}', criteria.get('directory', 'testDirectories/exampleDir0')).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(res[0])).replace('${TREE}', fullTree['html']).replace("${OPENSTATE}", "open").replace("${CRITERIA}", json.dumps(criteria))
+    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${TRAVERSALROOTDIR}', criteria.get('directory', 'testDirectories/exampleDir0')).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(res[0])).replace('${TREE}', fullTree['html']).replace("${OPENSTATE}", "open").replace("${CRITERIA}", json.dumps({k: criteria[k] for k in set(list(criteria.keys())) - set(excludeKeys)}))
 
+    
+    
     # Replace psudovariables related to page
     h = h.replace('${TITLE}', criteria.get('title', '')).replace('${INTROTEXT}', criteria.get('introduction', ''))
 
@@ -347,7 +353,7 @@ def search(query='', criteria={}):
 
 
 
-def interactiveMode(cfg={}):
+def interactiveSearch(cfg={}):
     
      while (True):
             q = input('Give query (regular expression - use (?i:<matching pattern>) for case sensitive search)> ')
@@ -383,10 +389,13 @@ def selector(mode='export', cfg={}):
 
 
     if mode == 'export':
-       export(cfg)
+       if not cfg.get('progress', False): 
+          export(cfg)
+       else:
+          GUI.progressCommand('export', '', cfg)  
     elif mode == 'search':
          if cfg.get('interactive'):
-            interactiveMode(cfg)
+            interactiveSearch(cfg)
          elif not cfg.get('progress', False): 
                result=search(query='', criteria=cfg)
                #print(result)

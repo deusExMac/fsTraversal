@@ -14,8 +14,8 @@ import datetime
 import requests
 import customtkinter as ctk
 
-
-from sandbox import search
+import sandbox
+#from sandbox import search
 
 
         
@@ -27,9 +27,9 @@ def doGUIOperation(op='', query='', win=None, progressLabel=None, statusLabel=No
     cfg['guistatus'] = statusLabel
 
     if op=='search':
-       search(query=f'{query}', criteria=cfg)
+       sandbox.search(query=f'{query}', criteria=cfg)
     elif op=='export':
-         export(cfg)
+         sandbox.export(cfg)
 
     # Small delay before closing window to give
     # a better glimpse on the numbers or messages. 
