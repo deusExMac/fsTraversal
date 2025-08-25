@@ -1,6 +1,5 @@
-
 #
-
+#
 #
 # tzagara|v0.3@13/04/2024
 
@@ -14,8 +13,10 @@ import datetime
 import requests
 import customtkinter as ctk
 
+# TODO: How to properly deal with circular imports?
+# See https://stackoverflow.com/questions/7336802/how-to-avoid-circular-imports-in-python
 import sandbox
-#from sandbox import search
+
 
 
         

@@ -230,7 +230,7 @@ def fsTraversal(root, lvl, visitor=None):
 # Exporting
 
 # TODO: More tests needed
-#@timeit
+@timeit
 def export(criteria={}):
 
     if not os.path.isdir(criteria.get('directory', 'testDirectories/exampleDir0')):
@@ -368,7 +368,8 @@ def interactiveSearch(cfg={}):
                GUI.progressCommand('search', q, cfg) 
             else:
                # Simple search without progress 
-               search(q,  cfg)
+               res = search(q,  cfg)
+               print(res)
                
 
 
@@ -390,7 +391,8 @@ def selector(mode='export', cfg={}):
 
     if mode == 'export':
        if not cfg.get('progress', False): 
-          export(cfg)
+          result = export(cfg)
+          print(result)
        else:
           GUI.progressCommand('export', '', cfg)  
     elif mode == 'search':
@@ -398,7 +400,7 @@ def selector(mode='export', cfg={}):
             interactiveSearch(cfg)
          elif not cfg.get('progress', False): 
                result=search(query='', criteria=cfg)
-               #print(result)
+               print(result)
          else:
                GUI.progressCommand('search', ' '.join(cfg.get('searchquery', [])), cfg)  
              
