@@ -47,7 +47,7 @@ def getCurrentDateTime(tz=None):
 
 
 def normalizeDateTime(td):
-    return(parse(td).date())
+    return(parse(td, dayfirst=True).date())
 
 
 # Prints path formated so that 

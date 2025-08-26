@@ -28,6 +28,20 @@ class TestCriteria(unittest.TestCase):
 
 
       # TODO: Is it good practice to have many assert in a test?
+      def test_search_zeroMatchingResults(self):
+          tCriteria = {'directory':'testDirectories/testDir0'}
+          # There are exactly 5 files with extension .jpg in this directory
+          # NOTE: search returns a tuple with the following values:
+          #       (status, <number of matching directories>, <<number of matching files>, <number of ignored objects>)
+          result=sandbox.search(query=r'manolis', criteria=tCriteria)
+          self.assertEqual(result[0], 0, 'Status should be 0')
+          self.assertEqual(result[1], 0, 'Should return 0 DIRECTORIES.')
+          self.assertEqual(result[2], 0, 'Should return 0 FILES')
+          # NOTE: number of ignored objects is not compared since they may differ for win and mac machines (due to .DS_Store files)    
+
+
+
+      # TODO: Is it good practice to have many assert in a test?
       def test_search_searchDirectoryContainingOnlyEmptySubdirectories(self):
           # This directory contains 10 empty subdirectories 
           tCriteria = {'directory':'testDirectories/testDir1'}
@@ -36,7 +50,7 @@ class TestCriteria(unittest.TestCase):
           #       (status, <number of matching directories>, <<number of matching files>, <number of ignored objects>)
           result=sandbox.search(query=r'.*', criteria=tCriteria)
           self.assertEqual(result[0], 0, 'Status should be 0')
-          self.assertEqual(result[1], 10, 'Number of total DIrECTORIES should be 10')
+          self.assertEqual(result[1], 10, 'Number of total DIRECTORIES should be 10')
           # NOTE: number of ignored objects is not compared since they may differ for win and mac machines (due to .DS_Store files)
 
 
@@ -86,8 +100,8 @@ class TestCriteria(unittest.TestCase):
 
 
       def test_search_almostExactFileSizeByOne(self):
-          # Return ONLY ONE files with file size equal to 176821 bytes
-          # NOTE: there is one file with exact size 176820 bytes
+          # Return NO files with file size equal to 176821 bytes
+          # NOTE: there is one file with an exact size of 176820 bytes
           tCriteria = {'directory':'testDirectories/testDir0',
                        'fileSize':176821, # off by one byte
                        'noDirs':True}
@@ -102,7 +116,7 @@ class TestCriteria(unittest.TestCase):
 
 
 
-      def test_search_minimumFileSize(self):
+      def test_search_minimumFileSizeOnlyFiles(self):
           # Return ONLY FILES with minimum file size 1118488 Bytes
           # NOTE: there is one file with size exactly equal to 1118487 Bytes
           tCriteria = {'directory':'testDirectories/testDir0',
@@ -111,10 +125,25 @@ class TestCriteria(unittest.TestCase):
           
           # NOTE: search returns a tuple with the following values:
           #       (status, <number of matching directories>, <<number of matching files>, <number of ignored objects>)
-          result=sandbox.search(query=r'\.*', criteria=tCriteria)
+          result=sandbox.search(query=r'.*', criteria=tCriteria)
           self.assertEqual(result[0], 0, 'Status should be 0')
           self.assertEqual(result[1], 0, 'Should return 0 DIRECTORIES.')
-          self.assertEqual(result[2], 4, 'Should return 4 FILES with extension with filesize >= 1118488 Bytes')
+          self.assertEqual(result[2], 4, 'Should return 4 FILES  with filesize >= 1118488 Bytes')
+          # NOTE: number of ignored objects is not compared since they may differ for win and mac machines (due to .DS_Store files)
+
+
+      def test_search_onlyDirectories(self):
+          # Return ONLY FILES with minimum file size 1118488 Bytes
+          # NOTE: there is one file with size exactly equal to 1118487 Bytes
+          tCriteria = {'directory':'testDirectories/testDir0',
+                       'noFiles':True}
+          
+          # NOTE: search returns a tuple with the following values:
+          #       (status, <number of matching directories>, <<number of matching files>, <number of ignored objects>)
+          result=sandbox.search(query=r'2', criteria=tCriteria)
+          self.assertEqual(result[0], 0, 'Status should be 0')
+          self.assertEqual(result[1], 13, 'Should return 13 DIRECTORIES.')
+          self.assertEqual(result[2], 0, 'Should return 0 FILES due to noFiles option')
           # NOTE: number of ignored objects is not compared since they may differ for win and mac machines (due to .DS_Store files)
 
 
