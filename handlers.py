@@ -34,9 +34,25 @@ fontColorPalette = ['#4287f5', '#801408', '#08259c', '#4560d1', '#0a690a', '#9c5
 #.replace('${PARENTPATH}', eval('parent'))
 
 
-DIRPSUDOVARIABLES = {'${DIRNAME}': 'name', '${PATH}':'path', '${RLVLCOLOR}':'random.choice(fontColorPalette)',
-                     '${LEVEL}': 'str(level)', '${OPENSTATE}': '', '${PARENTPATH}':'parent', '${LEVELTABS}':'level*"\t"'}
-FILEPSUDOCARIABLE = {}
+DIRECTORYPSEUDOVARIABLES = {'${ID}': 'dId', '${DIRNAME}': 'name', '${PATH}':'path', '${RLVLCOLOR}':'random.choice(fontColorPalette)',
+                            '${LEVEL}': 'str(level)', '${OPENSTATE}': '""', '${PARENTPATH}':'parent', '${LEVELTABS}':'level*"&nbsp;"'}
+#nF['html'] = self.fileTemplate.replace('${FILELINK}', makeHtmlLink(path, name, False)).
+#replace('${FILENAME}', name).
+#replace('${PATH}', path).
+#replace('${RLVLCOLOR}', random.choice(fontColorPalette)).
+#replace('${LEVEL}', str(level)).
+#replace('${FILESIZE}', str(finfo['size'])).
+#replace('${FILELASTMODIFIED}', finfo['lastmodified'].strftime('%d/%m/%Y %H:%M:%S')).
+#replace('${FILECREATED}', finfo['creationdate'].strftime('%d/%m/%Y %H:%M:%S')).
+#replace('${PARENTPATH}', parent)
+FILEPSEUDOVARIABLES = {'${ID}': 'dId', '${FILELINK}':'makeHtmlLink(path, name, False)',
+                       '${FILENAME}': 'name', '${PATH}':'path', '${RLVLCOLOR}':'random.choice(fontColorPalette)',
+                       '${LEVEL}': 'str(level)',
+                       '${FILESIZE}': 'str(finfo["size"])',
+                       '${FILELASTMODIFIED}':"finfo['lastmodified'].strftime('%d/%m/%Y %H:%M:%S')",
+                       '${FILECREATED}': "finfo['creationdate'].strftime('%d/%m/%Y %H:%M:%S')",
+                       '${PARENTPATH}':'parent',
+                       '${LEVELTABS}':'level*"&nbsp;"'}
 
 
 
@@ -423,8 +439,15 @@ class HTMLExporter(Visitor):
                  
         self.file_count += 1
 
+        dId = "f" + str(level) + "-" + str( random.randint(0, 1000000) )
         nF={'type':'file',  'collapsed':False, 'level':level, 'name':path, 'dname':name, 'html':''}
-        nF['html'] = self.fileTemplate.replace('${FILELINK}', makeHtmlLink(path, name, False)).replace('${FILENAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level)).replace('${FILESIZE}', str(finfo['size'])).replace('${FILELASTMODIFIED}', finfo['lastmodified'].strftime('%d/%m/%Y %H:%M:%S')).replace('${FILECREATED}', finfo['creationdate'].strftime('%d/%m/%Y %H:%M:%S')).replace('${PARENTPATH}', parent)
+
+        # TODO: Test this more
+        nF['html'] = self.fileTemplate
+        for k, v in FILEPSEUDOVARIABLES.items():
+            nF['html'] = nF['html'].replace(k, eval(v))
+            
+        #nF['html'] = self.fileTemplate.replace('${FILELINK}', makeHtmlLink(path, name, False)).replace('${FILENAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level)).replace('${FILESIZE}', str(finfo['size'])).replace('${FILELASTMODIFIED}', finfo['lastmodified'].strftime('%d/%m/%Y %H:%M:%S')).replace('${FILECREATED}', finfo['creationdate'].strftime('%d/%m/%Y %H:%M:%S')).replace('${PARENTPATH}', parent)
         filename, fileExtension = os.path.splitext(path)
         
         if fileExtension == '':
@@ -467,8 +490,14 @@ class HTMLExporter(Visitor):
         self.collapse(newD=nD)
 
         # Add to stack
-        dId = "d" + str(level) + "-" + str( random.randint(0, 1000000) )      
-        nD['html'] = self.dirTemplate.replace('${ID}', dId).replace('${DIRNAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level)).replace("${OPENSTATE}", "").replace('${PARENTPATH}', parent)
+        dId = "d" + str(level) + "-" + str( random.randint(0, 1000000) )
+
+        # TODO: more tests for this
+        nD['html'] = self.dirTemplate
+        for k,v in DIRECTORYPSEUDOVARIABLES.items():
+            nD['html'] = nD['html'].replace(k, eval(v))
+        
+        #nD['html'] = self.dirTemplate.replace('${ID}', dId).replace('${DIRNAME}', name).replace('${PATH}', path).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', str(level)).replace("${OPENSTATE}", "").replace('${PARENTPATH}', parent)
         self.stack.append(nD)
         
         return(0)
