@@ -62,12 +62,44 @@ class TestCriteria(unittest.TestCase):
           # This directory is empty.
           # NOTE: search returns a tuple with the following values:
           #       (status, <number of matching directories>, <<number of matching files>, <number of ignored objects>)
-          result=sandbox.search(query=r'\.*', criteria=tCriteria)
+          result=sandbox.search(query=r'.*', criteria=tCriteria)
           self.assertEqual(result[0], 0, 'Status should be 0')
           self.assertEqual(result[1], 0, 'Directory should not contain any SUBDIRECTORY')
           self.assertEqual(result[2], 0, 'Directory should not contain any FILES')
           self.assertEqual(result[3], 0, 'Number of ignored objects (DIRECTORIES and FILES) should 0')
                
+
+      def test_search_exactFileSize(self):
+          # Return ONLY ONE files with file size equal to 176820 Bytes
+          tCriteria = {'directory':'testDirectories/testDir0',
+                       'fileSize':176820,
+                       'noDirs':True}
+          
+          # NOTE: search returns a tuple with the following values:
+          #       (status, <number of matching directories>, <<number of matching files>, <number of ignored objects>)
+          result=sandbox.search(query=r'.*', criteria=tCriteria)
+          self.assertEqual(result[0], 0, 'Status should be 0')
+          self.assertEqual(result[1], 0, 'Should return 0 DIRECTORIES.')
+          self.assertEqual(result[2], 1, 'Should return 1 FILE with filesize exactly equal to 176820 Bytes')
+          # NOTE: number of ignored objects is not compared since they may differ for win and mac machines (due to .DS_Store files)
+
+
+
+      def test_search_almostExactFileSizeByOne(self):
+          # Return ONLY ONE files with file size equal to 176821 bytes
+          # NOTE: there is one file with exact size 176820 bytes
+          tCriteria = {'directory':'testDirectories/testDir0',
+                       'fileSize':176821, # off by one byte
+                       'noDirs':True}
+          
+          # NOTE: search returns a tuple with the following values:
+          #       (status, <number of matching directories>, <<number of matching files>, <number of ignored objects>)
+          result=sandbox.search(query=r'.*', criteria=tCriteria)
+          self.assertEqual(result[0], 0, 'Status should be 0')
+          self.assertEqual(result[1], 0, 'Should return 0 DIRECTORIES.')
+          self.assertEqual(result[2], 0, 'Should return 0 FILES with filesize exactly equal to 176821 Bytes')
+          # NOTE: number of ignored objects is not compared since they may differ for win and mac machines (due to .DS_Store files)
+
 
 
       def test_search_minimumFileSize(self):

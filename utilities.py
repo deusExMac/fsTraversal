@@ -262,7 +262,8 @@ def fileCreationDate(filePath):
 def fileInfo( filePath ):
     fInf = {}
     try:
-      fInf['size']  = str(os.path.getsize(filePath))
+      # In bytes  
+      fInf['size']  = str(os.path.getsize(filePath)) # TODO: don't change type?
     except Exception as fszEx:
           fInf['size'] = "-1"
 

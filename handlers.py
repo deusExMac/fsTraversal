@@ -541,7 +541,11 @@ class SearchVisitor(Visitor):
                return(0)
 
             
-            
+            if self.criteria.get('fileSize', -1) >= 0:
+               if int(finfo['size']) != self.criteria.get('fileSize', -1):
+                  self.ignored()
+                  return(0)
+                   
             if self.criteria.get('minFileSize', -1) >= 0:
                if int(finfo['size']) < self.criteria.get('minFileSize', -1):
                    self.ignored() 
