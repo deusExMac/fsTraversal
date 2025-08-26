@@ -264,21 +264,21 @@ class HTMLExporter(Visitor):
     #
     # An instance of a stack (first element in stack is always the initial root directory): 
     # 
-    # {type:file, level:2, name:exampleDir0/1/excelFile.xlsx, html:''}
-    # {type:file, level:2, name:exampleDir0/1/anImageFile.jpg, html:''}
-    # {type:file, level:1, name:exampleDir0/1/, html:'...${SUBDIRECTORY}'}
-    # {type:file, level:0, name:exampleDir0/}
+    # {type:file, level:2, name:testDir0/1/excelFile.xlsx, html:''}
+    # {type:file, level:2, name:testDir0/1/anImageFile.jpg, html:''}
+    # {type:file, level:1, name:testDir0/1/, html:'...${SUBDIRECTORY}'}
+    # {type:file, level:0, name:testDir0/}
     #
     # If collapsed, the stack will become:
     #
-    # {type:file, level:1, name:exampleDir0/1/, html:'...<html of excelFile.xlsx, html of anImageFile.jpg>'}
-    # {type:file, level:0, name:exampleDir0/}
+    # {type:file, level:1, name:testDir0/1/, html:'...<html of excelFile.xlsx, html of anImageFile.jpg>'}
+    # {type:file, level:0, name:testDir0/}
     #
     # If exampleDir0 would have another dir (e.g. 2), the stack would become:
     #
-    # {type:file, level:1, name:exampleDir0/2/, html:'...${SUBDIRECTORY}'}
-    # {type:file, level:1, name:exampleDir0/1/, html:'...<html of excelFile.xlsx, html of anImageFile.jpg>'}
-    # {type:file, level:0, name:exampleDir0/}
+    # {type:file, level:1, name:testDir0/2/, html:'...${SUBDIRECTORY}'}
+    # {type:file, level:1, name:testDir0/1/, html:'...<html of excelFile.xlsx, html of anImageFile.jpg>'}
+    # {type:file, level:0, name:testDir0/}
     #
     # All items in level 1 would be collapsed if all level 1 items have been exhausted
     #

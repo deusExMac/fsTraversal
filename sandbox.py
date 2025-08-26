@@ -233,7 +233,7 @@ def fsTraversal(root, lvl, visitor=None):
 @timeit
 def export(criteria={}):
 
-    if not os.path.isdir(criteria.get('directory', 'testDirectories/exampleDir0')):
+    if not os.path.isdir(criteria.get('directory', 'testDirectories/testDir0')):
        clrprint.clrprint(f'[Error] Not such directory [{root}]', clr="red")
        return((-2, 0, 0, 0, 0))
 
@@ -248,12 +248,12 @@ def export(criteria={}):
     hE.stack.append({'type':'directory',
                      'collapsed':False,
                      'level':0,
-                     'name':criteria.get('directory', 'testDirectories/exampleDir0'),
-                     'dname':criteria.get('directory', 'testDirectories/exampleDir0'),
-                     'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', criteria.get('directory', 'testDirectories/exampleDir0')).replace('${PATH}', criteria.get('directory', 'testDirectories/exampleDir0')).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
+                     'name':criteria.get('directory', 'testDirectories/testDir0'),
+                     'dname':criteria.get('directory', 'testDirectories/testDir0'),
+                     'html':dTemp.replace('${ID}', '-8888').replace('${DIRNAME}', criteria.get('directory', 'testDirectories/testDir0')).replace('${PATH}', criteria.get('directory', 'testDirectories/testDir0')).replace('${RLVLCOLOR}', random.choice(fontColorPalette)).replace('${LEVEL}', '0')})
 
     try:
-      res=fsTraversal(criteria.get('directory', 'testDirectories/exampleDir0'), 1, visitor=hE)
+      res=fsTraversal(criteria.get('directory', 'testDirectories/testDir0'), 1, visitor=hE)
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criteriaException. Message:', str(ce), clr='red')
       res = (ce.errorCode, -1, -1, hE.directory_count, hE.file_count) # TODO: check and fix this.
@@ -288,7 +288,7 @@ def export(criteria={}):
     excludeKeys = ['guiwindow', 'guiprogress', 'guistatus']
     
     # Replace psudovariables related to traversal
-    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${TRAVERSALROOTDIR}', criteria.get('directory', 'testDirectories/exampleDir0')).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(res[0])).replace('${TREE}', fullTree['html']).replace("${OPENSTATE}", "open").replace("${CRITERIA}", json.dumps({k: criteria[k] for k in set(list(criteria.keys())) - set(excludeKeys)}))
+    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${TRAVERSALROOTDIR}', criteria.get('directory', 'testDirectories/testDir0')).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(res[0])).replace('${TREE}', fullTree['html']).replace("${OPENSTATE}", "open").replace("${CRITERIA}", json.dumps({k: criteria[k] for k in set(list(criteria.keys())) - set(excludeKeys)}))
 
     
     
@@ -338,7 +338,7 @@ def search(query='', criteria={}):
 
     clrprint.clrprint(f'Search results for {q}:', clr='maroon')
     try:
-      fsTraversal(criteria.get('directory', 'testDirectories/exampleDir0'), 1, visitor=sV)
+      fsTraversal(criteria.get('directory', 'testDirectories/testDir0'), 1, visitor=sV)
     except handlers.criteriaException as ce:
       clrprint.clrprint('Terminated due to criterialException. Message:', str(ce), clr='red')
     
@@ -379,7 +379,7 @@ def interactiveSearch(cfg={}):
 def selector(mode='export', cfg={}):
    
     
-    clrprint.clrprint(f"\nStarting [{mode}] mode from root [{cfg.get('directory', 'testDirectories/exampleDir0')}] with following paramters:")
+    clrprint.clrprint(f"\nStarting [{mode}] mode from root [{cfg.get('directory', 'testDirectories/testDir0')}] with following paramters:")
     clrprint.clrprint(f"{cfg}\n", clr='yellow')
     for i in range(6):
         clrprint.clrprint(f'[{5-i}]', clr=random.choice(['red', 'blue', 'green', 'yellow', 'purple', 'black']), end='')
@@ -421,7 +421,7 @@ def main():
    cmdArgParser.add_argument('-c', '--config', default="fsTraversal.conf")
     
    # Directory traversal related and criteria
-   cmdArgParser.add_argument('-d', '--directory', default="testDirectories/exampleDir0")
+   cmdArgParser.add_argument('-d', '--directory', default="testDirectories/testDir0")
    cmdArgParser.add_argument('-mxt', '--maxTime',  type=float, default=-1)
    cmdArgParser.add_argument('-mxl', '--maxLevels', type=int, default=-1)
    cmdArgParser.add_argument('-if', '--fileinclusionPattern', default="")
