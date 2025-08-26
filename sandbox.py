@@ -429,6 +429,7 @@ def main():
 
    cmdArgParser.add_argument('-id', '--dirinclusionPattern', default="")
    cmdArgParser.add_argument('-xd', '--direxclusionPattern', default="")
+   cmdArgParser.add_argument('-fsz', '--fileSize', type=float, default=-1) # TODO: implement this
    cmdArgParser.add_argument('-mns', '--minFileSize', type=float, default=-1)
    cmdArgParser.add_argument('-mxs', '--maxFileSize', type=float, default=-1)
    cmdArgParser.add_argument('-nd', '--maxDirs', type=int, default=-1)
@@ -486,7 +487,7 @@ def main():
    # change the data type for some settings.
    # TODO: Is there a better way?
    intKeys = ['maxLevels', 'maxDirs', 'maxFiles']
-   floatKeys = ['minFileSize', 'maxFileSize', 'maxTime']
+   floatKeys = ['fileSize', 'minFileSize', 'maxFileSize', 'maxTime']
    for s in cSettings.sections():
        for k in dict(cSettings.items(s)):
            if k in intKeys:
