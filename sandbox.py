@@ -503,6 +503,11 @@ def main():
    # Command line arguments have highest priority
    config.update( (k,v) for k,v in args.items() if ((v != '' and v!=-1) or (k not in config.keys())))
 
+   # if these options are set, don't search for directories. Currently
+   # these are supported only for files
+   if config['minFileSize'] >=0 or config['maxFileSize'] >=0 or config['fileSize'] >=0 or config['creationDate']!='' or config['lastModifiedDate'] != '':
+      config['noDirs'] = True    
+
    
    mode = ''
    if not config.get('searchquery', []) and not config.get('interactive'):

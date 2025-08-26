@@ -423,7 +423,8 @@ class HTMLExporter(Visitor):
 
 
     def visit_directory(self, name, path, level, parent, ldc, lfc):
-               
+
+            
         if self.criteria.get('maxDirs', -1) > 0:
            if self.directory_count >= self.criteria.get('maxDirs', -1):
               raise criteriaException(-10, 'Maximum number of DIRECTORIES reached.')
