@@ -23,36 +23,33 @@ fontColorPalette = ['#4287f5', '#801408', '#08259c', '#4560d1', '#0a690a', '#9c5
 
 
 
-# TODO: Next two dicts of replacing not yet used
-
-#nD['html'] = self.dirTemplate.replace('${ID}', dId).
-#replace('${DIRNAME}', name)
-#.replace('${PATH}', path)
-#.replace('${RLVLCOLOR}', random.choice(fontColorPalette))
-#.replace('${LEVEL}', str(level))
-#.replace("${OPENSTATE}", "")
-#.replace('${PARENTPATH}', eval('parent'))
+# List of pseudovariable.
+# Keys will be replaced in templates by eval-ing the values.
 
 
-DIRECTORYPSEUDOVARIABLES = {'${ID}': 'dId', '${DIRNAME}': 'name', '${PATH}':'path', '${RLVLCOLOR}':'random.choice(fontColorPalette)',
-                            '${LEVEL}': 'str(level)', '${OPENSTATE}': '""', '${PARENTPATH}':'parent', '${LEVELTABS}':'level*"&nbsp;"'}
-#nF['html'] = self.fileTemplate.replace('${FILELINK}', makeHtmlLink(path, name, False)).
-#replace('${FILENAME}', name).
-#replace('${PATH}', path).
-#replace('${RLVLCOLOR}', random.choice(fontColorPalette)).
-#replace('${LEVEL}', str(level)).
-#replace('${FILESIZE}', str(finfo['size'])).
-#replace('${FILELASTMODIFIED}', finfo['lastmodified'].strftime('%d/%m/%Y %H:%M:%S')).
-#replace('${FILECREATED}', finfo['creationdate'].strftime('%d/%m/%Y %H:%M:%S')).
-#replace('${PARENTPATH}', parent)
-FILEPSEUDOVARIABLES = {'${ID}': 'dId', '${FILELINK}':'makeHtmlLink(path, name, False)',
+DIRECTORYPSEUDOVARIABLES = {'${ID}': 'dId',
+                            '${DIRNAME}': 'name',
+                            '${PATH}':'path',
+                            '${RLVLCOLOR}':'random.choice(fontColorPalette)',
+                            '${LEVEL}': 'str(level)',
+                            '${OPENSTATE}': '""',
+                            '${PARENTPATH}':'parent',
+                            '${LEVELTABS}':'level*"\t"',
+                            '${LEVELNSBP}':'level*"&nbsp;"'}
+
+
+FILEPSEUDOVARIABLES = {'${ID}': 'dId',
+                       '${FILELINK}':'makeHtmlLink(path, name, False)',
                        '${FILENAME}': 'name', '${PATH}':'path', '${RLVLCOLOR}':'random.choice(fontColorPalette)',
                        '${LEVEL}': 'str(level)',
                        '${FILESIZE}': 'str(finfo["size"])',
                        '${FILELASTMODIFIED}':"finfo['lastmodified'].strftime('%d/%m/%Y %H:%M:%S')",
                        '${FILECREATED}': "finfo['creationdate'].strftime('%d/%m/%Y %H:%M:%S')",
                        '${PARENTPATH}':'parent',
-                       '${LEVELTABS}':'level*"&nbsp;"'}
+                       '${LEVELTABS}':'level*"\t"',
+                       '${LEVELNSBP}':'level*"&nbsp;"'}
+
+
 
 
 

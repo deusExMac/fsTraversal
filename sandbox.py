@@ -95,6 +95,8 @@ def timeit(f):
 # Ths core part of the file system traversal. This traverses all objects.
 # How encountered files/directories should be handled are in the visitor classes  
 # NOTE: the idea was to keep this function as generic as possible
+#
+# TODO: Looks too large. Needs to be optimized?
        
 def fsTraversal(root, lvl, visitor=None):
 
