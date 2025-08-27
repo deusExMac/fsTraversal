@@ -25,6 +25,8 @@ fontColorPalette = ['#4287f5', '#801408', '#08259c', '#4560d1', '#0a690a', '#9c5
 
 # List of pseudovariable.
 # Keys will be replaced in templates by eval-ing the values.
+#
+# TODO: Place this in different file
 
 
 DIRECTORYPSEUDOVARIABLES = {'${ID}': 'dId',
