@@ -349,6 +349,7 @@ class HTMLExporter(Visitor):
              # is at a higher level. Hence collect all at the
              # same level and merge/concatenate them
              sDir = top['html']
+             nAtLevel = 0
              while True:
 
                  if len(stk) <= 0:
@@ -367,16 +368,18 @@ class HTMLExporter(Visitor):
                 
                 
                  if s['level'] == top['level']:
+                    nAtLevel += 1 
                     #clrprint.clrprint(f"\t[Collapse]: Adding to [{s['name']}]", clr='yellow') 
                     if s['type']=='directory': 
-                       sDir = s['html'] + ' ' + sDir
+                       sDir = s['html'] + self.criteria.get('templateItemsSeparator', ' ')  + sDir
                     else:
-                       sDir = sDir + ' ' + s['html']
+                       sDir = sDir + self.criteria.get('templateItemsSeparator', ' ') + s['html']
                        
                  elif top['level'] - s['level'] == 1:  
                       sDir = s['html'].replace('${SUBDIRECTORY}', sDir)
                       top = {'type':'directory', 'collapsed':True, 'level':s['level'], 'name':s['name'], 'dname':s['dname'], 'html':sDir}
                       sDir = top['html']
+                      nAtLevel = 0
                       
                       
           # TODO: Do we need this?   

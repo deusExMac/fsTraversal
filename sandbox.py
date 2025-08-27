@@ -279,21 +279,11 @@ def export(criteria={}):
        subD = hE.stack.pop()
 
     fullTree = hE.stack.pop()
-
+    fullTree['html'] = fullTree['html'].replace('${LEVELTABS}', "")
     
     #################################################################################
-    # Prepare page from tamplate
+    # Prepare page from template
     #################################################################################
-
-    # These keys have non-seriazable values and hence must be removed before replacing
-    # psudovariable ${CRITERIA}
-    excludeKeys = ['guiwindow', 'guiprogress', 'guistatus']
-    
-    # Replace psudovariables related to traversal
-    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${TRAVERSALROOTDIR}', criteria.get('directory', 'testDirectories/testDir0')).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(res[0])).replace('${TREE}', fullTree['html']).replace("${OPENSTATE}", "open").replace("${CRITERIA}", json.dumps({k: criteria[k] for k in set(list(criteria.keys())) - set(excludeKeys)}))
-   
-    # Replace psudovariables related to page
-    h = h.replace('${TITLE}', criteria.get('title', '')).replace('${INTROTEXT}', criteria.get('introduction', ''))
 
     # Replacing external css files in page template.
     # Note: if many css files are specified, separate them with a comma (,)
@@ -301,9 +291,23 @@ def export(criteria={}):
     for cssFile in criteria.get('css', '').split(','):
          cssImports = cssImports + '<link rel="stylesheet" type="text/css" ' +  'href="'+ cssFile.strip() +'"><br>'
 
-    #print(f'{cssImports}') 
-    h.replace('${CSS}', cssImports)
+    # These keys have non-seriazable values and hence must be removed before replacing
+    # psudovariable ${CRITERIA}
+    excludeKeys = ['guiwindow', 'guiprogress', 'guistatus']
 
+
+    # Start replacements
+    
+    # Replace psudovariables related to traversal
+    h = pTemp.replace('${SUBDIRECTORY}', subD['html']).replace('${TRAVERSALROOTDIR}', criteria.get('directory', 'testDirectories/testDir0')).replace('${LNDIRS}', str(res[1])).replace('${LNFILES}', str(res[2])).replace('${NDIRS}', str(res[3])).replace('${NFILES}', str(res[4])).replace('${TERMINATIONCODE}', str(res[0])).replace('${TREE}', fullTree['html']).replace("${OPENSTATE}", "open").replace("${CRITERIA}", json.dumps({k: criteria[k] for k in set(list(criteria.keys())) - set(excludeKeys)}))
+   
+    # Replace psudovariables related to page
+    h = h.replace('${TITLE}', criteria.get('title', '')).replace('${INTROTEXT}', criteria.get('introduction', ''))
+    h = h.replace('${CSS}', cssImports)
+
+    # Should remaining ${SUBDIRECTORY} -signifying empty directories - be replaced?
+    if criteria.get('replaceEmptySubdirs', 'False').lower() in ['true', '1', 't', 'y', 'yes', 'yeah', 'yup', 'certainly', 'uh-huh']:
+       h = h.replace('${SUBDIRECTORY}', '')
 
     # Replacements done. Save to file
     with open(criteria.get('outputFile', 'index'+'-'+getCurrentDateTime().replace(':', '-') + '.html'), 'w', encoding='utf8') as sf:
@@ -500,7 +504,8 @@ def main():
 
    
    # Override configuration with non-default command line settings.
-   # Command line arguments have highest priority
+   # Command line arguments have highest priority.
+   # TODO: What about boolean arguments????
    config.update( (k,v) for k,v in args.items() if ((v != '' and v!=-1) or (k not in config.keys())))
 
    # if these options are set, don't search for directories. Currently
