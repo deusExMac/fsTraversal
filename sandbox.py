@@ -1,3 +1,19 @@
+
+"""
+  Traverses a directory structure on disk and is capable of applying various operations on the encountered
+  directories and files. This implementation has support for:
+     * exporting and saving directory structure in various formats (html, json, plain text etc) based on a
+       templating mechanism
+     * searching for directories and files
+     * comparing the contents of 2 directories and displaying their differences
+
+  All above behaviors can be modified using criteria.
+  For exports, a templating mechanism is used to format the output
+
+  v0.5/mmt/Aug 2025
+"""
+
+
 import os
 import sys
 import time
@@ -236,10 +252,10 @@ def fsTraversal(root, lvl, visitor=None):
 def export(criteria={}):
 
     if not os.path.isdir(criteria.get('directory', 'testDirectories/testDir0')):
-       clrprint.clrprint(f'[Error] Not such directory [{root}]', clr="red")
+       clrprint.clrprint(f'[Error] Not such directory [{criteria.get("directory", "testDirectories/testDir0")}]', clr="red")
        return((-2, 0, 0, 0, 0))
 
-    dTemp, fTemp, pTemp = readHTMLTemplateFile(criteria.get('htmlTemplate', 'html/template1.tmpl'))
+    dTemp, fTemp, pTemp = readHTMLTemplateFile(criteria.get('htmlTemplate', 'templates/htmlTemplate.tmpl'))
 
     # Create visitor
     hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, criteria)
@@ -268,7 +284,9 @@ def export(criteria={}):
 
     
     ################################################################################
-    # Save to file
+    #
+    # Prepare saving to file
+    #
     ################################################################################
 
     # if no directories and no files are in the initial folder,
@@ -280,9 +298,10 @@ def export(criteria={}):
 
     fullTree = hE.stack.pop()
     fullTree['html'] = fullTree['html'].replace('${LEVELTABS}', "")
+
     
     #################################################################################
-    # Prepare page from template
+    # Prepare page template 
     #################################################################################
 
     # Replacing external css files in page template.
@@ -515,12 +534,13 @@ def main():
 
    
    mode = ''
+   # If there is a searchquery of interactive mode, we do search
    if not config.get('searchquery', []) and not config.get('interactive'):
       mode = 'export'
    else:
       mode = 'search'
 
-   # Config set. Now, execute operation based on mode   
+   # Settings set. Now, execute operation based on mode   
    selector(mode, config)
    
 

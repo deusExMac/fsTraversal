@@ -9,8 +9,13 @@
 
 import unittest
 
+import pathlib as pl
+
 import GUI
 import sandbox 
+
+
+
 
 class TestCriteria(unittest.TestCase):
 
@@ -145,6 +150,15 @@ class TestCriteria(unittest.TestCase):
           self.assertEqual(result[1], 13, 'Should return 13 DIRECTORIES.')
           self.assertEqual(result[2], 0, 'Should return 0 FILES due to noFiles option')
           # NOTE: number of ignored objects is not compared since they may differ for win and mac machines (due to .DS_Store files)
+
+
+      def test_export_checkExportFileExistens(self):
+          tCriteria = {'outputFile':'test.html'}
+          
+          path = pl.Path(tCriteria['outputFile'])
+          result = sandbox.export(tCriteria)
+          self.assertEqual((path, path.is_file()), (path, True))
+   
 
 
 if __name__ == "__main__":
