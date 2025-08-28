@@ -476,6 +476,8 @@ def main():
    
    # PAGE TEMPLATE  related
    cmdArgParser.add_argument('-t', '--htmlTemplate', default="")
+   # How the (replaced) template items (files/directories) should be spararated
+   cmdArgParser.add_argument('-tis', '--templateItemsSeparator', default='')
    cmdArgParser.add_argument('-o', '--outputFile', default="index.html")
    # Note: if many css files are specified, enclose the arguments in double quotes "" and
    # separate individual css files with a comma (,) e.g. -s "a.css, folder/b.css, c.css"
@@ -525,8 +527,9 @@ def main():
    # Override configuration with non-default command line settings.
    # Command line arguments have highest priority.
    # TODO: What about boolean arguments????
-   config.update( (k,v) for k,v in args.items() if ((v != '' and v!=-1) or (k not in config.keys())))
-
+   config.update((k,v) for k,v in args.items() if ((v != '' and v!=-1) or (k not in config.keys())))
+   
+   
    # if these options are set, don't search for directories. Currently
    # these are supported only for files
    if config['minFileSize'] >=0 or config['maxFileSize'] >=0 or config['fileSize'] >=0 or config['creationDate']!='' or config['lastModifiedDate'] != '':
