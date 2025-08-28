@@ -332,7 +332,7 @@ def export(criteria={}):
     with open(criteria.get('outputFile', 'index'+'-'+getCurrentDateTime().replace(':', '-') + '.html'), 'w', encoding='utf8') as sf:
          sf.write(h)
 
-    clrprint.clrprint(f'\n[{getCurrentDateTime()}] Total file count:{hE.file_count} Total directory count:{hE.directory_count}. Ignored:{hE.nIgnored}', clr='yellow')
+    clrprint.clrprint(f'[{getCurrentDateTime()}] Total file count:{hE.file_count} Total directory count:{hE.directory_count}. Ignored:{hE.nIgnored}', clr='yellow')
   
 
     return(res)
