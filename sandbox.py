@@ -474,7 +474,7 @@ def main():
    # proceeds.
    cmdArgParser.add_argument('-P', '--progress', action='store_true')
    
-   # PAGE TEMPLATE  related
+   # TEMPLATE  related
    cmdArgParser.add_argument('-t', '--htmlTemplate', default="")
    # How the (replaced) template items (files/directories) should be spararated
    cmdArgParser.add_argument('-tis', '--templateItemsSeparator', default='')
