@@ -325,7 +325,7 @@ def export(criteria={}):
     h = h.replace('${CSS}', cssImports)
 
     # Should remaining ${SUBDIRECTORY} -signifying empty directories - be replaced?
-    if criteria.get('replaceEmptySubdirs', 'False').lower() in ['true', '1', 't', 'y', 'yes', 'yeah', 'yup', 'certainly', 'uh-huh']:
+    if criteria.get('replaceEmptySubdirs', False):
        h = h.replace('${SUBDIRECTORY}', '')
 
     # Replacements done. Save to file
@@ -475,7 +475,7 @@ def main():
    cmdArgParser.add_argument('-P', '--progress', action='store_true')
    
    # TEMPLATE  related
-   cmdArgParser.add_argument('-t', '--htmlTemplate', default="")
+   cmdArgParser.add_argument('-tp', '--htmlTemplate', default="")
    # How the (replaced) template items (files/directories) should be spararated
    cmdArgParser.add_argument('-tis', '--templateItemsSeparator', default='')
    cmdArgParser.add_argument('-o', '--outputFile', default="index.html")
@@ -484,7 +484,9 @@ def main():
    cmdArgParser.add_argument('-s', '--css', default="html/style.css")
    cmdArgParser.add_argument('-i', '--introduction', default="")
    cmdArgParser.add_argument('-tl', '--title', default="")
-   cmdArgParser.add_argument('-e', '--urlencode', action='store_true')
+   cmdArgParser.add_argument('-E', '--urlencode', action='store_true')
+   cmdArgParser.add_argument('-RE', '--replaceEmptySubdirs', action='store_true')
+   
 
 
    # Debugging
@@ -513,12 +515,15 @@ def main():
    # TODO: Is there a better way?
    intKeys = ['maxLevels', 'maxDirs', 'maxFiles']
    floatKeys = ['fileSize', 'minFileSize', 'maxFileSize', 'maxTime']
+   boolKeys = ['replaceEmptySubdirs', 'urlencode', 'interactive', 'noDirs', 'noFiles']
    for s in cSettings.sections():
        for k in dict(cSettings.items(s)):
            if k in intKeys:
               config[k] = cSettings.getint(s, k, fallback=-1)
            elif k in floatKeys:
               config[k] = cSettings.getfloat(s, k, fallback=-1.0)
+           elif k in boolKeys:
+               config[k] = cSettings.getboolean(s, k, fallback=False)
            else:   
               config[k] = cSettings.get(s, k, fallback='')
            
