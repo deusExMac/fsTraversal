@@ -24,10 +24,9 @@ fontColorPalette = ['#4287f5', '#801408', '#08259c', '#4560d1', '#0a690a', '#9c5
 
 
 # List of pseudovariable.
-# Keys will be replaced in templates by eval-ing the values.
+# Keys will be replaced in templates by eval-ing the values of the keys.
 #
-# TODO: Place this in different file
-
+# TODO: Place this in different file?
 
 DIRECTORYPSEUDOVARIABLES = {'${ID}': 'dId',
                             '${DIRNAME}': 'name',
@@ -64,7 +63,7 @@ FILEPSEUDOVARIABLES = {'${ID}': 'dId',
 #
 # TODO: Has not been tested. Also, must be placed in utilities.py
 
-def nameMatches( on, xP='', iP='', lvl=-1, dbg=False ):
+def nameMatches( on, xP='', iP='', lvl=-1, dbg=False):
     #print('Exclusion pattern:', xP)
     #print('inclusion pattern:', iP)
     if xP!= "" and re.search(xP, on) is not None:
