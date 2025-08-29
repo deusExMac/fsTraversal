@@ -71,7 +71,7 @@ ON_TRAVERSE_ERROR_QUIT = False
                                               
 # TODO: Replace related function in utilities with this... 
 #        ==> OK fixed. Tests needed
-def readHTMLTemplateFile(fname, dm='<!---directorytemplate--->\n', fm='<!---filetemplate--->\n', pm='<!---pagetemplate--->\n'):
+def readTemplateFile(fname, dm='<!---directorytemplate--->\n', fm='<!---filetemplate--->\n', pm='<!---pagetemplate--->\n'):
     
     with open(fname, 'r', encoding='utf8') as content_file:
                  content = content_file.read()
@@ -278,7 +278,7 @@ def export(criteria={}):
        clrprint.clrprint(f'[Error] Not such directory [{criteria.get("directory", "testDirectories/testDir0")}]', clr="red")
        return((-2, 0, 0, 0, 0))
 
-    dTemp, fTemp, pTemp = readHTMLTemplateFile(criteria.get('htmlTemplate', 'templates/htmlTemplate.tmpl'))
+    dTemp, fTemp, pTemp = readTemplateFile(criteria.get('template', 'templates/htmlTemplate.tmpl'))
 
     # Create visitor
     hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, criteria)
@@ -498,7 +498,7 @@ def main():
    cmdArgParser.add_argument('-P', '--progress', action='store_true')
    
    # TEMPLATE  related
-   cmdArgParser.add_argument('-tp', '--htmlTemplate', default="")
+   cmdArgParser.add_argument('-tp', '--template', default="")
    # How the (replaced) template items (files/directories) should be spararated
    cmdArgParser.add_argument('-tis', '--templateItemsSeparator', default='')
    cmdArgParser.add_argument('-o', '--outputFile', default="index.html")
