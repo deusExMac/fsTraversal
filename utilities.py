@@ -181,6 +181,29 @@ def nameComplies( on, xP='', iP='', dbg=False ):
     return(True)
 
 
+# Checks if obect name on complies to exclusion and inclusion pattern.
+# nameComplies returns True, if name does NOT match exclusion regex pattern (xP)
+# AND matches inclusion regex pattern (iP).
+# An empty inclusion regex pattern means no inclusion pattern i.e. all
+# object names are good.
+#
+# TODO: Has not been tested. Also, must be placed in utilities.py
+
+def nameMatches( on, xP='', iP='', lvl=-1, dbg=False):
+    #print('Exclusion pattern:', xP)
+    #print('inclusion pattern:', iP)
+    if xP!= "" and re.search(xP, on) is not None:
+       if dbg:
+              print( lvl*"-", "EXCLUDING:[", on, "] lvl:", lvl )               
+       return(False) 
+
+    if re.search(iP, on) is None:
+       if dbg:
+          print( lvl*"-", "NOT MATCHING INCLUSION:[", on, "] lvl:", lvl )
+       return(False)
+
+    return(True)
+
 
 
 # This is a special one, like nameComplies, but only

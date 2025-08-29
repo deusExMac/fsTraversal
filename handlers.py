@@ -12,7 +12,7 @@ import random
 from collections import deque
 
 
-from utilities import searchNameComplies, printPath, fileInfo, strToBytes, normalizeDateTime
+from utilities import searchNameComplies, printPath, fileInfo, strToBytes, normalizeDateTime, nameMatches
 
 
 
@@ -62,7 +62,7 @@ FILEPSEUDOVARIABLES = {'${ID}': 'dId',
 # object names are good.
 #
 # TODO: Has not been tested. Also, must be placed in utilities.py
-
+'''
 def nameMatches( on, xP='', iP='', lvl=-1, dbg=False):
     #print('Exclusion pattern:', xP)
     #print('inclusion pattern:', iP)
@@ -77,7 +77,7 @@ def nameMatches( on, xP='', iP='', lvl=-1, dbg=False):
        return(False)
 
     return(True)
-
+'''
 
 
 
