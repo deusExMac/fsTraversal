@@ -1,3 +1,25 @@
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#    * Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#    * Redistributions in binary form must reproduce the above copyright
+#      notice, this list of conditions and the following disclaimer in
+#      the documentation and/or other materials provided with the distribution
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
 
 """
   Traverses a directory structure on disk and is capable of applying various operations on the encountered
@@ -11,6 +33,7 @@
   For exports, a templating mechanism is used to format the output
 
   v0.5/mmt/Aug 2025
+  
 """
 
 
@@ -325,14 +348,14 @@ def export(criteria={}):
     h = h.replace('${CSS}', cssImports)
 
     # Should remaining ${SUBDIRECTORY} -signifying empty directories - be replaced?
-    if criteria.get('replaceEmptySubdirs', 'False').lower() in ['true', '1', 't', 'y', 'yes', 'yeah', 'yup', 'certainly', 'uh-huh']:
+    if criteria.get('replaceEmptySubdirs', False):
        h = h.replace('${SUBDIRECTORY}', '')
 
     # Replacements done. Save to file
     with open(criteria.get('outputFile', 'index'+'-'+getCurrentDateTime().replace(':', '-') + '.html'), 'w', encoding='utf8') as sf:
          sf.write(h)
 
-    clrprint.clrprint(f'\n[{getCurrentDateTime()}] Total file count:{hE.file_count} Total directory count:{hE.directory_count}. Ignored:{hE.nIgnored}', clr='yellow')
+    clrprint.clrprint(f's[{getCurrentDateTime()}] Total file count:{hE.file_count} Total directory count:{hE.directory_count}. Ignored:{hE.nIgnored}', clr='yellow')
   
 
     return(res)
@@ -475,7 +498,7 @@ def main():
    cmdArgParser.add_argument('-P', '--progress', action='store_true')
    
    # TEMPLATE  related
-   cmdArgParser.add_argument('-t', '--htmlTemplate', default="")
+   cmdArgParser.add_argument('-tp', '--htmlTemplate', default="")
    # How the (replaced) template items (files/directories) should be spararated
    cmdArgParser.add_argument('-tis', '--templateItemsSeparator', default='')
    cmdArgParser.add_argument('-o', '--outputFile', default="index.html")
@@ -484,7 +507,9 @@ def main():
    cmdArgParser.add_argument('-s', '--css', default="html/style.css")
    cmdArgParser.add_argument('-i', '--introduction', default="")
    cmdArgParser.add_argument('-tl', '--title', default="")
-   cmdArgParser.add_argument('-e', '--urlencode', action='store_true')
+   cmdArgParser.add_argument('-E', '--urlencode', action='store_true')
+   cmdArgParser.add_argument('-RE', '--replaceEmptySubdirs', action='store_true')
+   
 
 
    # Debugging
@@ -513,12 +538,15 @@ def main():
    # TODO: Is there a better way?
    intKeys = ['maxLevels', 'maxDirs', 'maxFiles']
    floatKeys = ['fileSize', 'minFileSize', 'maxFileSize', 'maxTime']
+   boolKeys = ['replaceEmptySubdirs', 'urlencode', 'interactive', 'noDirs', 'noFiles']
    for s in cSettings.sections():
        for k in dict(cSettings.items(s)):
            if k in intKeys:
               config[k] = cSettings.getint(s, k, fallback=-1)
            elif k in floatKeys:
               config[k] = cSettings.getfloat(s, k, fallback=-1.0)
+           elif k in boolKeys:
+               config[k] = cSettings.getboolean(s, k, fallback=False)
            else:   
               config[k] = cSettings.get(s, k, fallback='')
            
