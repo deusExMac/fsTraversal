@@ -378,9 +378,40 @@ def openFile(filePath):
 
 
 
+
+
+# TODO: Replace related function in utilities with this... 
+#        ==> OK fixed. Tests needed
+def readTemplateFile(fname, dm='<!---directorytemplate--->\n', fm='<!---filetemplate--->\n', pm='<!---pagetemplate--->\n'):
+    
+    with open(fname, 'r', encoding='utf8') as content_file:
+                 content = content_file.read()
+                 
+    # Next seems correct
+    try: 
+       dTemp = re.search(r'(?<=' + dm + r')(.*?)(?=' + fm +  '|' + pm + r')', content, re.DOTALL | re.MULTILINE).group()
+    except:
+       dTemp = ''
+       
+    # TODO: Fix me
+    try:
+       fTemp = re.search(r'(?<=' + fm + ')(.*?)(?='+ pm + '|' + dm + ')', content, re.DOTALL | re.MULTILINE).group()
+    except:
+       fTemp = ''
+
+    try:   
+       pTemp = re.search('(?<=' + pm + r')(.*$)', content, re.DOTALL | re.MULTILINE).group()
+    except Exception as trEx:
+       print(f'Read error: {str(trEx)}') 
+       pTemp = '' 
+
+    return(dTemp.strip(), fTemp.strip(), pTemp.strip())
+
+
+
 #text = re.search(r'Start\n.*?End', content, re.DOTALL).group()
 
-
+'''
 # TODO: Not yet working when order changes. Fix this...
 #        ==> OK fixe. Tests needed
 def readHTMLTemplateFile(fname, dm, fm, pm):
@@ -406,7 +437,7 @@ def readHTMLTemplateFile(fname, dm, fm, pm):
        pTemp = '' 
 
     return(dTemp.strip(), fTemp.strip(), pTemp.strip() )
-    
+'''    
 
 
 # Works only for function traverseDirectory.

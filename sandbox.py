@@ -53,7 +53,7 @@ import argparse
 
 
 
-from utilities import fontColorPalette, normalizedPathJoin, fileInfo, strToBytes, getCurrentDateTime
+from utilities import fontColorPalette, readTemplateFile, normalizedPathJoin, fileInfo, strToBytes, getCurrentDateTime
 import handlers
 import GUI
 
@@ -68,7 +68,7 @@ ON_TRAVERSE_ERROR_QUIT = False
 
 
 
-                                              
+'''                                              
 # TODO: Replace related function in utilities with this... 
 #        ==> OK fixed. Tests needed
 def readTemplateFile(fname, dm='<!---directorytemplate--->\n', fm='<!---filetemplate--->\n', pm='<!---pagetemplate--->\n'):
@@ -95,7 +95,7 @@ def readTemplateFile(fname, dm='<!---directorytemplate--->\n', fm='<!---filetemp
        pTemp = '' 
 
     return(dTemp.strip(), fTemp.strip(), pTemp.strip())
-    
+'''    
 
 
 # Works only for function traverseDirectory.
@@ -278,8 +278,12 @@ def export(criteria={}):
        clrprint.clrprint(f'[Error] Not such directory [{criteria.get("directory", "testDirectories/testDir0")}]', clr="red")
        return((-2, 0, 0, 0, 0))
 
-    dTemp, fTemp, pTemp = readTemplateFile(criteria.get('template', 'templates/htmlTemplate.tmpl'))
-
+    try: 
+       dTemp, fTemp, pTemp = readTemplateFile(criteria.get('template', 'templates/htmlTemplate.tmpl'))
+    except Exception as tmpException:
+       clrprint.clrprint(f'[Error] Error loading template file [{criteria.get("template", "templates/htmlTemplate.tmpl")}]', clr="red") 
+       sys.exit(-4)
+       
     # Create visitor
     hE = handlers.HTMLExporter(dTemp, fTemp, pTemp, criteria)
     
