@@ -90,6 +90,7 @@ class TestCriteria(unittest.TestCase):
 
       def test_search_exactFileSize(self):
           # Return ONLY ONE files with file size equal to 176820 Bytes
+          # noDirs must be set manually here
           tCriteria = {'directory':'testDirectories/testDir0',
                        'fileSize':176820,
                        'noDirs':True}
@@ -153,7 +154,7 @@ class TestCriteria(unittest.TestCase):
 
 
       def test_export_checkExportFileExistens(self):
-          tCriteria = {'outputFile':'test.html'}
+          tCriteria = {'outputFile':'unitTest_checkExportFileExistens.html'}
           
           path = pl.Path(tCriteria['outputFile'])
           result = sandbox.export(tCriteria)

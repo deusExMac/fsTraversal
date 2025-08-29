@@ -68,34 +68,7 @@ ON_TRAVERSE_ERROR_QUIT = False
 
 
 
-'''                                              
-# TODO: Replace related function in utilities with this... 
-#        ==> OK fixed. Tests needed
-def readTemplateFile(fname, dm='<!---directorytemplate--->\n', fm='<!---filetemplate--->\n', pm='<!---pagetemplate--->\n'):
-    
-    with open(fname, 'r', encoding='utf8') as content_file:
-                 content = content_file.read()
-                 
-    # Next seems correct
-    try: 
-       dTemp = re.search(r'(?<=' + dm + r')(.*?)(?=' + fm +  '|' + pm + r')', content, re.DOTALL | re.MULTILINE).group()
-    except:
-       dTemp = ''
-       
-    # TODO: Fix me
-    try:
-       fTemp = re.search(r'(?<=' + fm + ')(.*?)(?='+ pm + '|' + dm + ')', content, re.DOTALL | re.MULTILINE).group()
-    except:
-       fTemp = ''
 
-    try:   
-       pTemp = re.search('(?<=' + pm + r')(.*$)', content, re.DOTALL | re.MULTILINE).group()
-    except Exception as trEx:
-       print(f'Read error: {str(trEx)}') 
-       pTemp = '' 
-
-    return(dTemp.strip(), fTemp.strip(), pTemp.strip())
-'''    
 
 
 # Works only for function traverseDirectory.
@@ -376,6 +349,7 @@ def search(query='', criteria={}):
 
     print(f'Using settings: {criteria}')
     if query=='':
+       # TODO: how to join escaped? 
        q = ' '.join(criteria.get('searchquery', []))
     else:
        q = query
