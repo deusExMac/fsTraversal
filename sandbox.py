@@ -53,7 +53,7 @@ import argparse
 
 
 
-from utilities import fontColorPalette, readTemplateFile, normalizedPathJoin, fileInfo, strToBytes, getCurrentDateTime
+from utilities import fontColorPalette, readTemplateFile, normalizedPathJoin, fileInfo, strToBytes, getCurrentDateTime, dirDifference, tabularDisplay
 import handlers
 import GUI
 
@@ -172,9 +172,9 @@ def fsTraversal(root, lvl, visitor=None):
     dirs.sort()
     files.sort()
 
-    ###########################################
+    #
     # Handle files
-    ###########################################
+    #
     
     lfc = 0 # local file count
     tfc = 0 # total file count until here
@@ -191,9 +191,9 @@ def fsTraversal(root, lvl, visitor=None):
            tfc += 1 
 
            
-    ###########################################
+    #
     # Handle directories
-    ###########################################
+    #
     
     ldc = 0 # local directory count
     tdc = 0 # total directory count until here 
@@ -233,15 +233,21 @@ def fsTraversal(root, lvl, visitor=None):
 #
 #
 #
-# Actual implementations of above general directory structure 
-# traveersal to support specific cases.
+# Actual implementations of specific applications based on the above general
+# directory structure functionfsTraversal().
+#
 #
 #
 ###########################################################################
 
 
 
-# Exporting
+
+###########################################################################
+# Export 
+###########################################################################
+
+
 
 # TODO: More tests needed
 @timeit
@@ -283,11 +289,11 @@ def export(criteria={}):
     hE.collapse(final=True)
 
     
-    ################################################################################
+    
     #
     # Prepare saving to file
     #
-    ################################################################################
+    
 
     # if no directories and no files are in the initial folder,
     # generate an empty result for the SUBDIRECTORY template variable.  
@@ -300,9 +306,9 @@ def export(criteria={}):
     fullTree['html'] = fullTree['html'].replace('${LEVELTABS}', "")
 
     
-    #################################################################################
+    #
     # Prepare page template 
-    #################################################################################
+    #
 
     # Replacing external css files in page template.
     # Note: if many css files are specified, separate them with a comma (,)
@@ -341,6 +347,12 @@ def export(criteria={}):
 
 
 
+
+###########################################################################
+# Search 
+###########################################################################
+
+
 # Searching
 # NOTE: to avoid error messages when using case insensitive regex, use the following way:
 #       (?i:<matching pattern>)
@@ -373,6 +385,19 @@ def search(query='', criteria={}):
 
 
 
+###########################################################################
+# Comparison 
+###########################################################################
+
+# TODO....
+def compareDirectories(cfg={}):
+    sts, ltotal, lonly, ronly, conly = dirDifference(L_dir=cfg.get('L_dir', 'testDirectories/testDir0'),
+                                                     R_dir=cfg.get('R_dir', 'testDirectories/testDir1'),
+                                                     lvl=1,
+                                                     matchFilter='')
+    tabularDisplay(cfg.get('L_dir', 'testDirectories/testDir0'), lonly,
+                              cfg.get('R_dir', 'testDirectories/testDir1'), ronly,
+                              conly)
 
 
 
@@ -427,7 +452,9 @@ def selector(mode='export', cfg={}):
                print(result)
          else:
                GUI.progressCommand('search', ' '.join(cfg.get('searchquery', [])), cfg)  
-             
+    else:
+         compareDirectories(cfg)
+         
             
 
 
@@ -453,7 +480,7 @@ def main():
 
    cmdArgParser.add_argument('-id', '--dirinclusionPattern', default="")
    cmdArgParser.add_argument('-xd', '--direxclusionPattern', default="")
-   cmdArgParser.add_argument('-fsz', '--fileSize', type=float, default=-1) # TODO: implement this
+   cmdArgParser.add_argument('-fsz', '--fileSize', type=float, default=-1) 
    cmdArgParser.add_argument('-mns', '--minFileSize', type=float, default=-1)
    cmdArgParser.add_argument('-mxs', '--maxFileSize', type=float, default=-1)
    cmdArgParser.add_argument('-nd', '--maxDirs', type=int, default=-1)
@@ -466,10 +493,12 @@ def main():
    
 
    # SEARCH functionality related
-   # If set, don't search for files. 
+   # If set, exclude files. 
    cmdArgParser.add_argument('-NF', '--noFiles', action='store_true')
+   # If set, exclude directories
    cmdArgParser.add_argument('-ND', '--noDirs', action='store_true')
    cmdArgParser.add_argument('-I', '--interactive', action='store_true')
+
 
    # If set, this will display a gui showing the progress of search as it
    # proceeds.
@@ -549,6 +578,7 @@ def main():
    else:
       mode = 'search'
 
+   
    # Settings set. Now, execute operation based on mode   
    selector(mode, config)
    

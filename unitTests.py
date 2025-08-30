@@ -32,6 +32,21 @@ class TestCriteria(unittest.TestCase):
           # NOTE: number of ignored objects is not compared since they may differ for win and mac machines (due to .DS_Store files)
 
 
+      # TODO: do we need this?
+      def test_search_matchName(self):
+          # NOTE: there is one file with an exact size of 176820 bytes
+          tCriteria = {'directory':'testDirectories/testDir0'}
+          
+          # NOTE: search returns a tuple with the following values:
+          #       (status, <number of matching directories>, <<number of matching files>, <number of ignored objects>)
+          result=sandbox.search(query=r'Cod', criteria=tCriteria)
+          self.assertEqual(result[0], 0, 'Status should be 0')
+          self.assertEqual(result[1], 0, 'Should return 0 DIRECTORIES.')
+          self.assertEqual(result[2], 4, 'Should return 4 FILES with filesize exactly equal to 176821 Bytes')
+          # NOTE: number of ignored objects is not compared since they may differ for win and mac machines (due to .DS_Store files)
+
+ 
+
       # TODO: Is it good practice to have many assert in a test?
       def test_search_zeroMatchingResults(self):
           tCriteria = {'directory':'testDirectories/testDir0'}
@@ -152,6 +167,11 @@ class TestCriteria(unittest.TestCase):
           self.assertEqual(result[2], 0, 'Should return 0 FILES due to noFiles option')
           # NOTE: number of ignored objects is not compared since they may differ for win and mac machines (due to .DS_Store files)
 
+
+
+      #
+      # Export tests
+      #
 
       def test_export_checkExportFileExistens(self):
           tCriteria = {'outputFile':'unitTest_checkExportFileExistens.html'}
